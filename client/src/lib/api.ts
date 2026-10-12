@@ -15,7 +15,7 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
     headers: {
       ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
       // Required by the server's CSRF guard for state-changing requests.
-      'X-Worktalk': '1',
+      'X-Client': '1',
     },
     body: body !== undefined ? JSON.stringify(body) : undefined,
   });
