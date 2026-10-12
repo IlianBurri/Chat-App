@@ -1,6 +1,6 @@
 /**
  * Small, safe markdown subset for messages. Produces a tree (never HTML):
- * paragraphs, line breaks, **bold**, *italic* / _italic_, ~~strike~~, `code`,
+ * paragraphs, # headings (levels 1–3), line breaks, **bold**, *italic* / _italic_, ~~strike~~, `code`,
  * ``` code blocks ```, lists, > quotes, [links](https://…), bare URLs and
  * @mentions of known people.
  */
@@ -15,6 +15,7 @@ export type Inline =
 
 export type Block =
   | { type: 'paragraph'; children: Inline[] }
+  | { type: 'heading'; level: 1 | 2 | 3; children: Inline[] }
   | { type: 'codeblock'; text: string }
   | { type: 'list'; ordered: boolean; items: Inline[][] }
   | { type: 'quote'; children: Inline[] };
@@ -28,6 +29,7 @@ const UNORDERED = /^\s*[-*•]\s+/;
 const ORDERED = /^\s*\d+[.)]\s+/;
 const QUOTE = /^>\s?/;
 const FENCE = /^\s*```/;
+const HEADING = /^(#{1,3})\s+(.+)$/;
 
 export function parseMarkdown(source: string, mentions: MentionTarget[] = []): Block[] {
   const lines = source.replace(/\r\n?/g, '\n').split('\n');
@@ -64,6 +66,13 @@ export function parseMarkdown(source: string, mentions: MentionTarget[] = []): B
       continue;
     }
 
+    const heading = HEADING.exec(line);
+    if (heading) {
+      blocks.push({ type: 'heading', level: heading[1].length as 1 | 2 | 3, children: inline(heading[2].trim()) });
+      i++;
+      continue;
+    }
+
     if (line.trim() === '') {
       i++;
       continue;
@@ -76,7 +85,8 @@ export function parseMarkdown(source: string, mentions: MentionTarget[] = []): B
       !FENCE.test(lines[i]) &&
       !UNORDERED.test(lines[i]) &&
       !ORDERED.test(lines[i]) &&
-      !QUOTE.test(lines[i])
+      !QUOTE.test(lines[i]) &&
+      !HEADING.test(lines[i])
     ) {
       paragraph.push(lines[i++]);
     }

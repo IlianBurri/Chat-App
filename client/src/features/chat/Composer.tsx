@@ -1,9 +1,10 @@
 import clsx from 'clsx';
-import { CalendarPlusIcon, ChartBarIcon, CodeIcon, LinkSimpleIcon, ListBulletsIcon, ListNumbersIcon, PaperPlaneRightIcon, PaperclipIcon, PlusIcon, SmileyIcon, TextAaIcon, TextBIcon, TextItalicIcon, TextStrikethroughIcon, XIcon } from '@phosphor-icons/react';
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { CalendarPlusIcon, ChartBarIcon, PaperPlaneRightIcon, PaperclipIcon, PlusIcon, SmileyIcon, TextAaIcon, XIcon } from '@phosphor-icons/react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { create } from 'zustand';
-import { Avatar } from '@/components/ui/Avatar';
+import { FormatToolbar, MentionSuggestions } from '@/components/editor/EditorParts';
+import { useTextEditor } from '@/components/editor/useTextEditor';
 import { useComingSoon } from '@/components/ui/ComingSoon';
 import { EmojiPicker } from '@/components/ui/EmojiPicker';
 import { IconButton } from '@/components/ui/IconButton';
@@ -12,7 +13,6 @@ import { Popover } from '@/components/ui/Popover';
 import { useToast } from '@/components/ui/Toaster';
 import { previewText } from '@/lib/format';
 import { getSocket } from '@/lib/socket';
-import { codeFormat, insertMention, linkFormat, mentionQuery, prefixLines, wrapSelection, type Edit } from '@/lib/textFormat';
 import type { MessageDto, PublicUser } from '@/lib/types';
 import { useMessagesStore } from '@/stores/messages';
 import { PollDialog } from './PollDialog';
@@ -53,9 +53,6 @@ export function Composer({ chatId, people, replyTo, onCancelReply, onEditLast }:
 
   const [expanded, setExpanded] = useState(false);
   const [sending, setSending] = useState(false);
-  const [caret, setCaret] = useState(0);
-  const [mentionIndex, setMentionIndex] = useState(0);
-  const [mentionDismissed, setMentionDismissed] = useState<string | null>(null);
   const [pollOpen, setPollOpen] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const lastTypingSent = useRef(0);
@@ -97,74 +94,13 @@ export function Composer({ chatId, people, replyTo, onCancelReply, onEditLast }:
     el.style.height = `${Math.min(el.scrollHeight, expanded ? 320 : 200)}px`;
   }, [text, expanded]);
 
-  // --- mentions --------------------------------------------------------------
-  const mention = mentionQuery(text, caret);
-  const mentionKey = mention ? `${mention.start}:${mention.query}` : null;
-  const candidates =
-    mention && mentionKey !== mentionDismissed
-      ? people
-          .filter((p) =>
-            p.name
-              .toLowerCase()
-              .split(/\s+/)
-              .concat(p.name.toLowerCase())
-              .some((part) => part.startsWith(mention.query.toLowerCase())),
-          )
-          .slice(0, 6)
-      : [];
-  const mentionOpen = candidates.length > 0;
-
-  // --- editing helpers -------------------------------------------------------
+  // --- editing ---------------------------------------------------------------
   const setText = (value: string) => {
     setDraft(chatId, { text: value });
     signalTyping(value.trim().length > 0);
   };
-
-  const apply = (edit: Edit) => {
-    setText(edit.text);
-    requestAnimationFrame(() => {
-      const el = textareaRef.current;
-      if (!el) return;
-      el.focus();
-      el.setSelectionRange(edit.selectionStart, edit.selectionEnd);
-      setCaret(edit.selectionEnd);
-    });
-  };
-
-  const selection = () => {
-    const el = textareaRef.current;
-    return { start: el?.selectionStart ?? text.length, end: el?.selectionEnd ?? text.length };
-  };
-
-  const format = (kind: 'bold' | 'italic' | 'strike' | 'bullets' | 'numbers' | 'code' | 'link') => {
-    const { start, end } = selection();
-    switch (kind) {
-      case 'bold':
-        return apply(wrapSelection(text, start, end, '**', '**', t('composer.placeholderBold')));
-      case 'italic':
-        return apply(wrapSelection(text, start, end, '_', '_', t('composer.placeholderItalic')));
-      case 'strike':
-        return apply(wrapSelection(text, start, end, '~~', '~~', t('composer.placeholderStrike')));
-      case 'bullets':
-        return apply(prefixLines(text, start, end, () => '- '));
-      case 'numbers':
-        return apply(prefixLines(text, start, end, (i) => `${i + 1}. `));
-      case 'code':
-        return apply(codeFormat(text, start, end));
-      case 'link':
-        return apply(linkFormat(text, start, end, t('composer.placeholderLink')));
-    }
-  };
-
-  const insertText = (value: string) => {
-    const { start, end } = selection();
-    apply({ text: text.slice(0, start) + value + text.slice(end), selectionStart: start + value.length, selectionEnd: start + value.length });
-  };
-
-  const pickMention = (person: PublicUser) => {
-    if (!mention) return;
-    apply(insertMention(text, mention.start, caret, person.name));
-  };
+  const candidates = useMemo(() => people.map((p) => ({ id: p.id, name: p.name, user: p })), [people]);
+  const editor = useTextEditor({ text, onTextChange: setText, candidates, textareaRef });
 
   // --- sending ---------------------------------------------------------------
   const submit = async () => {
@@ -195,29 +131,7 @@ export function Composer({ chatId, people, replyTo, onCancelReply, onEditLast }:
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (mentionOpen) {
-      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        const delta = e.key === 'ArrowDown' ? 1 : -1;
-        setMentionIndex((i) => (i + delta + candidates.length) % candidates.length);
-        return;
-      }
-      if (e.key === 'Enter' || e.key === 'Tab') {
-        e.preventDefault();
-        pickMention(candidates[Math.min(mentionIndex, candidates.length - 1)]);
-        return;
-      }
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        setMentionDismissed(mentionKey);
-        return;
-      }
-    }
-    if ((e.ctrlKey || e.metaKey) && !e.shiftKey && (e.key === 'b' || e.key === 'i')) {
-      e.preventDefault();
-      format(e.key === 'b' ? 'bold' : 'italic');
-      return;
-    }
+    if (editor.handleKeyDown(e)) return;
     if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
       const sendNow = expanded ? e.ctrlKey || e.metaKey : !e.shiftKey;
       if (sendNow) {
@@ -237,42 +151,9 @@ export function Composer({ chatId, people, replyTo, onCancelReply, onEditLast }:
     }
   };
 
-  const formatButtons = [
-    { kind: 'bold', icon: TextBIcon, label: t('composer.bold') },
-    { kind: 'italic', icon: TextItalicIcon, label: t('composer.italic') },
-    { kind: 'strike', icon: TextStrikethroughIcon, label: t('composer.strike') },
-    { kind: 'bullets', icon: ListBulletsIcon, label: t('composer.bullets') },
-    { kind: 'numbers', icon: ListNumbersIcon, label: t('composer.numbers') },
-    { kind: 'code', icon: CodeIcon, label: t('composer.code') },
-    { kind: 'link', icon: LinkSimpleIcon, label: t('composer.link') },
-  ] as const;
-
   return (
     <div className="relative px-5 pb-4">
-      {mentionOpen && (
-        <ul
-          id="mention-suggestions"
-          role="listbox"
-          aria-label={t('composer.mentionSuggestions')}
-          className="absolute bottom-full left-5 z-30 mb-1 w-72 rounded-lg border border-line bg-main py-1 shadow-pop"
-        >
-          {candidates.map((p, i) => (
-            <li
-              key={p.id}
-              id={`mention-${p.id}`}
-              role="option"
-              aria-selected={i === mentionIndex}
-              onPointerDown={(e) => e.preventDefault()}
-              onClick={() => pickMention(p)}
-              onPointerEnter={() => setMentionIndex(i)}
-              className={clsx('flex cursor-pointer items-center gap-2 px-3 py-1.5 text-sm', i === mentionIndex && 'bg-hover')}
-            >
-              <Avatar user={p} size="xs" showStatus />
-              {p.name}
-            </li>
-          ))}
-        </ul>
-      )}
+      <MentionSuggestions mentions={editor.mentions} className="left-5" />
 
       <div className="rounded-lg border border-line bg-input shadow-card focus-within:border-b-accent focus-within:shadow-[inset_0_-2px_0_var(--ui-accent)]">
         {replyTo && (
@@ -295,12 +176,7 @@ export function Composer({ chatId, people, replyTo, onCancelReply, onEditLast }:
               onChange={(e) => setDraft(chatId, { subject: e.target.value })}
               className="h-9 w-full bg-transparent text-base font-semibold outline-none placeholder:font-normal placeholder:text-subtle focus-visible:outline-none"
             />
-            <div role="toolbar" aria-label={t('composer.formatting')} className="flex flex-wrap items-center gap-0.5 pb-1.5">
-              {formatButtons.map((b) => (
-                <IconButton key={b.kind} label={b.label} icon={b.icon} size="sm" onMouseDown={(e) => e.preventDefault()} onClick={() => format(b.kind)} />
-              ))}
-              <span className="ml-auto text-xs text-subtle">{t('composer.ctrlEnterHint')}</span>
-            </div>
+            <FormatToolbar onFormat={editor.format} hint={t('composer.ctrlEnterHint')} />
           </div>
         )}
 
@@ -308,17 +184,8 @@ export function Composer({ chatId, people, replyTo, onCancelReply, onEditLast }:
           ref={textareaRef}
           rows={1}
           aria-label={t('composer.placeholder')}
-          aria-autocomplete="list"
-          aria-controls={mentionOpen ? 'mention-suggestions' : undefined}
-          aria-activedescendant={mentionOpen ? `mention-${candidates[Math.min(mentionIndex, candidates.length - 1)].id}` : undefined}
           placeholder={t('composer.placeholder')}
-          value={text}
-          onChange={(e) => {
-            setText(e.target.value);
-            setCaret(e.target.selectionStart);
-            setMentionIndex(0);
-          }}
-          onSelect={(e) => setCaret(e.currentTarget.selectionStart)}
+          {...editor.textareaProps}
           onKeyDown={onKeyDown}
           onBlur={() => signalTyping(false)}
           className={clsx(
@@ -334,7 +201,7 @@ export function Composer({ chatId, people, replyTo, onCancelReply, onEditLast }:
             placement="top-start"
             trigger={({ ref, ...props }) => <IconButton ref={ref} label={t('composer.emoji')} icon={SmileyIcon} size="sm" {...props} />}
           >
-            <EmojiPicker onSelect={insertText} />
+            <EmojiPicker onSelect={editor.insertText} />
           </Popover>
           <IconButton label={t('composer.attach')} icon={PaperclipIcon} size="sm" onClick={() => showComingSoon(t('composer.attach'))} />
           <Menu

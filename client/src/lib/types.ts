@@ -47,6 +47,16 @@ export interface ChannelSummary {
   isDefault: boolean;
   muted: boolean;
   hidden: boolean;
+  /** Someone else wrote here since you last looked */
+  unread: boolean;
+}
+
+export interface WorkspacePermissions {
+  manageWorkspace: boolean;
+  manageMembers: boolean;
+  manageChannels: boolean;
+  moderate: boolean;
+  editNotes: boolean;
 }
 
 export interface WorkspaceSummary {
@@ -58,7 +68,59 @@ export interface WorkspaceSummary {
   visibility: 'public' | 'private';
   memberCount: number;
   role: WorkspaceRole;
+  permissions: WorkspacePermissions;
   channels: ChannelSummary[];
+}
+
+/** A public workgroup you can join. */
+export interface DiscoverWorkspace {
+  id: string;
+  name: string;
+  description: string | null;
+  logoUrl: string | null;
+  color: string;
+  memberCount: number;
+}
+
+export interface WorkspaceMember {
+  user: PublicUser;
+  role: WorkspaceRole;
+  joinedAt: string;
+}
+
+export interface ChannelDetail {
+  id: string;
+  workspaceId: string;
+  name: string;
+  description: string | null;
+  type: 'standard' | 'private';
+  isDefault: boolean;
+  notes: string;
+}
+
+export interface ReplyDto {
+  id: string;
+  postId: string;
+  author: UserRef & { avatarUrl: string | null };
+  content: string;
+  createdAt: string;
+  editedAt: string | null;
+  deleted: boolean;
+  reactions: ReactionSummary[];
+}
+
+export interface PostDto {
+  id: string;
+  channelId: string;
+  author: UserRef & { avatarUrl: string | null };
+  subject: string | null;
+  content: string;
+  createdAt: string;
+  editedAt: string | null;
+  lastActivityAt: string;
+  deleted: boolean;
+  reactions: ReactionSummary[];
+  replies: ReplyDto[];
 }
 
 export type MessageType = 'text' | 'poll' | 'meeting' | 'system';
