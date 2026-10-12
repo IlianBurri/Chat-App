@@ -6,6 +6,8 @@ import { requireClientHeader } from './middleware/csrf';
 import { errorHandler } from './middleware/error';
 import { authRouter } from './routes/auth';
 import { chatsRouter } from './routes/chats';
+import { messagesRouter } from './routes/messages';
+import { pollsRouter } from './routes/polls';
 import { usersRouter } from './routes/users';
 import { workspacesRouter } from './routes/workspaces';
 
@@ -25,6 +27,8 @@ export function createApp() {
   api.use('/auth', authRouter);
   api.use('/users', requireAuth, usersRouter);
   api.use('/chats', requireAuth, chatsRouter);
+  api.use('/messages', requireAuth, messagesRouter);
+  api.use('/polls', requireAuth, pollsRouter);
   api.use('/workspaces', requireAuth, workspacesRouter);
   api.use(() => {
     throw new HttpError(404, 'not_found', 'Unknown API route');
