@@ -1,0 +1,144 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Design tokens. Components only use the semantic Tailwind colours below. */
+:root {
+  color-scheme: light;
+  --tl-accent: #5b5fc7;
+  --tl-accent-hover: #4f52b2;
+  --tl-accent-strong: #444791;
+  --tl-accent-soft: #e8ebfa;
+  --tl-accent-fg: #ffffff;
+
+  --tl-bg-app: #ebebf3;
+  --tl-bg-pane: #f5f5fa;
+  --tl-bg-main: #ffffff;
+  --tl-bg-hover: #e6e6ef;
+  --tl-bg-selected: #ffffff;
+  --tl-bg-input: #ffffff;
+  --tl-bubble-other: #f2f2f6;
+  --tl-border: #e0e0ea;
+  --tl-fg: #242424;
+  --tl-muted: #616166;
+  --tl-subtle: #8a8a93;
+
+  --tl-danger: #c4314b;
+  --tl-success: #13a10e;
+  --tl-warning: #eaa300;
+  --tl-offline: #8a8a93;
+
+  --tl-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 2px 8px rgb(0 0 0 / 0.06);
+  --tl-shadow-lg: 0 8px 24px rgb(0 0 0 / 0.14), 0 2px 6px rgb(0 0 0 / 0.08);
+}
+
+.dark {
+  color-scheme: dark;
+  --tl-accent: #7f85f5;
+  --tl-accent-hover: #9299f7;
+  --tl-accent-strong: #aab0fa;
+  --tl-accent-soft: #33345a;
+  --tl-accent-fg: #14142b;
+
+  --tl-bg-app: #17171c;
+  --tl-bg-pane: #1f1f26;
+  --tl-bg-main: #26262e;
+  --tl-bg-hover: #30303a;
+  --tl-bg-selected: #34343f;
+  --tl-bg-input: #2e2e37;
+  --tl-bubble-other: #31313b;
+  --tl-border: #383843;
+  --tl-fg: #f2f2f5;
+  --tl-muted: #b3b3be;
+  --tl-subtle: #8c8c98;
+
+  --tl-danger: #f1707b;
+  --tl-success: #54c56a;
+  --tl-warning: #ffc83d;
+  --tl-offline: #8c8c98;
+
+  --tl-shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 2px 8px rgb(0 0 0 / 0.3);
+  --tl-shadow-lg: 0 8px 24px rgb(0 0 0 / 0.5), 0 2px 6px rgb(0 0 0 / 0.4);
+}
+
+@theme inline {
+  --color-accent: var(--tl-accent);
+  --color-accent-hover: var(--tl-accent-hover);
+  --color-accent-strong: var(--tl-accent-strong);
+  --color-accent-soft: var(--tl-accent-soft);
+  --color-accent-fg: var(--tl-accent-fg);
+  --color-app: var(--tl-bg-app);
+  --color-pane: var(--tl-bg-pane);
+  --color-main: var(--tl-bg-main);
+  --color-hover: var(--tl-bg-hover);
+  --color-selected: var(--tl-bg-selected);
+  --color-input: var(--tl-bg-input);
+  --color-bubble: var(--tl-bubble-other);
+  --color-line: var(--tl-border);
+  --color-fg: var(--tl-fg);
+  --color-muted: var(--tl-muted);
+  --color-subtle: var(--tl-subtle);
+  --color-danger: var(--tl-danger);
+  --color-success: var(--tl-success);
+  --color-warning: var(--tl-warning);
+  --color-offline: var(--tl-offline);
+  --shadow-card: var(--tl-shadow);
+  --shadow-pop: var(--tl-shadow-lg);
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-app text-fg antialiased;
+    font-family:
+      system-ui,
+      -apple-system,
+      'Segoe UI',
+      Roboto,
+      'Helvetica Neue',
+      Arial,
+      sans-serif;
+    font-size: 14px;
+  }
+
+  *,
+  ::before,
+  ::after {
+    border-color: var(--tl-border);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--tl-accent);
+    outline-offset: 2px;
+  }
+
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']) {
+    cursor: pointer;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--tl-subtle) 45%, transparent);
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background-clip: content-box;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
