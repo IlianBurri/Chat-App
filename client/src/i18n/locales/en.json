@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Worktalk",
+    "name": "Hallo",
     "tagline": "Chat, workgroups, meetings and files in one place."
   },
   "common": {
@@ -21,7 +21,7 @@
     "email": "Email",
     "password": "Password",
     "name": "Full name",
-    "noAccount": "New to Worktalk?",
+    "noAccount": "New to Hallo?",
     "haveAccount": "Already have an account?",
     "passwordHint": "At least 8 characters",
     "demoAccounts": "Demo accounts",

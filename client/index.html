@@ -5,11 +5,11 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#5B5FC7" />
-    <title>Worktalk</title>
+    <title>Hallo</title>
     <script>
       // Apply the saved theme before first paint to avoid a light flash in dark mode.
       try {
-        var theme = JSON.parse(localStorage.getItem('wt-ui') || '{}').state?.theme || 'system';
+        var theme = JSON.parse(localStorage.getItem('ui-prefs') || '{}').state?.theme || 'system';
         var dark = theme === 'dark' || (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
         document.documentElement.classList.toggle('dark', dark);
       } catch (e) {}

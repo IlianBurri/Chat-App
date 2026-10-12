@@ -1,6 +1,6 @@
-# Worktalk
+# Hallo
 
-Worktalk ist eine Kommunikations- und Kollaborations-App für Firmen: Einzel- und Gruppenchats, Arbeitsgruppen mit Themenkanälen, Audio-/Videoanrufe, Kalender und Dateiablage an einem Ort.
+Hallo ist eine Kommunikations- und Kollaborations-App für Firmen: Einzel- und Gruppenchats, Arbeitsgruppen mit Themenkanälen, Audio-/Videoanrufe, Kalender und Dateiablage an einem Ort.
 
 > **Stand:** Meilenstein 1 von 8 – Projekt-Setup, Anmeldung, Grundlayout und Demo-Daten. Funktionen späterer Meilensteine sind in der App als „Kommt bald“ markiert.
 
@@ -26,12 +26,12 @@ Alle Demo-Konten verwenden das Passwort **`Demo1234!`**. Auf der Anmeldeseite ka
 
 | Name | E-Mail | Rolle in den Demo-Daten |
 |---|---|---|
-| Anna Keller | anna@worktalk.demo | Besitzerin „Produktentwicklung“ |
-| Ben Müller | ben@worktalk.demo | Mitglied |
-| Clara Rossi | clara@worktalk.demo | Mitglied, Status „Beschäftigt“ |
-| David Meier | david@worktalk.demo | Mitglied |
-| Elif Yılmaz | elif@worktalk.demo | Besitzerin „Marketing & Vertrieb“ |
-| Felix Schneider | felix@worktalk.demo | Gast, Status „Nicht stören“ |
+| Anna Keller | anna@example.com | Besitzerin „Produktentwicklung“ |
+| Ben Müller | ben@example.com | Mitglied |
+| Clara Rossi | clara@example.com | Mitglied, Status „Beschäftigt“ |
+| David Meier | david@example.com | Mitglied |
+| Elif Yılmaz | elif@example.com | Besitzerin „Marketing & Vertrieb“ |
+| Felix Schneider | felix@example.com | Gast, Status „Nicht stören“ |
 
 Zum Testen in Echtzeit meldest du dich in zwei Browserfenstern (z. B. einem normalen und einem privaten Fenster) mit verschiedenen Konten an.
 
@@ -62,7 +62,7 @@ Der Server funktioniert ohne Konfiguration. Wer etwas ändern will, kopiert `ser
 
 - **Client:** React 19, TypeScript, Vite, Tailwind CSS 4, Zustand, React Router, lucide-react, i18next (Englisch und Deutsch)
 - **Server:** Node.js, Express 5, TypeScript, Socket.IO, Prisma 7 mit SQLite, zod
-- **Anmeldung:** E-Mail und Passwort (bcrypt), JWT im httpOnly-Cookie; ändernde Anfragen brauchen zusätzlich den Header `X-Worktalk: 1` (CSRF-Schutz)
+- **Anmeldung:** E-Mail und Passwort (bcrypt), JWT im httpOnly-Cookie; ändernde Anfragen brauchen zusätzlich den Header `X-Client: 1` (CSRF-Schutz)
 - **Anrufe (ab Meilenstein 7):** WebRTC Peer-to-Peer, Signalisierung über Socket.IO
 
 ```
