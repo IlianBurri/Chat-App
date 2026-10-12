@@ -1,0 +1,419 @@
+// Teamline data model.
+// Enum-like fields are plain strings (validated with zod in the API) so the
+// schema switches to PostgreSQL by changing only the datasource provider.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  passwordHash  String
+  avatarUrl     String?
+  jobTitle      String?
+  /// available | busy | dnd | away | offline; null = set automatically
+  manualStatus  String?
+  statusMessage String?
+  lastSeenAt    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  chatMemberships      ChatMember[]
+  messages             Message[]            @relation("MessageAuthor")
+  pinnedMessages       Message[]            @relation("MessagePinnedBy")
+  reactions            Reaction[]
+  readReceipts         ReadReceipt[]
+  workspaceMemberships WorkspaceMember[]
+  channelMemberships   ChannelMember[]
+  posts                Post[]
+  replies              Reply[]
+  files                File[]
+  organizedMeetings    Meeting[]
+  meetingParticipants  MeetingParticipant[]
+  pollVotes            PollVote[]
+  notifications        Notification[]       @relation("NotificationRecipient")
+  causedNotifications  Notification[]       @relation("NotificationActor")
+  startedCalls         Call[]
+  callParticipants     CallParticipant[]
+}
+
+// ---------------------------------------------------------------------------
+// Chats (1:1 and group)
+// ---------------------------------------------------------------------------
+
+model Chat {
+  id            String   @id @default(cuid())
+  /// direct | group
+  type          String
+  name          String?
+  createdAt     DateTime @default(now())
+  lastMessageAt DateTime @default(now())
+
+  members      ChatMember[]
+  messages     Message[]
+  readReceipts ReadReceipt[]
+  files        File[]
+  meetings     Meeting[]
+  calls        Call[]
+
+  @@index([lastMessageAt])
+}
+
+model ChatMember {
+  id           String   @id @default(cuid())
+  chatId       String
+  userId       String
+  joinedAt     DateTime @default(now())
+  pinned       Boolean  @default(false)
+  muted        Boolean  @default(false)
+  hidden       Boolean  @default(false)
+  markedUnread Boolean  @default(false)
+
+  chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([chatId, userId])
+  @@index([userId])
+}
+
+model Message {
+  id              String    @id @default(cuid())
+  chatId          String
+  authorId        String
+  /// Markdown subset (bold, italic, lists, code, links)
+  content         String
+  subject         String?
+  /// text | poll | meeting | system
+  type            String    @default("text")
+  createdAt       DateTime  @default(now())
+  editedAt        DateTime?
+  deletedAt       DateTime?
+  replyToId       String?
+  forwardedFromId String?
+  pinnedAt        DateTime?
+  pinnedById      String?
+
+  chat          Chat           @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  author        User           @relation("MessageAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  pinnedBy      User?          @relation("MessagePinnedBy", fields: [pinnedById], references: [id], onDelete: SetNull)
+  replyTo       Message?       @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies       Message[]      @relation("MessageReplies")
+  forwardedFrom Message?       @relation("MessageForwards", fields: [forwardedFromId], references: [id], onDelete: SetNull)
+  forwards      Message[]      @relation("MessageForwards")
+  reactions     Reaction[]
+  files         File[]
+  poll          Poll?
+  notifications Notification[]
+
+  @@index([chatId, createdAt])
+}
+
+/// Last message a member has read in a chat (drives unread counts and the "seen" indicator).
+model ReadReceipt {
+  id                String   @id @default(cuid())
+  chatId            String
+  userId            String
+  lastReadMessageId String?
+  readAt            DateTime @default(now())
+
+  chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([chatId, userId])
+}
+
+/// A reaction targets exactly one of message, post or reply.
+model Reaction {
+  id        String   @id @default(cuid())
+  emoji     String
+  userId    String
+  messageId String?
+  postId    String?
+  replyId   String?
+  createdAt DateTime @default(now())
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  post    Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  reply   Reply?   @relation(fields: [replyId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+  @@index([postId])
+  @@index([replyId])
+}
+
+model Poll {
+  id        String  @id @default(cuid())
+  messageId String  @unique
+  question  String
+  multiple  Boolean @default(false)
+
+  message Message      @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  options PollOption[]
+}
+
+model PollOption {
+  id       String @id @default(cuid())
+  pollId   String
+  text     String
+  position Int
+
+  poll  Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  votes PollVote[]
+}
+
+model PollVote {
+  optionId  String
+  userId    String
+  createdAt DateTime @default(now())
+
+  option PollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([optionId, userId])
+}
+
+// ---------------------------------------------------------------------------
+// Workgroups and channels
+// ---------------------------------------------------------------------------
+
+model Workspace {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  logoUrl     String?
+  /// Tile colour used when there is no logo
+  color       String   @default("#5B5FC7")
+  /// public (anyone can join) | private (invite only)
+  visibility  String   @default("public")
+  createdAt   DateTime @default(now())
+
+  members  WorkspaceMember[]
+  channels Channel[]
+}
+
+model WorkspaceMember {
+  id          String   @id @default(cuid())
+  workspaceId String
+  userId      String
+  /// owner | member | guest
+  role        String   @default("member")
+  joinedAt    DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@index([userId])
+}
+
+model Channel {
+  id          String   @id @default(cuid())
+  workspaceId String
+  name        String
+  description String?
+  /// standard | private
+  type        String   @default("standard")
+  isDefault   Boolean  @default(false)
+  /// Markdown content of the "Notes" tab
+  notes       String   @default("")
+  createdAt   DateTime @default(now())
+
+  workspace Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  members   ChannelMember[]
+  posts     Post[]
+  files     File[]
+  meetings  Meeting[]
+  calls     Call[]
+
+  @@index([workspaceId])
+}
+
+/// Membership for private channels; per-user preferences (mute, hide, read state) for all channels.
+model ChannelMember {
+  id         String   @id @default(cuid())
+  channelId  String
+  userId     String
+  muted      Boolean  @default(false)
+  hidden     Boolean  @default(false)
+  lastReadAt DateTime @default(now())
+
+  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([channelId, userId])
+}
+
+model Post {
+  id             String    @id @default(cuid())
+  channelId      String
+  authorId       String
+  subject        String?
+  content        String
+  createdAt      DateTime  @default(now())
+  editedAt       DateTime?
+  deletedAt      DateTime?
+  lastActivityAt DateTime  @default(now())
+
+  channel       Channel        @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  author        User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  replies       Reply[]
+  reactions     Reaction[]
+  files         File[]
+  notifications Notification[]
+
+  @@index([channelId, lastActivityAt])
+}
+
+model Reply {
+  id        String    @id @default(cuid())
+  postId    String
+  authorId  String
+  content   String
+  createdAt DateTime  @default(now())
+  editedAt  DateTime?
+  deletedAt DateTime?
+
+  post          Post           @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author        User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  reactions     Reaction[]
+  files         File[]
+  notifications Notification[]
+
+  @@index([postId, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Files, meetings, calls, notifications
+// ---------------------------------------------------------------------------
+
+model File {
+  id           String   @id @default(cuid())
+  uploaderId   String
+  originalName String
+  /// Name on disk inside UPLOAD_DIR
+  storedName   String   @unique
+  mimeType     String
+  size         Int
+  createdAt    DateTime @default(now())
+  chatId       String?
+  channelId    String?
+  messageId    String?
+  postId       String?
+  replyId      String?
+
+  uploader User     @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
+  chat     Chat?    @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  channel  Channel? @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  message  Message? @relation(fields: [messageId], references: [id], onDelete: SetNull)
+  post     Post?    @relation(fields: [postId], references: [id], onDelete: SetNull)
+  reply    Reply?   @relation(fields: [replyId], references: [id], onDelete: SetNull)
+
+  @@index([chatId])
+  @@index([channelId])
+  @@index([uploaderId])
+}
+
+model Meeting {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  start       DateTime
+  end         DateTime
+  organizerId String
+  chatId      String?
+  channelId   String?
+  /// Call room used by "Join"
+  roomId      String   @unique @default(cuid())
+  /// Created via "Meet now"
+  isInstant   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  organizer    User                 @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  chat         Chat?                @relation(fields: [chatId], references: [id], onDelete: SetNull)
+  channel      Channel?             @relation(fields: [channelId], references: [id], onDelete: SetNull)
+  participants MeetingParticipant[]
+  calls        Call[]
+
+  @@index([start])
+}
+
+model MeetingParticipant {
+  meetingId String
+  userId    String
+  /// none | accepted | tentative | declined
+  response  String @default("none")
+
+  meeting Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([meetingId, userId])
+}
+
+model Call {
+  id          String    @id @default(cuid())
+  roomId      String
+  initiatorId String
+  /// audio | video
+  media       String
+  chatId      String?
+  channelId   String?
+  meetingId   String?
+  startedAt   DateTime  @default(now())
+  endedAt     DateTime?
+
+  initiator    User              @relation(fields: [initiatorId], references: [id], onDelete: Cascade)
+  chat         Chat?             @relation(fields: [chatId], references: [id], onDelete: SetNull)
+  channel      Channel?          @relation(fields: [channelId], references: [id], onDelete: SetNull)
+  meeting      Meeting?          @relation(fields: [meetingId], references: [id], onDelete: SetNull)
+  participants CallParticipant[]
+
+  @@index([roomId])
+}
+
+model CallParticipant {
+  callId   String
+  userId   String
+  /// invited | joined | missed | declined
+  state    String    @default("invited")
+  joinedAt DateTime?
+  leftAt   DateTime?
+
+  call Call @relation(fields: [callId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([callId, userId])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  actorId   String?
+  /// mention | reply | reaction | missed_call | meeting
+  type      String
+  /// Short text shown in the activity feed
+  preview   String?
+  chatId    String?
+  channelId String?
+  messageId String?
+  postId    String?
+  replyId   String?
+  meetingId String?
+  createdAt DateTime  @default(now())
+  readAt    DateTime?
+
+  user    User     @relation("NotificationRecipient", fields: [userId], references: [id], onDelete: Cascade)
+  actor   User?    @relation("NotificationActor", fields: [actorId], references: [id], onDelete: SetNull)
+  message Message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  post    Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  reply   Reply?   @relation(fields: [replyId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
