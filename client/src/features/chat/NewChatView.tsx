@@ -1,4 +1,4 @@
-import { SendHorizontal, UsersRound } from 'lucide-react';
+import { PaperPlaneRightIcon, UsersFourIcon } from '@phosphor-icons/react';
 import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
@@ -62,7 +62,7 @@ export function NewChatView() {
           />
         )}
       </header>
-      <EmptyState icon={UsersRound} title={t('chat.newChat')} text={t('chat.newChatHint')} />
+      <EmptyState icon={UsersFourIcon} title={t('chat.newChat')} text={t('chat.newChatHint')} />
       <form onSubmit={submit} className="px-5 pb-4">
         <div className="flex items-end rounded-lg border border-line bg-input shadow-card focus-within:border-accent">
           <textarea
@@ -80,7 +80,7 @@ export function NewChatView() {
             }}
             className="block flex-1 resize-none bg-transparent px-3 py-2.5 text-sm outline-none focus-visible:outline-none disabled:opacity-50"
           />
-          <IconButton type="submit" label={t('composer.send')} icon={SendHorizontal} className="m-1.5" disabled={!canSend} />
+          <IconButton type="submit" label={t('composer.send')} icon={PaperPlaneRightIcon} className="m-1.5" disabled={!canSend} />
         </div>
       </form>
     </main>

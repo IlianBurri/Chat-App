@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { ChevronRight, Lock, UserPlus } from 'lucide-react';
+import { CaretRightIcon, LockSimpleIcon, UserPlusIcon } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router';
@@ -40,7 +40,7 @@ export function TeamsList() {
         )}
       </div>
       <div className="border-t border-line p-3">
-        <Button icon={UserPlus} className="w-full" onClick={() => showComingSoon(t('teams.joinOrCreate'))}>
+        <Button icon={UserPlusIcon} className="w-full" onClick={() => showComingSoon(t('teams.joinOrCreate'))}>
           {t('teams.joinOrCreate')}
         </Button>
       </div>
@@ -63,7 +63,7 @@ function WorkspaceGroup({ workspace }: { workspace: WorkspaceSummary }) {
         onClick={() => setOpen((o) => !o)}
         className="mx-2 flex w-[calc(100%-1rem)] items-center gap-2 rounded-md px-2 py-1.5 text-left hover:bg-hover"
       >
-        <ChevronRight className={clsx('size-3.5 shrink-0 text-muted transition-transform', open && 'rotate-90')} aria-hidden="true" />
+        <CaretRightIcon className={clsx('size-3.5 shrink-0 text-muted transition-transform', open && 'rotate-90')} aria-hidden="true" />
         <WorkspaceTile workspace={workspace} size={28} />
         <span className="min-w-0 flex-1">
           <span className="block truncate font-semibold">{workspace.name}</span>
@@ -89,7 +89,7 @@ function WorkspaceGroup({ workspace }: { workspace: WorkspaceSummary }) {
                 >
                   <span className="truncate">{c.isDefault ? t('teams.general') : c.name}</span>
                   {c.type === 'private' && (
-                    <Lock className="size-3.5 shrink-0 text-subtle" aria-label={t('teams.privateChannel')} />
+                    <LockSimpleIcon className="size-3.5 shrink-0 text-subtle" aria-label={t('teams.privateChannel')} />
                   )}
                 </NavLink>
               </li>

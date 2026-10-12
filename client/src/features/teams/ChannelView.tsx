@@ -1,4 +1,4 @@
-import { Ellipsis, Info, Lock, PenSquare, Users, Video } from 'lucide-react';
+import { DotsThreeIcon, InfoIcon, LockSimpleIcon, NotePencilIcon, UsersThreeIcon, VideoCameraIcon } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useParams } from 'react-router';
@@ -30,7 +30,7 @@ export function ChannelView() {
         <div className="min-w-0">
           <h1 className="flex items-center gap-1.5 truncate text-base leading-tight font-semibold">
             {name}
-            {channel.type === 'private' && <Lock className="size-3.5 text-subtle" aria-label={t('teams.privateChannel')} />}
+            {channel.type === 'private' && <LockSimpleIcon className="size-3.5 text-subtle" aria-label={t('teams.privateChannel')} />}
           </h1>
           <p className="truncate text-xs text-muted">{workspace.name}</p>
         </div>
@@ -48,16 +48,16 @@ export function ChannelView() {
           addLabel={t('teams.tabs.add')}
         />
         <div className="ml-auto flex items-center gap-1">
-          <Button variant="primary" size="sm" icon={Video} onClick={() => showComingSoon(t('teams.meet'))}>
+          <Button variant="primary" size="sm" icon={VideoCameraIcon} onClick={() => showComingSoon(t('teams.meet'))}>
             {t('teams.meet')}
           </Button>
-          <IconButton label={t('chat.participants')} icon={Users} onClick={() => showComingSoon(t('chat.participants'))} />
-          <IconButton label={t('common.more')} icon={Ellipsis} onClick={() => showComingSoon(t('common.more'))} />
+          <IconButton label={t('chat.participants')} icon={UsersThreeIcon} onClick={() => showComingSoon(t('chat.participants'))} />
+          <IconButton label={t('common.more')} icon={DotsThreeIcon} onClick={() => showComingSoon(t('common.more'))} />
         </div>
       </header>
-      <EmptyState icon={tab === 'posts' ? PenSquare : Info} title={name} text={t('teams.milestonePosts')} />
+      <EmptyState icon={tab === 'posts' ? NotePencilIcon : InfoIcon} title={name} text={t('teams.milestonePosts')} />
       <div className="border-t border-line p-4">
-        <Button variant="primary" icon={PenSquare} onClick={() => showComingSoon(t('teams.newPost'))}>
+        <Button variant="primary" icon={NotePencilIcon} onClick={() => showComingSoon(t('teams.newPost'))}>
           {t('teams.newPost')}
         </Button>
       </div>

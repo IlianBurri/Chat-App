@@ -1,4 +1,4 @@
-import { Loader2 } from 'lucide-react';
+import { CircleNotchIcon } from '@phosphor-icons/react';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
@@ -146,7 +146,7 @@ export function MessageList({ chat, state, meId, editingId, onEdit, onReply, foc
         <div role="log" aria-label={t('chat.history')} aria-live="polite" className="pt-4 pb-6">
           {state.loadingOlder && (
             <div className="flex justify-center py-2 text-muted">
-              <Loader2 className="size-5 animate-spin" aria-label={t('common.loading')} />
+              <CircleNotchIcon className="size-5 animate-spin" aria-label={t('common.loading')} />
             </div>
           )}
           {!state.hasMore && messages.length > 0 && <p className="py-4 text-center text-xs text-subtle">{t('chat.beginning')}</p>}

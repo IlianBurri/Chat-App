@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { X } from 'lucide-react';
+import { XIcon } from '@phosphor-icons/react';
 import { useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { api } from '@/lib/api';
@@ -65,7 +65,7 @@ export function UserPicker({ label, selected, onChange, exclude = [], autoFocus,
               onClick={() => onChange(selected.filter((s) => s.id !== u.id))}
               className="rounded-full p-0.5 hover:bg-hover"
             >
-              <X className="size-3" aria-hidden="true" />
+              <XIcon className="size-3" aria-hidden="true" />
             </button>
           </span>
         ))}

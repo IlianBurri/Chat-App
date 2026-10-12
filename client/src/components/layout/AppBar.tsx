@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Bell, Calendar, Cloud, Ellipsis, LayoutGrid, MessageCircle, Phone, Users, type LucideIcon } from 'lucide-react';
+import { BellIcon, CalendarBlankIcon, ChatsCircleIcon, CloudIcon, DotsThreeIcon, PhoneIcon, SquaresFourIcon, UsersThreeIcon, type Icon as PhosphorIcon } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router';
 import { Badge } from '@/components/ui/Badge';
@@ -9,7 +9,7 @@ import { isUnread, useChatsStore } from '@/stores/chats';
 
 interface NavEntry {
   to: string;
-  icon: LucideIcon;
+  icon: PhosphorIcon;
   label: string;
   badge?: number;
 }
@@ -21,12 +21,12 @@ export function AppBar() {
   const unreadChats = useChatsStore((s) => s.chats.filter((c) => !c.muted && isUnread(c)).length);
 
   const entries: NavEntry[] = [
-    { to: '/activity', icon: Bell, label: t('nav.activity') },
-    { to: '/chat', icon: MessageCircle, label: t('nav.chat'), badge: unreadChats },
-    { to: '/teams', icon: Users, label: t('nav.teams') },
-    { to: '/calendar', icon: Calendar, label: t('nav.calendar') },
-    { to: '/calls', icon: Phone, label: t('nav.calls') },
-    { to: '/files', icon: Cloud, label: t('nav.files') },
+    { to: '/activity', icon: BellIcon, label: t('nav.activity') },
+    { to: '/chat', icon: ChatsCircleIcon, label: t('nav.chat'), badge: unreadChats },
+    { to: '/teams', icon: UsersThreeIcon, label: t('nav.teams') },
+    { to: '/calendar', icon: CalendarBlankIcon, label: t('nav.calendar') },
+    { to: '/calls', icon: PhoneIcon, label: t('nav.calls') },
+    { to: '/files', icon: CloudIcon, label: t('nav.files') },
   ];
 
   return (
@@ -45,14 +45,14 @@ export function AppBar() {
         ))}
         <li className="w-full">
           <button type="button" className={clsx(itemClass, 'text-muted hover:text-fg')} onClick={() => showComingSoon(t('placeholder.more'))}>
-            <BarItem icon={Ellipsis} label={t('nav.more')} active={false} />
+            <BarItem icon={DotsThreeIcon} label={t('nav.more')} active={false} />
           </button>
         </li>
       </ul>
       <div className="mt-auto w-full">
         <Tooltip label={t('nav.apps')} side="right" className="w-full">
           <button type="button" className={clsx(itemClass, 'text-muted hover:text-fg')} onClick={() => showComingSoon(t('nav.apps'))}>
-            <BarItem icon={LayoutGrid} label={t('nav.apps')} active={false} />
+            <BarItem icon={SquaresFourIcon} label={t('nav.apps')} active={false} />
           </button>
         </Tooltip>
       </div>
@@ -69,9 +69,7 @@ function BarItem({ icon: Icon, label, badge = 0, active }: Omit<NavEntry, 'to'> 
       <span className="relative rounded-md p-1 group-hover:bg-hover">
         <Icon
           className="size-5"
-          strokeWidth={active ? 2 : 1.6}
-          fill={active ? 'currentColor' : 'none'}
-          fillOpacity={active ? 0.9 : 0}
+          weight={active ? 'fill' : 'regular'}
           aria-hidden="true"
         />
         <Badge count={badge} className="absolute -top-1 -right-2" />

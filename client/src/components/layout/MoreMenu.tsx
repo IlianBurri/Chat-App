@@ -1,4 +1,4 @@
-import { Ellipsis, Languages, Monitor, Moon, Settings, Sun } from 'lucide-react';
+import { DesktopIcon, DotsThreeIcon, GearSixIcon, MoonIcon, SunIcon, TranslateIcon } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconButton } from '@/components/ui/IconButton';
@@ -19,20 +19,20 @@ export function MoreMenu() {
       <Menu
         label={t('settings.menu')}
         width={220}
-        trigger={({ ref, ...props }) => <IconButton ref={ref} label={t('settings.menu')} icon={Ellipsis} {...props} />}
+        trigger={({ ref, ...props }) => <IconButton ref={ref} label={t('settings.menu')} icon={DotsThreeIcon} {...props} />}
       >
-        <MenuItem icon={Settings} onSelect={() => setSettingsOpen(true)}>
+        <MenuItem icon={GearSixIcon} onSelect={() => setSettingsOpen(true)}>
           {t('settings.title')}
         </MenuItem>
         <MenuSeparator />
         <MenuLabel>{t('settings.theme')}</MenuLabel>
-        <MenuItem icon={Monitor} checked={theme === 'system'} onSelect={() => setTheme('system')}>
+        <MenuItem icon={DesktopIcon} checked={theme === 'system'} onSelect={() => setTheme('system')}>
           {t('settings.themeSystem')}
         </MenuItem>
-        <MenuItem icon={Sun} checked={theme === 'light'} onSelect={() => setTheme('light')}>
+        <MenuItem icon={SunIcon} checked={theme === 'light'} onSelect={() => setTheme('light')}>
           {t('settings.themeLight')}
         </MenuItem>
-        <MenuItem icon={Moon} checked={theme === 'dark'} onSelect={() => setTheme('dark')}>
+        <MenuItem icon={MoonIcon} checked={theme === 'dark'} onSelect={() => setTheme('dark')}>
           {t('settings.themeDark')}
         </MenuItem>
         <MenuSeparator />
@@ -40,7 +40,7 @@ export function MoreMenu() {
         {LANGUAGES.map((l) => (
           <MenuItem
             key={l.code}
-            icon={Languages}
+            icon={TranslateIcon}
             checked={i18n.resolvedLanguage === l.code}
             onSelect={() => void i18n.changeLanguage(l.code)}
           >

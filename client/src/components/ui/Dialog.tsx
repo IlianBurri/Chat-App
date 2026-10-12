@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { X } from 'lucide-react';
+import { XIcon } from '@phosphor-icons/react';
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconButton } from './IconButton';
@@ -43,7 +43,7 @@ export function Dialog({ open, onClose, title, children, footer, width = 440 }: 
             <h2 id={titleId} className="text-base font-semibold">
               {title}
             </h2>
-            <IconButton label={t('common.close')} icon={X} onClick={onClose} size="sm" />
+            <IconButton label={t('common.close')} icon={XIcon} onClick={onClose} size="sm" />
           </header>
           <div className="px-5 pb-4">{children}</div>
           {footer && <footer className="flex justify-end gap-2 border-t border-line px-5 py-3">{footer}</footer>}

@@ -1,11 +1,11 @@
 import clsx from 'clsx';
-import type { LucideIcon } from 'lucide-react';
+import type { Icon as PhosphorIcon } from '@phosphor-icons/react';
 import { forwardRef, type ButtonHTMLAttributes } from 'react';
 import { Tooltip } from './Tooltip';
 
 interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   label: string;
-  icon: LucideIcon;
+  icon: PhosphorIcon;
   size?: 'sm' | 'md';
   active?: boolean;
   tooltipSide?: 'top' | 'bottom' | 'right' | 'left';
@@ -30,7 +30,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
         )}
         {...props}
       >
-        <Icon className={size === 'sm' ? 'size-4' : 'size-[18px]'} strokeWidth={1.75} aria-hidden="true" />
+        <Icon className={size === 'sm' ? 'size-4' : 'size-[18px]'} aria-hidden="true" />
       </button>
     </Tooltip>
   );

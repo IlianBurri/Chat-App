@@ -102,6 +102,8 @@
       Roboto,
       'Helvetica Neue',
       Arial,
+      /* Bundled so emoji look the same on every system. */
+      Twemoji,
       sans-serif;
     font-size: 14px;
   }

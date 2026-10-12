@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Bell, BellOff, EyeOff, LogOut, Mail, MailOpen, Pin, PinOff } from 'lucide-react';
+import { BellIcon, BellSlashIcon, EnvelopeOpenIcon, EnvelopeSimpleIcon, EyeSlashIcon, PushPinIcon, PushPinSlashIcon, SignOutIcon } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
 import { NavLink, useMatch, useNavigate } from 'react-router';
 import { Avatar, GroupAvatar } from '@/components/ui/Avatar';
@@ -71,26 +71,26 @@ export function ChatListItem({ chat, meId, now }: { chat: ChatSummary; meId: str
             ) : (
               <span className={clsx('flex-1 truncate text-xs', unread ? 'font-semibold text-fg' : 'text-muted')}>{preview}</span>
             )}
-            {chat.muted && <BellOff className="size-3.5 shrink-0 text-subtle" aria-label={t('chat.muted')} />}
+            {chat.muted && <BellSlashIcon className="size-3.5 shrink-0 text-subtle" aria-label={t('chat.muted')} />}
             {unread && <span role="img" className="size-2 shrink-0 rounded-full bg-accent" aria-label={t('nav.unreadBadge', { count: chat.unreadCount || 1 })} />}
           </span>
         </span>
       </NavLink>
 
       <ContextMenu point={menu.point} label={t('chat.actions.menu', { name: title })} onClose={menu.close}>
-        <MenuItem icon={chat.pinned ? PinOff : Pin} onSelect={() => void run(() => updateFlags(chat.id, { pinned: !chat.pinned }))}>
+        <MenuItem icon={chat.pinned ? PushPinSlashIcon : PushPinIcon} onSelect={() => void run(() => updateFlags(chat.id, { pinned: !chat.pinned }))}>
           {chat.pinned ? t('chat.actions.unpin') : t('chat.actions.pin')}
         </MenuItem>
-        <MenuItem icon={chat.muted ? Bell : BellOff} onSelect={() => void run(() => updateFlags(chat.id, { muted: !chat.muted }))}>
+        <MenuItem icon={chat.muted ? BellIcon : BellSlashIcon} onSelect={() => void run(() => updateFlags(chat.id, { muted: !chat.muted }))}>
           {chat.muted ? t('chat.actions.unmute') : t('chat.actions.mute')}
         </MenuItem>
         {unread ? (
-          <MenuItem icon={MailOpen} onSelect={() => void run(() => markRead(chat.id))}>
+          <MenuItem icon={EnvelopeOpenIcon} onSelect={() => void run(() => markRead(chat.id))}>
             {t('chat.actions.markRead')}
           </MenuItem>
         ) : (
           <MenuItem
-            icon={Mail}
+            icon={EnvelopeSimpleIcon}
             onSelect={() =>
               void run(async () => {
                 if (active) navigate('/chat');
@@ -102,7 +102,7 @@ export function ChatListItem({ chat, meId, now }: { chat: ChatSummary; meId: str
           </MenuItem>
         )}
         <MenuItem
-          icon={EyeOff}
+          icon={EyeSlashIcon}
           onSelect={() =>
             void run(async () => {
               if (active) navigate('/chat');
@@ -116,7 +116,7 @@ export function ChatListItem({ chat, meId, now }: { chat: ChatSummary; meId: str
           <>
             <MenuSeparator />
             <MenuItem
-              icon={LogOut}
+              icon={SignOutIcon}
               danger
               onSelect={() =>
                 void run(async () => {

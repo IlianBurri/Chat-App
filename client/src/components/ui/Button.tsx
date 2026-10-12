@@ -1,11 +1,11 @@
 import clsx from 'clsx';
-import type { LucideIcon } from 'lucide-react';
+import type { Icon as PhosphorIcon } from '@phosphor-icons/react';
 import { forwardRef, type ButtonHTMLAttributes } from 'react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
   size?: 'sm' | 'md';
-  icon?: LucideIcon;
+  icon?: PhosphorIcon;
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
@@ -27,7 +27,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       )}
       {...props}
     >
-      {Icon && <Icon className="size-4" strokeWidth={1.75} aria-hidden="true" />}
+      {Icon && <Icon className="size-4" aria-hidden="true" />}
       {children}
     </button>
   );

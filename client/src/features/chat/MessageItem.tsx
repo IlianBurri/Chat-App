@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { format } from 'date-fns';
-import { Check, Eye, Forward, LogOut, Pencil, Pin, UserPlus } from 'lucide-react';
+import { CheckIcon, EyeIcon, PencilSimpleIcon, PushPinIcon, ShareFatIcon, SignOutIcon, UserPlusIcon } from '@phosphor-icons/react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Markdown } from '@/components/chat/Markdown';
@@ -93,7 +93,7 @@ function MessageBody({
       >
         {message.forwardedFrom && (
           <p className="mb-1 flex items-center gap-1 text-xs text-muted not-italic">
-            <Forward className="size-3.5" aria-hidden="true" />
+            <ShareFatIcon className="size-3.5" aria-hidden="true" />
             {t('message.forwardedFrom', { name: message.forwardedFrom.author.name })}
           </p>
         )}
@@ -127,13 +127,13 @@ function MessageBody({
           <p className="mt-0.5 flex items-center justify-end gap-2 text-[11px] text-subtle">
             {message.pinned && (
               <span className="inline-flex items-center gap-0.5">
-                <Pin className="size-3" aria-hidden="true" />
+                <PushPinIcon className="size-3" aria-hidden="true" />
                 {t('message.pinned')}
               </span>
             )}
             {message.editedAt && (
               <span className="inline-flex items-center gap-0.5">
-                <Pencil className="size-3" aria-hidden="true" />
+                <PencilSimpleIcon className="size-3" aria-hidden="true" />
                 {t('message.edited')}
               </span>
             )}
@@ -163,7 +163,7 @@ function MessageBody({
 
       {own && groupEnd && seen !== undefined && !message.deleted && (
         <span className="mt-0.5 flex items-center gap-1 text-[11px] text-subtle" aria-label={seen ? t('message.seen') : t('message.sent')} role="img">
-          {seen ? <Eye className="size-3.5 text-accent" aria-hidden="true" /> : <Check className="size-3.5" aria-hidden="true" />}
+          {seen ? <EyeIcon className="size-3.5 text-accent" aria-hidden="true" /> : <CheckIcon className="size-3.5" aria-hidden="true" />}
         </span>
       )}
     </div>
@@ -185,7 +185,7 @@ function SystemMessage({ message, members, meId }: { message: MessageDto; member
 
   const actor = message.author.id === meId ? t('common.you') : message.author.name;
   const nameOf = (id: string) => (id === meId ? t('common.you') : (members.find((m) => m.id === id)?.name ?? t('chat.someone')));
-  const Icon = event.event === 'left' ? LogOut : event.event === 'added' ? UserPlus : Pencil;
+  const Icon = event.event === 'left' ? SignOutIcon : event.event === 'added' ? UserPlusIcon : PencilSimpleIcon;
   const text =
     event.event === 'added'
       ? t('chat.system.added', { actor, names: event.userIds.map(nameOf).join(', ') })

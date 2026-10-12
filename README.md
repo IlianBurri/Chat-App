@@ -60,7 +60,7 @@ Der Server funktioniert ohne Konfiguration. Wer etwas ändern will, kopiert `ser
 
 ## Technik
 
-- **Client:** React 19, TypeScript, Vite, Tailwind CSS 4, Zustand, React Router, lucide-react, i18next (Englisch und Deutsch)
+- **Client:** React 19, TypeScript, Vite, Tailwind CSS 4, Zustand, React Router, Phosphor Icons, Twemoji-Farbschrift für einheitliche Emojis, i18next (Englisch und Deutsch)
 - **Server:** Node.js, Express 5, TypeScript, Socket.IO, Prisma 7 mit SQLite, zod
 - **Anmeldung:** E-Mail und Passwort (bcrypt), JWT im httpOnly-Cookie; ändernde Anfragen brauchen zusätzlich den Header `X-Client: 1` (CSRF-Schutz)
 - **Anrufe (ab Meilenstein 7):** WebRTC Peer-to-Peer, Signalisierung über Socket.IO
@@ -106,3 +106,8 @@ Auswahlfelder sind im Schema bewusst als Text gespeichert, damit es ohne Änderu
 6. ⏳ Kalender und Besprechungsplanung
 7. ⏳ Audio-/Videoanrufe mit Bildschirmfreigabe
 8. ⏳ Responsive Layout, Feinschliff, End-to-End-Tests
+
+## Drittanbieter-Grafiken
+
+- Icons: [Phosphor Icons](https://phosphoricons.com) (MIT-Lizenz)
+- Emojis: [Twemoji](https://github.com/jdecked/twemoji) © Twitter, Inc. und weitere Mitwirkende, Grafiken unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); als Farbschrift über [twemoji-colr-font](https://github.com/mrdrogdrog/twemoji-color-font) (OFL-1.1)

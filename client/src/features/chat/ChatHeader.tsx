@@ -1,4 +1,4 @@
-import { Bell, BellOff, Ellipsis, LogOut, Pencil, Phone, Pin, PinOff, UserPlus, Users, Video } from 'lucide-react';
+import { BellIcon, BellSlashIcon, DotsThreeIcon, PencilSimpleIcon, PhoneIcon, PushPinIcon, PushPinSlashIcon, SignOutIcon, UserPlusIcon, UsersThreeIcon, VideoCameraIcon } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
@@ -59,24 +59,24 @@ export function ChatHeader({ chat, meId }: { chat: ChatSummary; meId: string }) 
         addLabel={t('chat.tabs.add')}
       />
       <div className="ml-auto flex items-center gap-1">
-        <IconButton label={t('chat.videoCall')} icon={Video} onClick={() => showComingSoon(t('chat.videoCall'))} />
-        <IconButton label={t('chat.audioCall')} icon={Phone} onClick={() => showComingSoon(t('chat.audioCall'))} />
+        <IconButton label={t('chat.videoCall')} icon={VideoCameraIcon} onClick={() => showComingSoon(t('chat.videoCall'))} />
+        <IconButton label={t('chat.audioCall')} icon={PhoneIcon} onClick={() => showComingSoon(t('chat.audioCall'))} />
         <Popover
           label={t('chat.participants')}
           placement="bottom-end"
-          trigger={({ ref, ...props }) => <IconButton ref={ref} label={t('chat.participants')} icon={Users} {...props} />}
+          trigger={({ ref, ...props }) => <IconButton ref={ref} label={t('chat.participants')} icon={UsersThreeIcon} {...props} />}
         >
           <ParticipantsPanel chat={chat} meId={meId} onAdd={() => setDialog('add')} />
         </Popover>
-        <Menu label={t('common.more')} trigger={({ ref, ...props }) => <IconButton ref={ref} label={t('common.more')} icon={Ellipsis} {...props} />}>
-          <MenuItem icon={chat.pinned ? PinOff : Pin} onSelect={() => void run(() => updateFlags(chat.id, { pinned: !chat.pinned }))}>
+        <Menu label={t('common.more')} trigger={({ ref, ...props }) => <IconButton ref={ref} label={t('common.more')} icon={DotsThreeIcon} {...props} />}>
+          <MenuItem icon={chat.pinned ? PushPinSlashIcon : PushPinIcon} onSelect={() => void run(() => updateFlags(chat.id, { pinned: !chat.pinned }))}>
             {chat.pinned ? t('chat.actions.unpin') : t('chat.actions.pin')}
           </MenuItem>
-          <MenuItem icon={chat.muted ? Bell : BellOff} onSelect={() => void run(() => updateFlags(chat.id, { muted: !chat.muted }))}>
+          <MenuItem icon={chat.muted ? BellIcon : BellSlashIcon} onSelect={() => void run(() => updateFlags(chat.id, { muted: !chat.muted }))}>
             {chat.muted ? t('chat.actions.unmute') : t('chat.actions.mute')}
           </MenuItem>
           {isGroup && (
-            <MenuItem icon={Pencil} onSelect={() => setDialog('rename')}>
+            <MenuItem icon={PencilSimpleIcon} onSelect={() => setDialog('rename')}>
               {t('chat.actions.rename')}
             </MenuItem>
           )}
@@ -84,7 +84,7 @@ export function ChatHeader({ chat, meId }: { chat: ChatSummary; meId: string }) 
             <>
               <MenuSeparator />
               <MenuItem
-                icon={LogOut}
+                icon={SignOutIcon}
                 danger
                 onSelect={() =>
                   void run(async () => {
@@ -118,7 +118,7 @@ function ParticipantsPanel({ chat, meId, onAdd }: { chat: ChatSummary; meId: str
       </ul>
       <Button
         className="mt-2 w-full"
-        icon={UserPlus}
+        icon={UserPlusIcon}
         onClick={() => {
           popover?.close();
           onAdd();

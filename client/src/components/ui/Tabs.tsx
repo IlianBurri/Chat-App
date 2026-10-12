@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Plus } from 'lucide-react';
+import { PlusIcon } from '@phosphor-icons/react';
 import type { KeyboardEvent } from 'react';
 import { IconButton } from './IconButton';
 
@@ -59,7 +59,7 @@ export function Tabs({ label, tabs, active, onChange, onAdd, addLabel, className
           );
         })}
       </div>
-      {onAdd && addLabel && <IconButton label={addLabel} icon={Plus} size="sm" onClick={onAdd} />}
+      {onAdd && addLabel && <IconButton label={addLabel} icon={PlusIcon} size="sm" onClick={onAdd} />}
     </div>
   );
 }

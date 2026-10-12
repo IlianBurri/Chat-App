@@ -1,4 +1,4 @@
-import { LogOut, MessageSquareText, RotateCcw } from 'lucide-react';
+import { ArrowCounterClockwiseIcon, ChatTextIcon, SignOutIcon } from '@phosphor-icons/react';
 import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Avatar } from '@/components/ui/Avatar';
@@ -51,15 +51,15 @@ export function ProfileMenu({ user }: { user: Me }) {
             {t(`status.${s}`)}
           </MenuItem>
         ))}
-        <MenuItem icon={RotateCcw} checked={user.manualStatus === null} onSelect={() => void updateProfile({ manualStatus: null })}>
+        <MenuItem icon={ArrowCounterClockwiseIcon} checked={user.manualStatus === null} onSelect={() => void updateProfile({ manualStatus: null })}>
           {t('status.automatic')}
         </MenuItem>
         <MenuSeparator />
-        <MenuItem icon={MessageSquareText} onSelect={() => setMessageOpen(true)}>
+        <MenuItem icon={ChatTextIcon} onSelect={() => setMessageOpen(true)}>
           {t('status.message')}
         </MenuItem>
         <MenuSeparator />
-        <MenuItem icon={LogOut} onSelect={() => void logout()}>
+        <MenuItem icon={SignOutIcon} onSelect={() => void logout()}>
           {t('auth.signOut')}
         </MenuItem>
       </Menu>

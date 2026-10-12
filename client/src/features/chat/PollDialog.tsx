@@ -1,4 +1,4 @@
-import { Plus, X } from 'lucide-react';
+import { PlusIcon, XIcon } from '@phosphor-icons/react';
 import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
@@ -73,7 +73,7 @@ export function PollDialog({ chatId, open, onClose }: { chatId: string; open: bo
               />
               <IconButton
                 label={t('poll.removeOption', { number: i + 1 })}
-                icon={X}
+                icon={XIcon}
                 size="sm"
                 disabled={options.length <= 2}
                 onClick={() => setOptions(options.filter((_, j) => j !== i))}
@@ -81,7 +81,7 @@ export function PollDialog({ chatId, open, onClose }: { chatId: string; open: bo
             </div>
           ))}
           {options.length < MAX_OPTIONS && (
-            <Button size="sm" variant="ghost" icon={Plus} onClick={() => setOptions([...options, ''])}>
+            <Button size="sm" variant="ghost" icon={PlusIcon} onClick={() => setOptions([...options, ''])}>
               {t('poll.addOption')}
             </Button>
           )}

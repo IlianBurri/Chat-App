@@ -1,4 +1,4 @@
-import { Ellipsis, Forward, Link2, MailWarning, Pencil, Pin, PinOff, Reply, SmilePlus, Trash2 } from 'lucide-react';
+import { ArrowBendUpLeftIcon, DotsThreeIcon, EnvelopeSimpleIcon, LinkSimpleIcon, PencilSimpleIcon, PushPinIcon, PushPinSlashIcon, ShareFatIcon, SmileyWinkIcon, TrashIcon } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
 import { EmojiPicker } from '@/components/ui/EmojiPicker';
 import { IconButton } from '@/components/ui/IconButton';
@@ -48,41 +48,41 @@ export function MessageToolbar({ message, own, actions, onOpenChange }: MessageT
         label={t('message.moreReactions')}
         placement="top-end"
         onOpenChange={onOpenChange}
-        trigger={({ ref, ...props }) => <IconButton ref={ref} label={t('message.moreReactions')} icon={SmilePlus} size="sm" {...props} />}
+        trigger={({ ref, ...props }) => <IconButton ref={ref} label={t('message.moreReactions')} icon={SmileyWinkIcon} size="sm" {...props} />}
       >
         <EmojiPicker onSelect={(emoji) => actions.react(message, emoji)} />
       </Popover>
       <span className="mx-0.5 h-5 w-px bg-line" aria-hidden="true" />
-      <IconButton label={t('message.reply')} icon={Reply} size="sm" onClick={() => actions.reply(message)} />
+      <IconButton label={t('message.reply')} icon={ArrowBendUpLeftIcon} size="sm" onClick={() => actions.reply(message)} />
       <Menu
         label={t('message.moreActions')}
         width={230}
         onOpenChange={onOpenChange}
-        trigger={({ ref, ...props }) => <IconButton ref={ref} label={t('message.moreActions')} icon={Ellipsis} size="sm" {...props} />}
+        trigger={({ ref, ...props }) => <IconButton ref={ref} label={t('message.moreActions')} icon={DotsThreeIcon} size="sm" {...props} />}
       >
         {own && isText && (
-          <MenuItem icon={Pencil} onSelect={() => actions.edit(message)}>
+          <MenuItem icon={PencilSimpleIcon} onSelect={() => actions.edit(message)}>
             {t('message.edit')}
           </MenuItem>
         )}
-        <MenuItem icon={message.pinned ? PinOff : Pin} onSelect={() => actions.togglePin(message)}>
+        <MenuItem icon={message.pinned ? PushPinSlashIcon : PushPinIcon} onSelect={() => actions.togglePin(message)}>
           {message.pinned ? t('message.unpin') : t('message.pin')}
         </MenuItem>
         {isText && (
-          <MenuItem icon={Forward} onSelect={() => actions.forward(message)}>
+          <MenuItem icon={ShareFatIcon} onSelect={() => actions.forward(message)}>
             {t('message.forward')}
           </MenuItem>
         )}
-        <MenuItem icon={MailWarning} onSelect={() => actions.markUnread(message)}>
+        <MenuItem icon={EnvelopeSimpleIcon} onSelect={() => actions.markUnread(message)}>
           {t('message.markUnread')}
         </MenuItem>
-        <MenuItem icon={Link2} onSelect={() => actions.copyLink(message)}>
+        <MenuItem icon={LinkSimpleIcon} onSelect={() => actions.copyLink(message)}>
           {t('message.copyLink')}
         </MenuItem>
         {own && (
           <>
             <MenuSeparator />
-            <MenuItem icon={Trash2} danger onSelect={() => actions.remove(message)}>
+            <MenuItem icon={TrashIcon} danger onSelect={() => actions.remove(message)}>
               {t('message.delete')}
             </MenuItem>
           </>

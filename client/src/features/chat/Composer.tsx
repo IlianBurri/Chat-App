@@ -1,21 +1,5 @@
 import clsx from 'clsx';
-import {
-  BarChart3,
-  Bold,
-  CalendarPlus,
-  Code,
-  Italic,
-  Link2,
-  List,
-  ListOrdered,
-  Paperclip,
-  Plus,
-  SendHorizontal,
-  Smile,
-  Strikethrough,
-  Type,
-  X,
-} from 'lucide-react';
+import { CalendarPlusIcon, ChartBarIcon, CodeIcon, LinkSimpleIcon, ListBulletsIcon, ListNumbersIcon, PaperPlaneRightIcon, PaperclipIcon, PlusIcon, SmileyIcon, TextAaIcon, TextBIcon, TextItalicIcon, TextStrikethroughIcon, XIcon } from '@phosphor-icons/react';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { create } from 'zustand';
@@ -254,13 +238,13 @@ export function Composer({ chatId, people, replyTo, onCancelReply, onEditLast }:
   };
 
   const formatButtons = [
-    { kind: 'bold', icon: Bold, label: t('composer.bold') },
-    { kind: 'italic', icon: Italic, label: t('composer.italic') },
-    { kind: 'strike', icon: Strikethrough, label: t('composer.strike') },
-    { kind: 'bullets', icon: List, label: t('composer.bullets') },
-    { kind: 'numbers', icon: ListOrdered, label: t('composer.numbers') },
-    { kind: 'code', icon: Code, label: t('composer.code') },
-    { kind: 'link', icon: Link2, label: t('composer.link') },
+    { kind: 'bold', icon: TextBIcon, label: t('composer.bold') },
+    { kind: 'italic', icon: TextItalicIcon, label: t('composer.italic') },
+    { kind: 'strike', icon: TextStrikethroughIcon, label: t('composer.strike') },
+    { kind: 'bullets', icon: ListBulletsIcon, label: t('composer.bullets') },
+    { kind: 'numbers', icon: ListNumbersIcon, label: t('composer.numbers') },
+    { kind: 'code', icon: CodeIcon, label: t('composer.code') },
+    { kind: 'link', icon: LinkSimpleIcon, label: t('composer.link') },
   ] as const;
 
   return (
@@ -297,7 +281,7 @@ export function Composer({ chatId, people, replyTo, onCancelReply, onEditLast }:
               <p className="font-semibold">{t('composer.replyingTo', { name: replyTo.author.name })}</p>
               <p className="truncate text-muted">{previewText(replyTo.content)}</p>
             </div>
-            <IconButton label={t('composer.cancelReply')} icon={X} size="sm" onClick={onCancelReply} />
+            <IconButton label={t('composer.cancelReply')} icon={XIcon} size="sm" onClick={onCancelReply} />
           </div>
         )}
 
@@ -344,32 +328,32 @@ export function Composer({ chatId, people, replyTo, onCancelReply, onEditLast }:
         />
 
         <div className="flex items-center gap-0.5 px-2 pb-1.5">
-          <IconButton label={expanded ? t('composer.collapse') : t('composer.format')} icon={Type} size="sm" active={expanded} aria-pressed={expanded} onClick={() => setExpanded((v) => !v)} />
+          <IconButton label={expanded ? t('composer.collapse') : t('composer.format')} icon={TextAaIcon} size="sm" active={expanded} aria-pressed={expanded} onClick={() => setExpanded((v) => !v)} />
           <Popover
             label={t('composer.emoji')}
             placement="top-start"
-            trigger={({ ref, ...props }) => <IconButton ref={ref} label={t('composer.emoji')} icon={Smile} size="sm" {...props} />}
+            trigger={({ ref, ...props }) => <IconButton ref={ref} label={t('composer.emoji')} icon={SmileyIcon} size="sm" {...props} />}
           >
             <EmojiPicker onSelect={insertText} />
           </Popover>
-          <IconButton label={t('composer.attach')} icon={Paperclip} size="sm" onClick={() => showComingSoon(t('composer.attach'))} />
+          <IconButton label={t('composer.attach')} icon={PaperclipIcon} size="sm" onClick={() => showComingSoon(t('composer.attach'))} />
           <Menu
             label={t('composer.more')}
             align="start"
             placement="top"
             width={220}
-            trigger={({ ref, ...props }) => <IconButton ref={ref} label={t('composer.more')} icon={Plus} size="sm" {...props} />}
+            trigger={({ ref, ...props }) => <IconButton ref={ref} label={t('composer.more')} icon={PlusIcon} size="sm" {...props} />}
           >
-            <MenuItem icon={BarChart3} onSelect={() => setPollOpen(true)}>
+            <MenuItem icon={ChartBarIcon} onSelect={() => setPollOpen(true)}>
               {t('poll.create')}
             </MenuItem>
-            <MenuItem icon={CalendarPlus} onSelect={() => showComingSoon(t('composer.scheduleMeeting'))}>
+            <MenuItem icon={CalendarPlusIcon} onSelect={() => showComingSoon(t('composer.scheduleMeeting'))}>
               {t('composer.scheduleMeeting')}
             </MenuItem>
           </Menu>
           <IconButton
             label={t('composer.send')}
-            icon={SendHorizontal}
+            icon={PaperPlaneRightIcon}
             size="sm"
             className={clsx('ml-auto', text.trim() && 'text-accent hover:text-accent')}
             disabled={!text.trim() || sending}

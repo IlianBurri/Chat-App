@@ -1,4 +1,4 @@
-import { Sparkles } from 'lucide-react';
+import { SparkleIcon } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
 import { create } from 'zustand';
 import { Button } from './Button';
@@ -33,7 +33,7 @@ export function ComingSoonDialog() {
       }
     >
       <div className="flex items-start gap-3">
-        <Sparkles className="mt-0.5 size-5 shrink-0 text-accent" aria-hidden="true" />
+        <SparkleIcon className="mt-0.5 size-5 shrink-0 text-accent" aria-hidden="true" />
         <p className="text-sm text-muted">{t('common.comingSoonText', { feature })}</p>
       </div>
     </Dialog>

@@ -1,5 +1,5 @@
 /** Quick reactions shown in the message hover toolbar. */
-export const QUICK_REACTIONS = ['👍', '❤️', '😆', '😮', '😢', '😡'] as const;
+export const QUICK_REACTIONS = ['👍', '❤️', '😂', '🎉', '🙏', '👀'] as const;
 
 export const EMOJI_CATEGORIES = [
   {

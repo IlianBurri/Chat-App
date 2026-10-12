@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { ChevronDown, Filter, Lock, SquarePen, X } from 'lucide-react';
+import { CaretDownIcon, FunnelSimpleIcon, LockSimpleIcon, NotePencilIcon, XIcon } from '@phosphor-icons/react';
 import { useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink, useNavigate } from 'react-router';
@@ -32,7 +32,7 @@ export function ChatList() {
         <h1 className="flex-1 text-lg font-semibold">{t('chat.title')}</h1>
         <IconButton
           label={t('chat.filterByName')}
-          icon={showQuery ? X : Filter}
+          icon={showQuery ? XIcon : FunnelSimpleIcon}
           active={showQuery}
           aria-pressed={showQuery}
           onClick={() => {
@@ -40,7 +40,7 @@ export function ChatList() {
             setQuery('');
           }}
         />
-        <IconButton label={t('chat.newChat')} icon={SquarePen} onClick={() => navigate('/chat/new')} />
+        <IconButton label={t('chat.newChat')} icon={NotePencilIcon} onClick={() => navigate('/chat/new')} />
       </header>
 
       {showQuery && (
@@ -127,7 +127,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
           onClick={() => setOpen((o) => !o)}
           className="mx-2 flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold text-muted hover:text-fg"
         >
-          <ChevronDown className={clsx('size-3.5 transition-transform', !open && '-rotate-90')} aria-hidden="true" />
+          <CaretDownIcon className={clsx('size-3.5 transition-transform', !open && '-rotate-90')} aria-hidden="true" />
           {title}
         </button>
       </h2>
@@ -155,7 +155,7 @@ function ChannelList() {
             <span className="min-w-0 flex-1">
               <span className="flex items-center gap-1.5 truncate font-medium">
                 {c.isDefault ? t('teams.general') : c.name}
-                {c.type === 'private' && <Lock className="size-3 text-subtle" aria-label={t('teams.privateChannel')} />}
+                {c.type === 'private' && <LockSimpleIcon className="size-3 text-subtle" aria-label={t('teams.privateChannel')} />}
               </span>
               <span className="block truncate text-xs text-muted">{c.workspace.name}</span>
             </span>

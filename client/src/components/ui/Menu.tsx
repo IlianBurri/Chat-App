@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Check, type LucideIcon } from 'lucide-react';
+import { CheckIcon, type Icon as PhosphorIcon } from '@phosphor-icons/react';
 import {
   createContext,
   useCallback,
@@ -164,7 +164,7 @@ export function MenuList({ id, label, onClose, className, style, children }: Men
 }
 
 interface MenuItemProps {
-  icon?: LucideIcon;
+  icon?: PhosphorIcon;
   leading?: ReactNode;
   onSelect: () => void;
   children: ReactNode;
@@ -193,10 +193,10 @@ export function MenuItem({ icon: Icon, leading, onSelect, children, hint, checke
         danger ? 'text-danger' : 'text-fg',
       )}
     >
-      {leading ?? (Icon && <Icon className="size-4 shrink-0 text-muted" strokeWidth={1.75} aria-hidden="true" />)}
+      {leading ?? (Icon && <Icon className="size-4 shrink-0 text-muted" aria-hidden="true" />)}
       <span className="flex-1 truncate">{children}</span>
       {hint && <span className="text-xs text-subtle">{hint}</span>}
-      {isRadio && <Check className={clsx('size-4 text-accent', !checked && 'invisible')} aria-hidden="true" />}
+      {isRadio && <CheckIcon className={clsx('size-4 text-accent', !checked && 'invisible')} aria-hidden="true" />}
     </button>
   );
 }

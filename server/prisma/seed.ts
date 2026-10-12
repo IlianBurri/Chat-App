@@ -108,7 +108,7 @@ async function main() {
     ['anna', 'ben', 'clara', 'elif'],
     [
       ['elif', 3 * 60, 'Wer kommt heute mit zum Mittagessen? 🍕'],
-      ['ben', 3 * 60 - 2, 'Ich bin dabei!', [['elif', '😆']]],
+      ['ben', 3 * 60 - 2, 'Ich bin dabei!', [['elif', '🎉']]],
       ['clara', 3 * 60 - 4, 'Ich auch, 12:15 beim Eingang?'],
       ['anna', 3 * 60 - 6, 'Perfekt, bis gleich.', [['ben', '👍'], ['elif', '👍']]],
       ['elif', 25, 'Morgen probieren wir das neue Thai-Restaurant aus?'],

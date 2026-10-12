@@ -1,4 +1,4 @@
-import { MessageCircle } from 'lucide-react';
+import { ChatsCircleIcon } from '@phosphor-icons/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useParams, useSearchParams } from 'react-router';
@@ -69,7 +69,7 @@ function OpenChat({ chatId, meId }: { chatId: string; meId: string }) {
     <main className="flex min-w-0 flex-1 flex-col bg-main">
       <ChatHeader chat={chat} meId={meId} />
       {state?.error ? (
-        <EmptyState icon={MessageCircle} title={t('auth.errors.generic')} text={t('chat.loadFailed')} />
+        <EmptyState icon={ChatsCircleIcon} title={t('auth.errors.generic')} text={t('chat.loadFailed')} />
       ) : state?.loaded ? (
         <MessageList
           chat={chat}
@@ -115,7 +115,7 @@ export function ChatEmpty() {
   const { t } = useTranslation();
   return (
     <main className="flex flex-1 bg-main">
-      <EmptyState icon={MessageCircle} title={t('chat.selectChat')} text={t('chat.selectChatHint')} />
+      <EmptyState icon={ChatsCircleIcon} title={t('chat.selectChat')} text={t('chat.selectChatHint')} />
     </main>
   );
 }

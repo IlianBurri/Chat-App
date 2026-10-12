@@ -1,4 +1,4 @@
-import { CircleCheck, CircleAlert } from 'lucide-react';
+import { CheckCircleIcon, WarningCircleIcon } from '@phosphor-icons/react';
 import { create } from 'zustand';
 
 interface Toast {
@@ -31,9 +31,9 @@ export function Toaster() {
       {toasts.map((t) => (
         <div key={t.id} role="status" className="flex items-center gap-2 rounded-lg bg-fg px-4 py-2 text-sm text-main shadow-pop">
           {t.tone === 'success' ? (
-            <CircleCheck className="size-4 text-success" aria-hidden="true" />
+            <CheckCircleIcon className="size-4 text-success" aria-hidden="true" />
           ) : (
-            <CircleAlert className="size-4 text-danger" aria-hidden="true" />
+            <WarningCircleIcon className="size-4 text-danger" aria-hidden="true" />
           )}
           {t.text}
         </div>

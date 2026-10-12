@@ -1,14 +1,14 @@
 import clsx from 'clsx';
-import { Monitor, Moon, Sun } from 'lucide-react';
+import { DesktopIcon, MoonIcon, SunIcon } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
 import { Dialog } from '@/components/ui/Dialog';
 import { LANGUAGES } from '@/i18n';
 import { useUiStore, type ThemePreference } from '@/stores/ui';
 
 const THEMES = [
-  { value: 'system', icon: Monitor, label: 'settings.themeSystem' },
-  { value: 'light', icon: Sun, label: 'settings.themeLight' },
-  { value: 'dark', icon: Moon, label: 'settings.themeDark' },
+  { value: 'system', icon: DesktopIcon, label: 'settings.themeSystem' },
+  { value: 'light', icon: SunIcon, label: 'settings.themeLight' },
+  { value: 'dark', icon: MoonIcon, label: 'settings.themeDark' },
 ] as const;
 
 export function SettingsDialog({ open, onClose }: { open: boolean; onClose: () => void }) {

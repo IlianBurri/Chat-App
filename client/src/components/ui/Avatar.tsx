@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Users } from 'lucide-react';
+import { UsersThreeIcon } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
 import { avatarColor, initials } from '@/lib/format';
 import type { PublicUser, Status } from '@/lib/types';
@@ -62,7 +62,7 @@ export function GroupAvatar({ members, size = 'md' }: { members: Pick<PublicUser
         style={{ width: px, height: px }}
         aria-hidden="true"
       >
-        <Users className="size-1/2" />
+        <UsersThreeIcon className="size-1/2" />
       </span>
     );
   }

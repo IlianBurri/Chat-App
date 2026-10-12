@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { BarChart3, Check } from 'lucide-react';
+import { ChartBarIcon, CheckIcon } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/components/ui/Toaster';
@@ -33,7 +33,7 @@ export function PollCard({ poll, meId }: { poll: PollDto; meId: string }) {
   return (
     <div className="min-w-[260px] space-y-2">
       <p className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-muted uppercase">
-        <BarChart3 className="size-3.5" aria-hidden="true" />
+        <ChartBarIcon className="size-3.5" aria-hidden="true" />
         {t('poll.title')} · {poll.multiple ? t('poll.multiple') : t('poll.single')}
       </p>
       <p className="font-semibold">{poll.question}</p>
@@ -63,7 +63,7 @@ export function PollCard({ poll, meId }: { poll: PollDto; meId: string }) {
                   selected ? 'border-accent bg-accent text-accent-fg' : 'border-subtle',
                 )}
               >
-                {selected && <Check className="size-3" strokeWidth={3} />}
+                {selected && <CheckIcon className="size-3" weight="bold" />}
               </span>
               <span className="relative flex-1">{option.text}</span>
               <span className="relative text-xs text-muted">

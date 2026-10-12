@@ -1,4 +1,4 @@
-import { Bell, Calendar, Cloud, Phone, Users } from 'lucide-react';
+import { BellIcon, CalendarBlankIcon, CloudIcon, PhoneIcon, UsersThreeIcon } from '@phosphor-icons/react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router';
@@ -61,14 +61,14 @@ function TeamsIndex() {
   if (first && channel) return <Navigate to={`/teams/${first.id}/${channel.id}`} replace />;
   return (
     <main className="flex flex-1 bg-main">
-      <EmptyState icon={Users} title={t('teams.selectChannel')} text={t('teams.empty')} />
+      <EmptyState icon={UsersThreeIcon} title={t('teams.selectChannel')} text={t('teams.empty')} />
     </main>
   );
 }
 
 function Placeholder({ section }: { section: 'activity' | 'calendar' | 'calls' | 'files' }) {
   const { t } = useTranslation();
-  const icons = { activity: Bell, calendar: Calendar, calls: Phone, files: Cloud };
+  const icons = { activity: BellIcon, calendar: CalendarBlankIcon, calls: PhoneIcon, files: CloudIcon };
   return <PlaceholderView icon={icons[section]} title={t(`nav.${section}`)} text={t(`placeholder.${section}`)} />;
 }
 
