@@ -1,4 +1,4 @@
-// Worktalk data model.
+// Hallo data model.
 // Enum-like fields are plain strings (validated with zod in the API) so the
 // schema switches to PostgreSQL by changing only the datasource provider.
 
