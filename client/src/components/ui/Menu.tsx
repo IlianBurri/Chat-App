@@ -15,6 +15,11 @@ import {
 
 const MenuContext = createContext<{ close: () => void }>({ close: () => {} });
 
+/** Lets MenuItems inside a standalone MenuList (e.g. a context menu) close it. */
+export function MenuContextProvider({ close, children }: { close: () => void; children: ReactNode }) {
+  return <MenuContext.Provider value={{ close }}>{children}</MenuContext.Provider>;
+}
+
 export interface MenuTriggerProps {
   ref: Ref<HTMLButtonElement>;
   onClick: () => void;
@@ -29,19 +34,32 @@ interface MenuProps {
   children: ReactNode;
   align?: 'start' | 'end';
   width?: number;
+  /** Opens above the trigger (e.g. in toolbars near the bottom of the screen). */
+  placement?: 'bottom' | 'top';
+  onOpenChange?: (open: boolean) => void;
 }
 
 /** Dropdown menu with keyboard navigation (arrows, Home/End, Escape). */
-export function Menu({ label, trigger, children, align = 'end', width = 240 }: MenuProps) {
-  const [open, setOpen] = useState(false);
+export function Menu({ label, trigger, children, align = 'end', width = 240, placement = 'bottom', onOpenChange }: MenuProps) {
+  const [open, setOpenState] = useState(false);
+  const setOpen = useCallback(
+    (value: boolean) => {
+      setOpenState(value);
+      onOpenChange?.(value);
+    },
+    [onOpenChange],
+  );
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuId = useId();
 
-  const close = useCallback((restoreFocus = true) => {
-    setOpen(false);
-    if (restoreFocus) triggerRef.current?.focus();
-  }, []);
+  const close = useCallback(
+    (restoreFocus = true) => {
+      setOpen(false);
+      if (restoreFocus) triggerRef.current?.focus();
+    },
+    [setOpen],
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -56,7 +74,7 @@ export function Menu({ label, trigger, children, align = 'end', width = 240 }: M
     <div ref={rootRef} className="relative inline-flex">
       {trigger({
         ref: triggerRef,
-        onClick: () => setOpen((o) => !o),
+        onClick: () => setOpen(!open),
         'aria-haspopup': 'menu',
         'aria-expanded': open,
         'aria-controls': open ? menuId : undefined,
@@ -67,7 +85,7 @@ export function Menu({ label, trigger, children, align = 'end', width = 240 }: M
             id={menuId}
             label={label}
             onClose={() => close()}
-            className={clsx('absolute top-full z-50 mt-1', align === 'end' ? 'right-0' : 'left-0')}
+            className={clsx('absolute z-50', placement === 'top' ? 'bottom-full mb-1' : 'top-full mt-1', align === 'end' ? 'right-0' : 'left-0')}
             style={{ width }}
           >
             {children}
