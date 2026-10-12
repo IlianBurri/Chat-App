@@ -128,6 +128,40 @@ async function main() {
     'Projekt Atlas',
   );
 
+  // A reply and a poll so the demo shows these features.
+  await prisma.message.create({
+    data: {
+      chatId: annaBen.chat.id,
+      authorId: u.anna,
+      content: 'Klar, schick mir einfach den Link. 👍',
+      replyToId: annaBen.ids[annaBen.ids.length - 1],
+      createdAt: ago(10 * MINUTE),
+    },
+  });
+  await prisma.message.create({
+    data: {
+      chatId: lunch.chat.id,
+      authorId: u.elif,
+      type: 'poll',
+      content: 'Wohin gehen wir am Freitag?',
+      createdAt: ago(20 * MINUTE),
+      poll: {
+        create: {
+          question: 'Wohin gehen wir am Freitag?',
+          options: {
+            create: [
+              { text: 'Thai-Restaurant', position: 0, votes: { create: [{ userId: u.elif }, { userId: u.ben }] } },
+              { text: 'Pizzeria', position: 1, votes: { create: [{ userId: u.clara }] } },
+              { text: 'Burger', position: 2 },
+            ],
+          },
+        },
+      },
+    },
+  });
+  await prisma.chat.update({ where: { id: annaBen.chat.id }, data: { lastMessageAt: ago(10 * MINUTE) } });
+  await prisma.chat.update({ where: { id: lunch.chat.id }, data: { lastMessageAt: ago(20 * MINUTE) } });
+
   // Anna has unread messages in some chats.
   await prisma.readReceipt.updateMany({
     where: { chatId: { in: [annaBen.chat.id, lunch.chat.id] }, userId: u.anna },
