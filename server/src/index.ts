@@ -7,5 +7,5 @@ const httpServer = createServer(createApp());
 createSocketServer(httpServer);
 
 httpServer.listen(config.port, () => {
-  console.log(`Worktalk API listening on http://localhost:${config.port}`);
+  console.log(`Hallo API listening on http://localhost:${config.port}`);
 });

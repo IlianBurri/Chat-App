@@ -22,6 +22,6 @@ export const useUiStore = create<UiState>()(
         set({ listWidth: Math.round(Math.min(LIST_WIDTH.max, Math.max(LIST_WIDTH.min, width))) }),
     }),
     // The key is also read by the inline script in index.html.
-    { name: 'wt-ui' },
+    { name: 'ui-prefs' },
   ),
 );

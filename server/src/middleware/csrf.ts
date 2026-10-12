@@ -9,7 +9,7 @@ const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
  * forged form posts from other sites are rejected.
  */
 export function requireClientHeader(req: Request, _res: Response, next: NextFunction) {
-  if (!SAFE_METHODS.has(req.method) && req.get('X-Worktalk') !== '1') {
+  if (!SAFE_METHODS.has(req.method) && req.get('X-Client') !== '1') {
     throw new HttpError(403, 'csrf', 'Missing client header');
   }
   next();
