@@ -1,11 +1,11 @@
 import type { Status } from '@/lib/types';
 
 const COLORS: Record<Status, string> = {
-  available: 'var(--wt-success)',
-  busy: 'var(--wt-danger)',
-  dnd: 'var(--wt-danger)',
-  away: 'var(--wt-warning)',
-  offline: 'var(--wt-offline)',
+  available: 'var(--ui-success)',
+  busy: 'var(--ui-danger)',
+  dnd: 'var(--ui-danger)',
+  away: 'var(--ui-warning)',
+  offline: 'var(--ui-offline)',
 };
 
 /**
@@ -18,7 +18,7 @@ export function StatusIcon({ status, size = 10 }: { status: Status; size?: numbe
     <svg width={size} height={size} viewBox="0 0 16 16" aria-hidden="true" className="shrink-0">
       {status === 'offline' ? (
         <>
-          <circle cx="8" cy="8" r="6.5" fill="var(--wt-bg-main)" stroke={color} strokeWidth="2.5" />
+          <circle cx="8" cy="8" r="6.5" fill="var(--ui-bg-main)" stroke={color} strokeWidth="2.5" />
           <path d="M5.8 5.8l4.4 4.4M10.2 5.8l-4.4 4.4" stroke={color} strokeWidth="1.6" strokeLinecap="round" />
         </>
       ) : (

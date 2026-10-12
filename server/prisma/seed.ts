@@ -36,7 +36,7 @@ async function main() {
     const user = await prisma.user.create({
       data: {
         name: p.name,
-        email: `${p.key}@worktalk.demo`,
+        email: `${p.key}@example.com`,
         passwordHash,
         jobTitle: p.jobTitle,
         manualStatus: 'manualStatus' in p ? p.manualStatus : null,
@@ -333,7 +333,7 @@ async function main() {
     });
   }
 
-  console.log(`Seeded ${people.length} demo users. Sign in with e.g. anna@worktalk.demo / ${DEMO_PASSWORD}`);
+  console.log(`Seeded ${people.length} demo users. Sign in with e.g. anna@example.com / ${DEMO_PASSWORD}`);
 }
 
 main()
