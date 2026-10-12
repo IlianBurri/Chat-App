@@ -2,9 +2,8 @@ import clsx from 'clsx';
 import { ChevronDown, Filter, Lock, SquarePen, X } from 'lucide-react';
 import { useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';
 import { Button } from '@/components/ui/Button';
-import { useComingSoon } from '@/components/ui/ComingSoon';
 import { IconButton } from '@/components/ui/IconButton';
 import { WorkspaceTile } from '@/features/teams/WorkspaceTile';
 import { useAuthStore } from '@/stores/auth';
@@ -22,7 +21,7 @@ export function ChatList() {
   const [filter, setFilter] = useState<ChatFilter>('all');
   const [showQuery, setShowQuery] = useState(false);
   const [query, setQuery] = useState('');
-  const showComingSoon = useComingSoon((s) => s.show);
+  const navigate = useNavigate();
 
   const groups = useMemo(() => groupChats(chats, filter, query, meId), [chats, filter, query, meId]);
   const now = new Date();
@@ -41,7 +40,7 @@ export function ChatList() {
             setQuery('');
           }}
         />
-        <IconButton label={t('chat.newChat')} icon={SquarePen} onClick={() => showComingSoon(t('chat.newChat'))} />
+        <IconButton label={t('chat.newChat')} icon={SquarePen} onClick={() => navigate('/chat/new')} />
       </header>
 
       {showQuery && (
