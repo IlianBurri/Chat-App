@@ -23,6 +23,7 @@ export interface ChatSummary {
   members: PublicUser[];
   lastMessage: {
     id: string;
+    type: MessageType;
     content: string | null;
     deleted: boolean;
     author: { id: string; name: string };
@@ -59,3 +60,50 @@ export interface WorkspaceSummary {
   role: WorkspaceRole;
   channels: ChannelSummary[];
 }
+
+export type MessageType = 'text' | 'poll' | 'meeting' | 'system';
+
+export interface UserRef {
+  id: string;
+  name: string;
+}
+
+export interface ReactionSummary {
+  emoji: string;
+  userIds: string[];
+}
+
+export interface PollDto {
+  id: string;
+  question: string;
+  multiple: boolean;
+  options: { id: string; text: string; userIds: string[] }[];
+}
+
+export interface MessageDto {
+  id: string;
+  chatId: string;
+  type: MessageType;
+  author: UserRef & { avatarUrl: string | null };
+  subject: string | null;
+  content: string;
+  createdAt: string;
+  editedAt: string | null;
+  deleted: boolean;
+  pinned: boolean;
+  replyTo: { id: string; author: UserRef; content: string | null; deleted: boolean } | null;
+  forwardedFrom: { author: UserRef } | null;
+  reactions: ReactionSummary[];
+  poll: PollDto | null;
+}
+
+export interface ReadReceipt {
+  userId: string;
+  readAt: string;
+}
+
+/** Content of system messages (type 'system'), stored as JSON. */
+export type SystemEvent =
+  | { event: 'added'; userIds: string[] }
+  | { event: 'left' }
+  | { event: 'renamed'; name: string };
