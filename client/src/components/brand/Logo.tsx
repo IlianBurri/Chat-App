@@ -22,7 +22,7 @@ export function Logo({ size = 32 }: { size?: number }) {
   return (
     <span className="inline-flex items-center gap-2.5">
       <LogoMark size={size} />
-      <span className="font-semibold tracking-tight text-fg" style={{ fontSize: size * 0.62 }}>
+      <span className="font-semibold tracking-tight text-fg lowercase" style={{ fontSize: size * 0.62 }}>
         {t('app.name')}
       </span>
     </span>
