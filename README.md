@@ -2,7 +2,7 @@
 
 Hallo ist eine Kommunikations- und Kollaborations-App für Firmen: Einzel- und Gruppenchats, Arbeitsgruppen mit Themenkanälen, Audio-/Videoanrufe, Kalender und Dateiablage an einem Ort.
 
-> **Stand:** Meilenstein 1 von 8 – Projekt-Setup, Anmeldung, Grundlayout und Demo-Daten. Funktionen späterer Meilensteine sind in der App als „Kommt bald“ markiert.
+> **Stand:** Meilenstein 2 von 8 – Einzel- und Gruppenchats in Echtzeit. Funktionen späterer Meilensteine sind in der App als „Kommt bald“ markiert.
 
 ## Voraussetzungen
 
@@ -99,7 +99,7 @@ Auswahlfelder sind im Schema bewusst als Text gespeichert, damit es ohne Änderu
 ## Meilensteine
 
 1. ✅ Projekt-Setup, Anmeldung, Grundlayout, Demo-Daten
-2. ⏳ Einzel- und Gruppenchats in Echtzeit (Reaktionen, Bearbeiten/Löschen, Lesestatus, Tippindikator)
+2. ✅ Einzel- und Gruppenchats in Echtzeit (Reaktionen, Bearbeiten/Löschen, Lesestatus, Tippindikator, Antworten, Umfragen, @-Erwähnungen)
 3. ⏳ Arbeitsgruppen und Kanäle mit Threads und Rollen
 4. ⏳ Aktivitätsfeed, Benachrichtigungen, Suche, automatischer Status
 5. ⏳ Dateien und Uploads

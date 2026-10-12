@@ -134,6 +134,17 @@
   }
 }
 
+/* Briefly outlines a message that was jumped to. */
+@keyframes highlight {
+  0%,
+  60% {
+    box-shadow: 0 0 0 2px var(--ui-accent);
+  }
+  100% {
+    box-shadow: 0 0 0 2px transparent;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,
