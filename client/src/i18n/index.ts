@@ -23,7 +23,7 @@ void i18n
     interpolation: { escapeValue: false },
     detection: {
       order: ['localStorage', 'navigator'],
-      lookupLocalStorage: 'tl-lang',
+      lookupLocalStorage: 'wt-lang',
       caches: ['localStorage'],
     },
   });

@@ -24,7 +24,7 @@ const registration = credentials.extend({
 
 // Hash of a random password; compared against for unknown emails so response
 // timing does not reveal which addresses are registered.
-const DUMMY_HASH = bcrypt.hashSync('teamline-timing-guard', 12);
+const DUMMY_HASH = bcrypt.hashSync('worktalk-timing-guard', 12);
 
 authRouter.post('/register', async (req, res) => {
   const input = registration.parse(req.body);
