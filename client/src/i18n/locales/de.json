@@ -1,0 +1,154 @@
+{
+  "app": {
+    "name": "Teamline",
+    "tagline": "Chat, Arbeitsgruppen, Besprechungen und Dateien an einem Ort."
+  },
+  "common": {
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "close": "Schliessen",
+    "comingSoon": "Kommt bald",
+    "comingSoonText": "{{feature}} ist noch nicht verfügbar. Die Funktion ist für einen späteren Meilenstein geplant.",
+    "loading": "Wird geladen…",
+    "retry": "Erneut versuchen",
+    "you": "Du",
+    "more": "Weitere Optionen"
+  },
+  "auth": {
+    "signIn": "Anmelden",
+    "signUp": "Konto erstellen",
+    "signOut": "Abmelden",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "name": "Vollständiger Name",
+    "noAccount": "Neu bei Teamline?",
+    "haveAccount": "Bereits ein Konto?",
+    "passwordHint": "Mindestens 8 Zeichen",
+    "demoAccounts": "Demo-Konten",
+    "demoPassword": "Passwort für alle Demo-Konten: {{password}}",
+    "useAccount": "Als {{name}} anmelden",
+    "errors": {
+      "invalid_credentials": "E-Mail oder Passwort ist falsch.",
+      "email_taken": "Diese E-Mail ist bereits registriert.",
+      "validation": "Bitte überprüfe deine Eingaben.",
+      "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
+    }
+  },
+  "nav": {
+    "activity": "Aktivität",
+    "chat": "Chat",
+    "teams": "Gruppen",
+    "calendar": "Kalender",
+    "calls": "Anrufe",
+    "files": "Dateien",
+    "more": "Weitere",
+    "apps": "Apps",
+    "back": "Zurück",
+    "forward": "Vor",
+    "mainNavigation": "Hauptnavigation",
+    "unreadBadge_one": "{{count}} ungelesen",
+    "unreadBadge_other": "{{count}} ungelesen"
+  },
+  "search": {
+    "placeholder": "Personen, Nachrichten, Dateien und Gruppen suchen",
+    "label": "Suche",
+    "comingSoon": "Die Suche kommt mit Meilenstein 4."
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "menu": "Einstellungen und mehr",
+    "theme": "Design",
+    "themeSystem": "Systemeinstellung",
+    "themeLight": "Hell",
+    "themeDark": "Dunkel",
+    "language": "Sprache",
+    "keyboardShortcuts": "Tastenkombinationen",
+    "shortcutSearch": "Suchen",
+    "shortcutSend": "Nachricht senden",
+    "shortcutNewLine": "Neue Zeile"
+  },
+  "status": {
+    "available": "Verfügbar",
+    "busy": "Beschäftigt",
+    "dnd": "Nicht stören",
+    "away": "Abwesend",
+    "offline": "Als offline anzeigen",
+    "offlineShort": "Offline",
+    "reset": "Status zurücksetzen",
+    "automatic": "Automatisch festlegen",
+    "message": "Statusnachricht festlegen",
+    "messagePlaceholder": "Was gibt's Neues?",
+    "messageClear": "Statusnachricht löschen",
+    "profileMenu": "Profil, Status und Abmelden",
+    "setStatus": "Status festlegen"
+  },
+  "chat": {
+    "title": "Chat",
+    "newChat": "Neuer Chat",
+    "filter": "Filtern",
+    "filterByName": "Nach Name filtern",
+    "filters": {
+      "unread": "Ungelesen",
+      "chats": "Chats",
+      "channels": "Kanäle",
+      "meetings": "Besprechungen"
+    },
+    "pinned": "Angeheftet",
+    "recent": "Zuletzt",
+    "empty": "Keine Chats für diesen Filter.",
+    "noMeetings": "Besprechungschats werden hier angezeigt.",
+    "deletedMessage": "Diese Nachricht wurde gelöscht.",
+    "yesterday": "Gestern",
+    "today": "Heute",
+    "muted": "Stummgeschaltet",
+    "groupMembers_one": "{{count}} Mitglied",
+    "groupMembers_other": "{{count}} Mitglieder",
+    "selectChat": "Wähle einen Chat aus",
+    "selectChatHint": "Hier findest du deine Einzel- und Gruppenunterhaltungen.",
+    "tabs": {
+      "chat": "Chat",
+      "files": "Dateien",
+      "add": "Registerkarte hinzufügen"
+    },
+    "videoCall": "Videoanruf",
+    "audioCall": "Audioanruf",
+    "participants": "Teilnehmer",
+    "milestoneMessages": "Der Nachrichtenverlauf kommt mit Meilenstein 2."
+  },
+  "teams": {
+    "title": "Arbeitsgruppen",
+    "joinOrCreate": "Beitreten oder erstellen",
+    "general": "Allgemein",
+    "privateChannel": "Privater Kanal",
+    "expand": "{{name}} aufklappen",
+    "collapse": "{{name}} zuklappen",
+    "members_one": "{{count}} Mitglied",
+    "members_other": "{{count}} Mitglieder",
+    "roles": {
+      "owner": "Besitzer",
+      "member": "Mitglied",
+      "guest": "Gast"
+    },
+    "tabs": {
+      "posts": "Beiträge",
+      "files": "Dateien",
+      "notes": "Notizen",
+      "add": "Registerkarte hinzufügen"
+    },
+    "meet": "Besprechen",
+    "newPost": "Neuer Beitrag",
+    "empty": "Du bist noch in keiner Arbeitsgruppe.",
+    "selectChannel": "Wähle einen Kanal aus",
+    "milestonePosts": "Beiträge und Threads kommen mit Meilenstein 3."
+  },
+  "placeholder": {
+    "activity": "Erwähnungen, Antworten, Reaktionen und verpasste Anrufe erscheinen hier (Meilenstein 4).",
+    "calendar": "Der Kalender mit Tag-, Arbeitswochen-, Wochen- und Monatsansicht kommt mit Meilenstein 6.",
+    "calls": "Audio- und Videoanrufe kommen mit Meilenstein 7.",
+    "files": "Hier werden alle geteilten Dateien aufgelistet (Meilenstein 5).",
+    "more": "Weitere Apps"
+  },
+  "listPane": {
+    "resize": "Listenbreite anpassen"
+  }
+}
