@@ -98,7 +98,7 @@ export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
                     type="button"
                     disabled={busy}
                     aria-label={t('auth.useAccount', { name: u.name })}
-                    onClick={() => void run(() => login(`${u.key}@teamline.demo`, DEMO_PASSWORD))}
+                    onClick={() => void run(() => login(`${u.key}@worktalk.demo`, DEMO_PASSWORD))}
                     className="flex w-full items-center gap-2 rounded-md p-1.5 text-left text-sm hover:bg-hover"
                   >
                     <Avatar user={{ id: u.key, name: u.name, avatarUrl: null }} size="xs" />

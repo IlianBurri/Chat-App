@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Teamline",
+    "name": "Worktalk",
     "tagline": "Chat, Arbeitsgruppen, Besprechungen und Dateien an einem Ort."
   },
   "common": {
@@ -21,7 +21,7 @@
     "email": "E-Mail",
     "password": "Passwort",
     "name": "Vollständiger Name",
-    "noAccount": "Neu bei Teamline?",
+    "noAccount": "Neu bei Worktalk?",
     "haveAccount": "Bereits ein Konto?",
     "passwordHint": "Mindestens 8 Zeichen",
     "demoAccounts": "Demo-Konten",

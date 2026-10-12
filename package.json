@@ -1,8 +1,8 @@
 {
-  "name": "teamline",
+  "name": "worktalk",
   "version": "0.1.0",
   "private": true,
-  "description": "Teamline – chat, workgroups, calls, calendar and files for companies",
+  "description": "Worktalk – chat, workgroups, calls, calendar and files for companies",
   "workspaces": [
     "server",
     "client"
