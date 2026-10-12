@@ -8,6 +8,7 @@ import { EmptyState, PlaceholderView } from '@/components/layout/PlaceholderView
 import { AuthPage } from '@/features/auth/AuthPage';
 import { ChatList } from '@/features/chat/ChatList';
 import { ChatEmpty, ChatView } from '@/features/chat/ChatView';
+import { NewChatView } from '@/features/chat/NewChatView';
 import { ChannelView } from '@/features/teams/ChannelView';
 import { TeamsList } from '@/features/teams/TeamsList';
 import { useAuthStore } from '@/stores/auth';
@@ -88,6 +89,7 @@ const router = createBrowserRouter([
         element: <ChatSection />,
         children: [
           { index: true, element: <ChatEmpty /> },
+          { path: 'new', element: <NewChatView /> },
           { path: ':chatId', element: <ChatView /> },
         ],
       },
