@@ -1,71 +1,113 @@
-import { Ellipsis, MessageCircle, MessagesSquare, Phone, Users, Video } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useParams } from 'react-router';
+import { Navigate, useParams, useSearchParams } from 'react-router';
 import { EmptyState } from '@/components/layout/PlaceholderView';
-import { Avatar, GroupAvatar } from '@/components/ui/Avatar';
-import { useComingSoon } from '@/components/ui/ComingSoon';
-import { IconButton } from '@/components/ui/IconButton';
-import { Tabs } from '@/components/ui/Tabs';
+import type { MessageDto } from '@/lib/types';
 import { useAuthStore } from '@/stores/auth';
-import { chatTitle, directPartner, useChatsStore } from '@/stores/chats';
-import { useStatus } from '@/stores/presence';
+import { isUnread, useChatsStore } from '@/stores/chats';
+import { useMessagesStore } from '@/stores/messages';
+import { useTypingNames } from '@/stores/typing';
+import { ChatHeader } from './ChatHeader';
+import { Composer } from './Composer';
+import { MessageList } from './MessageList';
 
 export function ChatView() {
-  const { t } = useTranslation();
   const { chatId } = useParams();
   const me = useAuthStore((s) => s.user);
-  const { chats, loaded } = useChatsStore();
-  const showComingSoon = useComingSoon((s) => s.show);
-  const chat = chats.find((c) => c.id === chatId);
+  const chat = useChatsStore((s) => s.chats.find((c) => c.id === chatId));
+  const chatsLoaded = useChatsStore((s) => s.loaded);
 
-  if (!chat) return loaded ? <Navigate to="/chat" replace /> : <main className="flex-1 bg-main" />;
+  if (!chatId || !me) return null;
+  if (!chat) return chatsLoaded ? <Navigate to="/chat" replace /> : <main className="flex-1 bg-main" />;
+  // key: reset reply/edit state when switching chats
+  return <OpenChat key={chat.id} chatId={chat.id} meId={me.id} />;
+}
 
-  const partner = directPartner(chat, me?.id);
-  const title = chatTitle(chat, me?.id);
+function OpenChat({ chatId, meId }: { chatId: string; meId: string }) {
+  const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const chat = useChatsStore((s) => s.chats.find((c) => c.id === chatId))!;
+  const state = useMessagesStore((s) => s.byChat[chatId]);
+  const [replyTo, setReplyTo] = useState<MessageDto | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const typingNames = useTypingNames(chatId);
+  const others = useMemo(() => chat.members.filter((m) => m.id !== meId), [chat.members, meId]);
+
+  // Load history (again after a reconnect reset).
+  useEffect(() => {
+    if (!state?.loaded) void useMessagesStore.getState().load(chatId);
+  }, [chatId, state?.loaded]);
+
+  // This chat is "active": new messages are read immediately while visible.
+  useEffect(() => {
+    useChatsStore.getState().setActive(chatId);
+    return () => useChatsStore.getState().setActive(null);
+  }, [chatId]);
+
+  const unread = isUnread(chat);
+  useEffect(() => {
+    const markIfVisible = () => {
+      if (document.visibilityState === 'visible' && isUnread(useChatsStore.getState().chats.find((c) => c.id === chatId) ?? chat)) {
+        void useChatsStore.getState().markRead(chatId);
+      }
+    };
+    markIfVisible();
+    document.addEventListener('visibilitychange', markIfVisible);
+    return () => document.removeEventListener('visibilitychange', markIfVisible);
+    // chat is only a fallback for the lookup
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatId, unread]);
+
+  const editLast = useCallback(() => {
+    const own = state?.messages.filter((m) => m.author.id === meId && m.type === 'text' && !m.deleted);
+    const last = own?.[own.length - 1];
+    if (last) setEditingId(last.id);
+  }, [state?.messages, meId]);
 
   return (
     <main className="flex min-w-0 flex-1 flex-col bg-main">
-      <header className="flex h-14 shrink-0 items-center gap-3 border-b border-line px-4">
-        {partner ? <Avatar user={partner} showStatus /> : <GroupAvatar members={chat.members.filter((m) => m.id !== me?.id)} />}
-        <div className="min-w-0">
-          <h1 className="truncate text-base leading-tight font-semibold">{title}</h1>
-          {partner ? (
-            <PartnerStatus userId={partner.id} fallback={partner.status} message={partner.statusMessage} />
-          ) : (
-            <p className="text-xs text-muted">{t('chat.groupMembers', { count: chat.members.length })}</p>
-          )}
-        </div>
-        <Tabs
-          label={title}
-          className="ml-3"
-          active="chat"
-          tabs={[
-            { id: 'chat', label: t('chat.tabs.chat') },
-            { id: 'files', label: t('chat.tabs.files'), onSelect: () => showComingSoon(t('chat.tabs.files')) },
-          ]}
-          onAdd={() => showComingSoon(t('chat.tabs.add'))}
-          addLabel={t('chat.tabs.add')}
+      <ChatHeader chat={chat} meId={meId} />
+      {state?.error ? (
+        <EmptyState icon={MessageCircle} title={t('auth.errors.generic')} text={t('chat.loadFailed')} />
+      ) : state?.loaded ? (
+        <MessageList
+          chat={chat}
+          state={state}
+          meId={meId}
+          editingId={editingId}
+          onEdit={setEditingId}
+          onReply={setReplyTo}
+          focusMessageId={searchParams.get('message')}
         />
-        <div className="ml-auto flex items-center gap-1">
-          <IconButton label={t('chat.videoCall')} icon={Video} onClick={() => showComingSoon(t('chat.videoCall'))} />
-          <IconButton label={t('chat.audioCall')} icon={Phone} onClick={() => showComingSoon(t('chat.audioCall'))} />
-          <IconButton label={t('chat.participants')} icon={Users} onClick={() => showComingSoon(t('chat.participants'))} />
-          <IconButton label={t('common.more')} icon={Ellipsis} onClick={() => showComingSoon(t('common.more'))} />
-        </div>
-      </header>
-      <EmptyState icon={MessagesSquare} title={title} text={t('chat.milestoneMessages')} />
+      ) : (
+        <div className="flex-1" aria-busy="true" />
+      )}
+      <p aria-live="polite" className="h-5 px-6 text-xs text-muted">
+        {typingNames.length > 0 && <TypingText names={typingNames} />}
+      </p>
+      <Composer chatId={chatId} people={others} replyTo={replyTo} onCancelReply={() => setReplyTo(null)} onEditLast={editLast} />
     </main>
   );
 }
 
-function PartnerStatus({ userId, fallback, message }: { userId: string; fallback: Parameters<typeof useStatus>[1]; message: string | null }) {
+function TypingText({ names }: { names: string[] }) {
   const { t } = useTranslation();
-  const status = useStatus(userId, fallback);
+  const text =
+    names.length === 1
+      ? t('chat.typingOne', { name: names[0] })
+      : names.length === 2
+        ? t('chat.typingTwo', { first: names[0], second: names[1] })
+        : t('chat.typingMany');
   return (
-    <p className="truncate text-xs text-muted">
-      {status === 'offline' ? t('status.offlineShort') : t(`status.${status}`)}
-      {message && ` · ${message}`}
-    </p>
+    <span className="inline-flex items-center gap-1.5">
+      <span aria-hidden="true" className="inline-flex gap-0.5">
+        {[0, 1, 2].map((i) => (
+          <span key={i} className="size-1 animate-bounce rounded-full bg-muted" style={{ animationDelay: `${i * 150}ms` }} />
+        ))}
+      </span>
+      {text}
+    </span>
   );
 }
 
