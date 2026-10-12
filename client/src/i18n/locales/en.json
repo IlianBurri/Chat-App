@@ -1,0 +1,154 @@
+{
+  "app": {
+    "name": "Teamline",
+    "tagline": "Chat, workgroups, meetings and files in one place."
+  },
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "close": "Close",
+    "comingSoon": "Coming soon",
+    "comingSoonText": "{{feature}} is not available yet. It is planned for a later milestone.",
+    "loading": "Loading…",
+    "retry": "Try again",
+    "you": "You",
+    "more": "More options"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signUp": "Create account",
+    "signOut": "Sign out",
+    "email": "Email",
+    "password": "Password",
+    "name": "Full name",
+    "noAccount": "New to Teamline?",
+    "haveAccount": "Already have an account?",
+    "passwordHint": "At least 8 characters",
+    "demoAccounts": "Demo accounts",
+    "demoPassword": "Password for all demo accounts: {{password}}",
+    "useAccount": "Sign in as {{name}}",
+    "errors": {
+      "invalid_credentials": "Email or password is incorrect.",
+      "email_taken": "This email is already registered.",
+      "validation": "Please check your input.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "nav": {
+    "activity": "Activity",
+    "chat": "Chat",
+    "teams": "Groups",
+    "calendar": "Calendar",
+    "calls": "Calls",
+    "files": "Files",
+    "more": "More",
+    "apps": "Apps",
+    "back": "Back",
+    "forward": "Forward",
+    "mainNavigation": "Main navigation",
+    "unreadBadge_one": "{{count}} unread",
+    "unreadBadge_other": "{{count}} unread"
+  },
+  "search": {
+    "placeholder": "Search people, messages, files and groups",
+    "label": "Search",
+    "comingSoon": "Search is coming in milestone 4."
+  },
+  "settings": {
+    "title": "Settings",
+    "menu": "Settings and more",
+    "theme": "Theme",
+    "themeSystem": "System default",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "language": "Language",
+    "keyboardShortcuts": "Keyboard shortcuts",
+    "shortcutSearch": "Search",
+    "shortcutSend": "Send message",
+    "shortcutNewLine": "New line"
+  },
+  "status": {
+    "available": "Available",
+    "busy": "Busy",
+    "dnd": "Do not disturb",
+    "away": "Away",
+    "offline": "Appear offline",
+    "offlineShort": "Offline",
+    "reset": "Reset status",
+    "automatic": "Set automatically",
+    "message": "Set status message",
+    "messagePlaceholder": "What's happening?",
+    "messageClear": "Clear status message",
+    "profileMenu": "Profile, status and sign out",
+    "setStatus": "Set status"
+  },
+  "chat": {
+    "title": "Chat",
+    "newChat": "New chat",
+    "filter": "Filter",
+    "filterByName": "Filter by name",
+    "filters": {
+      "unread": "Unread",
+      "chats": "Chats",
+      "channels": "Channels",
+      "meetings": "Meetings"
+    },
+    "pinned": "Pinned",
+    "recent": "Recent",
+    "empty": "No chats match this filter.",
+    "noMeetings": "Meeting chats will appear here.",
+    "deletedMessage": "This message has been deleted.",
+    "yesterday": "Yesterday",
+    "today": "Today",
+    "muted": "Muted",
+    "groupMembers_one": "{{count}} member",
+    "groupMembers_other": "{{count}} members",
+    "selectChat": "Select a chat to start messaging",
+    "selectChatHint": "Your direct and group conversations live here.",
+    "tabs": {
+      "chat": "Chat",
+      "files": "Files",
+      "add": "Add a tab"
+    },
+    "videoCall": "Video call",
+    "audioCall": "Audio call",
+    "participants": "Participants",
+    "milestoneMessages": "The message history arrives in milestone 2."
+  },
+  "teams": {
+    "title": "Groups",
+    "joinOrCreate": "Join or create",
+    "general": "General",
+    "privateChannel": "Private channel",
+    "expand": "Expand {{name}}",
+    "collapse": "Collapse {{name}}",
+    "members_one": "{{count}} member",
+    "members_other": "{{count}} members",
+    "roles": {
+      "owner": "Owner",
+      "member": "Member",
+      "guest": "Guest"
+    },
+    "tabs": {
+      "posts": "Posts",
+      "files": "Files",
+      "notes": "Notes",
+      "add": "Add a tab"
+    },
+    "meet": "Meet",
+    "newPost": "New post",
+    "empty": "You are not a member of any group yet.",
+    "selectChannel": "Select a channel",
+    "milestonePosts": "Posts and threads arrive in milestone 3."
+  },
+  "placeholder": {
+    "activity": "Mentions, replies, reactions and missed calls will show up here (milestone 4).",
+    "calendar": "The calendar with day, work week, week and month views arrives in milestone 6.",
+    "calls": "Audio and video calls arrive in milestone 7.",
+    "files": "All your shared files will be listed here (milestone 5).",
+    "more": "More apps"
+  },
+  "listPane": {
+    "resize": "Resize list"
+  }
+}
