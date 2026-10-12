@@ -15,6 +15,11 @@ import {
 
 const MenuContext = createContext<{ close: () => void }>({ close: () => {} });
 
+/** Lets MenuItems inside a standalone MenuList (e.g. a context menu) close it. */
+export function MenuContextProvider({ close, children }: { close: () => void; children: ReactNode }) {
+  return <MenuContext.Provider value={{ close }}>{children}</MenuContext.Provider>;
+}
+
 export interface MenuTriggerProps {
   ref: Ref<HTMLButtonElement>;
   onClick: () => void;
