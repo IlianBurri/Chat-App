@@ -44,6 +44,14 @@ export function createSocketServer(httpServer: HttpServer) {
     socket.emit('presence:snapshot', await presenceSnapshot());
     void broadcastPresence(userId);
 
+    // Typing indicator: relayed to the other members of the chat, never stored.
+    socket.on('typing', async (payload: unknown) => {
+      const { chatId, typing } = (payload ?? {}) as { chatId?: unknown; typing?: unknown };
+      if (typeof chatId !== 'string' || !socket.rooms.has(rooms.chat(chatId))) return;
+      const me = await prisma.user.findUnique({ where: { id: userId }, select: { name: true } });
+      socket.to(rooms.chat(chatId)).emit('typing', { chatId, userId, name: me?.name ?? '', typing: typing === true });
+    });
+
     socket.on('presence:idle', (idle: unknown) => {
       presence.setIdle(userId, socket.id, idle === true);
       void broadcastPresence(userId);
