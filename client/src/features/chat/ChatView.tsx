@@ -8,7 +8,8 @@ import { useAuthStore } from '@/stores/auth';
 import { isUnread, useChatsStore } from '@/stores/chats';
 import { useMessagesStore } from '@/stores/messages';
 import { useTypingNames } from '@/stores/typing';
-import { ChatHeader } from './ChatHeader';
+import { FilesTab } from '@/features/files/FilesTab';
+import { ChatHeader, type ChatTab } from './ChatHeader';
 import { Composer } from './Composer';
 import { MessageList } from './MessageList';
 
@@ -31,6 +32,7 @@ function OpenChat({ chatId, meId }: { chatId: string; meId: string }) {
   const state = useMessagesStore((s) => s.byChat[chatId]);
   const [replyTo, setReplyTo] = useState<MessageDto | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [tab, setTab] = useState<ChatTab>('chat');
   const typingNames = useTypingNames(chatId);
   const others = useMemo(() => chat.members.filter((m) => m.id !== meId), [chat.members, meId]);
 
@@ -67,8 +69,10 @@ function OpenChat({ chatId, meId }: { chatId: string; meId: string }) {
 
   return (
     <main className="flex min-w-0 flex-1 flex-col bg-main">
-      <ChatHeader chat={chat} meId={meId} />
-      {state?.error ? (
+      <ChatHeader chat={chat} meId={meId} tab={tab} onTabChange={setTab} />
+      {tab === 'files' ? (
+        <FilesTab target={{ chatId }} label={t('chat.tabs.files')} />
+      ) : state?.error ? (
         <EmptyState icon={ChatsCircleIcon} title={t('auth.errors.generic')} text={t('chat.loadFailed')} />
       ) : state?.loaded ? (
         <MessageList
@@ -83,10 +87,14 @@ function OpenChat({ chatId, meId }: { chatId: string; meId: string }) {
       ) : (
         <div className="flex-1" aria-busy="true" />
       )}
-      <p aria-live="polite" className="h-5 px-6 text-xs text-muted">
-        {typingNames.length > 0 && <TypingText names={typingNames} />}
-      </p>
-      <Composer chatId={chatId} people={others} replyTo={replyTo} onCancelReply={() => setReplyTo(null)} onEditLast={editLast} />
+      {tab === 'chat' && (
+        <>
+          <p aria-live="polite" className="h-5 px-6 text-xs text-muted">
+            {typingNames.length > 0 && <TypingText names={typingNames} />}
+          </p>
+          <Composer chatId={chatId} people={others} replyTo={replyTo} onCancelReply={() => setReplyTo(null)} onEditLast={editLast} />
+        </>
+      )}
     </main>
   );
 }

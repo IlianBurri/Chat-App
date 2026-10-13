@@ -1,8 +1,7 @@
-import { DotsThreeIcon, FolderIcon, LockSimpleIcon, NotePencilIcon, UsersThreeIcon, VideoCameraIcon } from '@phosphor-icons/react';
+import { DotsThreeIcon, LockSimpleIcon, NotePencilIcon, UsersThreeIcon, VideoCameraIcon } from '@phosphor-icons/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useParams, useSearchParams } from 'react-router';
-import { EmptyState } from '@/components/layout/PlaceholderView';
 import { Button } from '@/components/ui/Button';
 import { useComingSoon } from '@/components/ui/ComingSoon';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
@@ -15,6 +14,7 @@ import { useAuthStore } from '@/stores/auth';
 import { usePostsStore } from '@/stores/posts';
 import { usePresenceStore } from '@/stores/presence';
 import { useWorkspacesStore } from '@/stores/workspaces';
+import { FilesTab } from '@/features/files/FilesTab';
 import { CHANNEL_MENTION_ID, CHANNEL_MENTION_NAMES, ChannelContext, type ChannelContextValue } from './channelContext';
 import { NotesTab } from './NotesTab';
 import { PostEditor } from './PostEditor';
@@ -176,8 +176,9 @@ function Channel({ workspace, channel }: { workspace: WorkspaceSummary; channel:
                     richByDefault
                     submitLabel={t('teams.publish')}
                     onCancel={() => setComposing(false)}
-                    onSubmit={async (content, subject) => {
-                      await posts.create(channel.id, { content, subject: subject || undefined });
+                    uploadTarget={{ channelId: channel.id }}
+                    onSubmit={async (content, subject, fileIds) => {
+                      await posts.create(channel.id, { content, subject: subject || undefined, fileIds });
                       setComposing(false);
                     }}
                   />
@@ -190,7 +191,9 @@ function Channel({ workspace, channel }: { workspace: WorkspaceSummary; channel:
             </div>
           </>
         )}
-        {tab === 'files' && <EmptyState icon={FolderIcon} title={t('teams.tabs.files')} text={t('teams.filesSoon')} />}
+        {tab === 'files' && (
+          <FilesTab target={{ channelId: channel.id }} label={t('teams.tabs.files')} canModerate={() => workspace.permissions.moderate} />
+        )}
         {tab === 'notes' && <NotesTab />}
       </main>
 

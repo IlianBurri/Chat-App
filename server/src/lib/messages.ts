@@ -1,4 +1,5 @@
 import type { Prisma } from '../generated/prisma/client';
+import { attachmentInclude, toFileDto } from './files';
 
 export const messageInclude = {
   author: { select: { id: true, name: true, avatarUrl: true } },
@@ -7,6 +8,7 @@ export const messageInclude = {
     select: { id: true, content: true, deletedAt: true, author: { select: { id: true, name: true } } },
   },
   forwardedFrom: { select: { author: { select: { id: true, name: true } } } },
+  files: attachmentInclude,
   poll: {
     include: {
       options: { orderBy: { position: 'asc' }, include: { votes: { select: { userId: true } } } },
@@ -57,6 +59,7 @@ export function toMessageDto(m: MessageRow) {
       : null,
     forwardedFrom: m.forwardedFrom ? { author: m.forwardedFrom.author } : null,
     reactions: deleted ? [] : summarizeReactions(m.reactions),
+    files: deleted ? [] : m.files.map(toFileDto),
     poll:
       m.poll && !deleted
         ? {

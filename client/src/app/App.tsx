@@ -1,4 +1,4 @@
-import { BellIcon, CalendarBlankIcon, CloudIcon, PhoneIcon, UsersThreeIcon } from '@phosphor-icons/react';
+import { BellIcon, CalendarBlankIcon, PhoneIcon, UsersThreeIcon } from '@phosphor-icons/react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createBrowserRouter, Navigate, Outlet, RouterProvider, useParams } from 'react-router';
@@ -10,6 +10,7 @@ import { AuthPage } from '@/features/auth/AuthPage';
 import { ChatList } from '@/features/chat/ChatList';
 import { ChatEmpty, ChatView } from '@/features/chat/ChatView';
 import { NewChatView } from '@/features/chat/NewChatView';
+import { FilesNav, FilesView } from '@/features/files/FilesApp';
 import { ChannelView } from '@/features/teams/ChannelView';
 import { DiscoverView } from '@/features/teams/DiscoverView';
 import { TeamsDialogs } from '@/features/teams/TeamsDialogs';
@@ -95,9 +96,21 @@ function ActivitySection() {
   );
 }
 
-function Placeholder({ section }: { section: 'calendar' | 'calls' | 'files' }) {
+function FilesSection() {
   const { t } = useTranslation();
-  const icons = { calendar: CalendarBlankIcon, calls: PhoneIcon, files: CloudIcon };
+  return (
+    <>
+      <ListPane label={t('files.title')}>
+        <FilesNav />
+      </ListPane>
+      <FilesView />
+    </>
+  );
+}
+
+function Placeholder({ section }: { section: 'calendar' | 'calls' }) {
+  const { t } = useTranslation();
+  const icons = { calendar: CalendarBlankIcon, calls: PhoneIcon };
   return <PlaceholderView icon={icons[section]} title={t(`nav.${section}`)} text={t(`placeholder.${section}`)} />;
 }
 
@@ -135,7 +148,7 @@ const router = createBrowserRouter([
       { path: 'activity', element: <ActivitySection /> },
       { path: 'calendar', element: <Placeholder section="calendar" /> },
       { path: 'calls', element: <Placeholder section="calls" /> },
-      { path: 'files', element: <Placeholder section="files" /> },
+      { path: 'files', element: <FilesSection /> },
       { path: '*', element: <Navigate to="/chat" replace /> },
     ],
   },

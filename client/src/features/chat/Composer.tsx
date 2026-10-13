@@ -1,9 +1,11 @@
 import clsx from 'clsx';
-import { CalendarPlusIcon, ChartBarIcon, PaperPlaneRightIcon, PaperclipIcon, PlusIcon, SmileyIcon, TextAaIcon, XIcon } from '@phosphor-icons/react';
+import { CalendarPlusIcon, ChartBarIcon, PaperPlaneRightIcon, PlusIcon, SmileyIcon, TextAaIcon, XIcon } from '@phosphor-icons/react';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { create } from 'zustand';
 import { FormatToolbar, MentionSuggestions } from '@/components/editor/EditorParts';
+import { AttachButton, AttachmentTray, DropOverlay } from '@/components/files/AttachmentTray';
+import { useAttachments } from '@/components/files/useAttachments';
 import { useTextEditor } from '@/components/editor/useTextEditor';
 import { useComingSoon } from '@/components/ui/ComingSoon';
 import { EmojiPicker } from '@/components/ui/EmojiPicker';
@@ -101,15 +103,22 @@ export function Composer({ chatId, people, replyTo, onCancelReply, onEditLast }:
   };
   const candidates = useMemo(() => people.map((p) => ({ id: p.id, name: p.name, user: p })), [people]);
   const editor = useTextEditor({ text, onTextChange: setText, candidates, textareaRef });
+  const attachments = useAttachments({ chatId });
+  const canSend = (text.trim().length > 0 || attachments.hasFiles) && !attachments.uploading;
 
   // --- sending ---------------------------------------------------------------
   const submit = async () => {
     const content = text.trim();
-    if (!content || sending) return;
+    if (attachments.uploading) {
+      showToast(t('files.waitForUpload'), 'error');
+      return;
+    }
+    if (!canSend || sending) return;
     setSending(true);
     // Clear right away so the user can keep typing (or press ArrowUp to edit)
     // while the request is in flight; the draft comes back if sending fails.
     const previous = { text, subject, expanded };
+    const files = attachments.take();
     setDraft(chatId, { text: '', subject: '' });
     signalTyping(false);
     setExpanded(false);
@@ -118,9 +127,12 @@ export function Composer({ chatId, people, replyTo, onCancelReply, onEditLast }:
         content,
         subject: previous.expanded && subject.trim() ? subject.trim() : undefined,
         replyToId: replyTo?.id,
+        fileIds: files.fileIds.length ? files.fileIds : undefined,
       });
+      files.release();
       onCancelReply();
     } catch {
+      files.restore();
       setDraft(chatId, { text: previous.text, subject: previous.subject });
       setExpanded(previous.expanded);
       showToast(t('composer.sendFailed'), 'error');
@@ -155,7 +167,11 @@ export function Composer({ chatId, people, replyTo, onCancelReply, onEditLast }:
     <div className="relative px-5 pb-4">
       <MentionSuggestions mentions={editor.mentions} className="left-5" />
 
-      <div className="rounded-lg border border-line bg-input shadow-card focus-within:border-b-accent focus-within:shadow-[inset_0_-2px_0_var(--ui-accent)]">
+      <div
+        {...attachments.dropProps}
+        className="relative rounded-lg border border-line bg-input shadow-card focus-within:border-b-accent focus-within:shadow-[inset_0_-2px_0_var(--ui-accent)]"
+      >
+        <DropOverlay visible={attachments.dragging} />
         {replyTo && (
           <div className="mx-2 mt-2 flex items-start gap-2 rounded-md border-l-[3px] border-accent bg-bubble px-2.5 py-1.5 text-xs">
             <div className="min-w-0 flex-1">
@@ -187,12 +203,15 @@ export function Composer({ chatId, people, replyTo, onCancelReply, onEditLast }:
           placeholder={t('composer.placeholder')}
           {...editor.textareaProps}
           onKeyDown={onKeyDown}
+          onPaste={attachments.onPaste}
           onBlur={() => signalTyping(false)}
           className={clsx(
             'block w-full resize-none bg-transparent px-3 py-2.5 text-sm leading-relaxed outline-none placeholder:text-subtle focus-visible:outline-none',
             expanded && 'min-h-24',
           )}
         />
+
+        <AttachmentTray attachments={attachments} />
 
         <div className="flex items-center gap-0.5 px-2 pb-1.5">
           <IconButton label={expanded ? t('composer.collapse') : t('composer.format')} icon={TextAaIcon} size="sm" active={expanded} aria-pressed={expanded} onClick={() => setExpanded((v) => !v)} />
@@ -203,7 +222,7 @@ export function Composer({ chatId, people, replyTo, onCancelReply, onEditLast }:
           >
             <EmojiPicker onSelect={editor.insertText} />
           </Popover>
-          <IconButton label={t('composer.attach')} icon={PaperclipIcon} size="sm" onClick={() => showComingSoon(t('composer.attach'))} />
+          <AttachButton attachments={attachments} />
           <Menu
             label={t('composer.more')}
             align="start"
@@ -222,8 +241,8 @@ export function Composer({ chatId, people, replyTo, onCancelReply, onEditLast }:
             label={t('composer.send')}
             icon={PaperPlaneRightIcon}
             size="sm"
-            className={clsx('ml-auto', text.trim() && 'text-accent hover:text-accent')}
-            disabled={!text.trim() || sending}
+            className={clsx('ml-auto', canSend && 'text-accent hover:text-accent')}
+            disabled={!canSend || sending}
             onClick={() => void submit()}
           />
         </div>

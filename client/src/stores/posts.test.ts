@@ -13,6 +13,7 @@ const post = (id: string, lastActivityAt: string, content = id): PostDto => ({
   lastActivityAt,
   deleted: false,
   reactions: [],
+  files: [],
   replies: [],
 });
 

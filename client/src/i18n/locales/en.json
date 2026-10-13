@@ -253,7 +253,6 @@
     "noPostsTitle": "No posts yet",
     "noPostsText": "Start the first conversation with “New post”.",
     "loadFailed": "The posts could not be loaded.",
-    "filesSoon": "Files shared in this channel will appear here (milestone 5).",
     "errors": {
       "lastOwner": "A workgroup needs at least one owner. Make someone else an owner first.",
       "lastMember": "A private channel needs at least one member.",
@@ -288,7 +287,6 @@
   "placeholder": {
     "calendar": "The calendar with day, work week, week and month views arrives in milestone 6.",
     "calls": "Audio and video calls arrive in milestone 7.",
-    "files": "All your shared files will be listed here (milestone 5).",
     "more": "More apps"
   },
   "listPane": {
@@ -423,5 +421,48 @@
   "alerts": {
     "inChat": "{{name}} in {{chat}}",
     "inChannel": "{{name}} in {{workspace}} › {{channel}}"
+  },
+  "files": {
+    "title": "Files",
+    "views": "File views",
+    "view": {
+      "all": "Recent",
+      "mine": "Uploaded by me",
+      "chats": "From chats",
+      "channels": "From workgroups"
+    },
+    "filter": "Filter by name",
+    "noMatch": "No file matches this name.",
+    "emptyTitle": "No files yet",
+    "emptyApp": "Files you share in chats and channels show up here.",
+    "emptyTab": "Upload a file or drag it here. Attachments of messages also show up here.",
+    "upload": "Upload",
+    "uploaded": "“{{name}}” uploaded",
+    "uploadingName": "Uploading “{{name}}” … {{percent}} %",
+    "uploading": "Uploading … {{percent}} %",
+    "failed": "Upload failed",
+    "uploadFailed": "“{{name}}” could not be uploaded.",
+    "tooLarge": "“{{name}}” is larger than 25 MB.",
+    "tooMany": "At most {{count}} files per message.",
+    "remove": "Remove {{name}}",
+    "attachments": "Attachments",
+    "dropHere": "Drop files to attach them",
+    "download": "Download",
+    "openImage": "Open image {{name}}",
+    "count_one": "{{count}} file",
+    "count_other": "{{count}} files",
+    "columns": {
+      "name": "Name",
+      "location": "Location",
+      "sharedBy": "Shared by",
+      "date": "Date",
+      "size": "Size",
+      "actions": "Actions"
+    },
+    "actionsFor": "Options for {{name}}",
+    "showInConversation": "Show in conversation",
+    "deleteTitle": "Delete file?",
+    "deleteText": "“{{name}}” will be removed for everyone. The message it was sent with stays.",
+    "waitForUpload": "Please wait until the files are uploaded."
   }
 }

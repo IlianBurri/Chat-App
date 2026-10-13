@@ -2,6 +2,7 @@ import type { Prisma } from '../generated/prisma/client';
 import { prisma } from '../db';
 import { getIo, rooms } from '../socket/realtime';
 import { forbidden, notFound } from './http-error';
+import { attachmentInclude, toFileDto } from './files';
 import { findMentions } from './mentions';
 import { summarizeReactions } from './messages';
 import { notify, type NewNotification } from './notifications';
@@ -17,7 +18,8 @@ const reactions = { select: { emoji: true, userId: true }, orderBy: { createdAt:
 export const postInclude = {
   author,
   reactions,
-  replies: { orderBy: { createdAt: 'asc' }, take: MAX_REPLIES, include: { author, reactions } },
+  files: attachmentInclude,
+  replies: { orderBy: { createdAt: 'asc' }, take: MAX_REPLIES, include: { author, reactions, files: attachmentInclude } },
 } satisfies Prisma.PostInclude;
 
 type PostRow = Prisma.PostGetPayload<{ include: typeof postInclude }>;
@@ -34,6 +36,7 @@ function toReplyDto(r: ReplyRow) {
     editedAt: r.editedAt,
     deleted,
     reactions: deleted ? [] : summarizeReactions(r.reactions),
+    files: deleted ? [] : r.files.map(toFileDto),
   };
 }
 
@@ -50,6 +53,7 @@ export function toPostDto(p: PostRow) {
     lastActivityAt: p.lastActivityAt,
     deleted,
     reactions: deleted ? [] : summarizeReactions(p.reactions),
+    files: deleted ? [] : p.files.filter((file) => file.replyId === null).map(toFileDto),
     replies: p.replies.map(toReplyDto),
   };
 }

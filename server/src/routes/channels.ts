@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { prisma } from '../db';
 import { forbidden, HttpError } from '../lib/http-error';
 import { channelNameTaken } from '../lib/permissions';
+import { assertPendingFiles, attachFiles, emitFilesChanged, fileIdsSchema, hasContentOrFiles } from '../lib/files';
 import { markNotificationsRead } from '../lib/notifications';
 import { emitPost, notifyChannelContent, postInclude, toPostDto } from '../lib/posts';
 import { publicUserSelect, toPublicUser } from '../lib/users';
@@ -170,19 +171,27 @@ channelsRouter.get('/:channelId/posts', async (req, res) => {
   res.json({ posts: rows.slice(0, PAGE_SIZE).reverse().map(toPostDto), hasMore: rows.length > PAGE_SIZE });
 });
 
-const newPost = z.object({
-  subject: z.string().trim().max(200).optional(),
-  content: z.string().trim().min(1).max(10_000),
-});
+const newPost = z
+  .object({
+    subject: z.string().trim().max(200).optional(),
+    content: z.string().trim().max(10_000),
+    fileIds: fileIdsSchema,
+  })
+  .refine(hasContentOrFiles, 'Write a post or attach a file');
 
 channelsRouter.post('/:channelId/posts', async (req, res) => {
   const userId = currentUserId(req);
   const { channel } = await requireChannelAccess(req.params.channelId, userId);
   const input = newPost.parse(req.body);
+  await assertPendingFiles(input.fileIds, userId, { channelId: channel.id });
   const now = new Date();
   const post = await prisma.post.create({
     data: { channelId: channel.id, authorId: userId, subject: input.subject || null, content: input.content, createdAt: now, lastActivityAt: now },
   });
+  if (input.fileIds?.length) {
+    await attachFiles(input.fileIds, userId, { channelId: channel.id, postId: post.id });
+    emitFilesChanged({ channelId: channel.id });
+  }
   const dto = await emitPost(post.id, 'post', userId);
   await notifyChannelContent({ channel, postId: post.id, authorId: userId, content: input.content });
   res.status(201).json({ post: dto });

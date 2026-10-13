@@ -8,6 +8,7 @@ import {
   requireMessageAccess,
   requireOwnMessage,
 } from '../lib/chats';
+import { deleteFiles, emitFilesChanged } from '../lib/files';
 import { HttpError } from '../lib/http-error';
 import { plainExcerpt } from '../lib/text';
 import { summarizeReactions } from '../lib/messages';
@@ -41,6 +42,8 @@ messagesRouter.delete('/:messageId', async (req, res) => {
     prisma.reaction.deleteMany({ where: { messageId: message.id } }),
   ]);
   await retractNotifications({ messageId: message.id });
+  await deleteFiles({ messageId: message.id });
+  emitFilesChanged({ chatId: message.chatId });
   res.json({ message: await emitMessage('message:updated', message.id) });
 });
 

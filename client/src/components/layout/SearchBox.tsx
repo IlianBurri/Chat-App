@@ -1,10 +1,12 @@
 import clsx from 'clsx';
-import { ChatsCircleIcon, FileIcon, HashIcon, LockSimpleIcon, MagnifyingGlassIcon, SpinnerGapIcon } from '@phosphor-icons/react';
+import { ChatsCircleIcon, HashIcon, LockSimpleIcon, MagnifyingGlassIcon, SpinnerGapIcon } from '@phosphor-icons/react';
 import { useEffect, useId, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
+import { FileIcon } from '@/components/files/FileIcon';
 import { Avatar } from '@/components/ui/Avatar';
 import { useToast } from '@/components/ui/Toaster';
+import { fileContextPath } from '@/features/files/FilesTable';
 import { highlightParts } from '@/features/search/Highlight';
 import { useGlobalSearch } from '@/features/search/useGlobalSearch';
 import { WorkspaceTile } from '@/features/teams/WorkspaceTile';
@@ -277,13 +279,15 @@ function useSections(results: SearchResults | null, query: string): Section[] {
 
   const files: Option[] = results.files.map((f) => ({
     id: `file-${f.id}`,
-    open: () => (f.chatId ? chatPath(f.chatId) : f.workspaceId && f.channelId ? channelPath(f.workspaceId, f.channelId) : '/files'),
+    open: () => fileContextPath(f) ?? '/files',
     content: (
       <>
-        <FileIcon className="size-6 shrink-0 text-accent" aria-hidden="true" />
+        <FileIcon mimeType={f.mimeType} name={f.name} />
         <span className="min-w-0 flex-1">
           <span className="block truncate font-medium">{mark(f.name)}</span>
-          <span className="block truncate text-xs text-muted">{whereLabel(f)}</span>
+          <span className="block truncate text-xs text-muted">
+            {f.uploader.name} · {whereLabel(f)}
+          </span>
         </span>
       </>
     ),
