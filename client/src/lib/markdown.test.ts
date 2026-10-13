@@ -65,6 +65,16 @@ describe('parseMarkdown', () => {
     expect(blocks[4]).toEqual({ type: 'codeblock', text: 'const x = 1;' });
   });
 
+  it('parses headings up to level 3 and ends paragraphs before them', () => {
+    const blocks = parseMarkdown('Intro\n## Release **2.0**\n#### zu tief\n#kein Abstand');
+    expect(blocks.map((b) => b.type)).toEqual(['paragraph', 'heading', 'paragraph']);
+    expect(blocks[1]).toEqual({
+      type: 'heading',
+      level: 2,
+      children: [{ type: 'text', text: 'Release ' }, { type: 'bold', children: [{ type: 'text', text: '2.0' }] }],
+    });
+  });
+
   it('collects mentioned user ids', () => {
     expect(mentionedUserIds('- @Ben bitte\n> @Anna Keller', people).sort()).toEqual(['a', 'b']);
   });

@@ -5,9 +5,11 @@ import { requireAuth } from './middleware/auth';
 import { requireClientHeader } from './middleware/csrf';
 import { errorHandler } from './middleware/error';
 import { authRouter } from './routes/auth';
+import { channelsRouter } from './routes/channels';
 import { chatsRouter } from './routes/chats';
 import { messagesRouter } from './routes/messages';
 import { pollsRouter } from './routes/polls';
+import { postsRouter, repliesRouter } from './routes/posts';
 import { usersRouter } from './routes/users';
 import { workspacesRouter } from './routes/workspaces';
 
@@ -30,6 +32,9 @@ export function createApp() {
   api.use('/messages', requireAuth, messagesRouter);
   api.use('/polls', requireAuth, pollsRouter);
   api.use('/workspaces', requireAuth, workspacesRouter);
+  api.use('/channels', requireAuth, channelsRouter);
+  api.use('/posts', requireAuth, postsRouter);
+  api.use('/replies', requireAuth, repliesRouter);
   api.use(() => {
     throw new HttpError(404, 'not_found', 'Unknown API route');
   });

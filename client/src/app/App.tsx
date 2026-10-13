@@ -1,7 +1,7 @@
 import { BellIcon, CalendarBlankIcon, CloudIcon, PhoneIcon, UsersThreeIcon } from '@phosphor-icons/react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router';
+import { createBrowserRouter, Navigate, Outlet, RouterProvider, useParams } from 'react-router';
 import { AppShell } from '@/components/layout/AppShell';
 import { ListPane } from '@/components/layout/ListPane';
 import { EmptyState, PlaceholderView } from '@/components/layout/PlaceholderView';
@@ -10,6 +10,8 @@ import { ChatList } from '@/features/chat/ChatList';
 import { ChatEmpty, ChatView } from '@/features/chat/ChatView';
 import { NewChatView } from '@/features/chat/NewChatView';
 import { ChannelView } from '@/features/teams/ChannelView';
+import { DiscoverView } from '@/features/teams/DiscoverView';
+import { TeamsDialogs } from '@/features/teams/TeamsDialogs';
 import { TeamsList } from '@/features/teams/TeamsList';
 import { useAuthStore } from '@/stores/auth';
 import { useWorkspacesStore } from '@/stores/workspaces';
@@ -49,6 +51,7 @@ function TeamsSection() {
         <TeamsList />
       </ListPane>
       <Outlet />
+      <TeamsDialogs />
     </>
   );
 }
@@ -64,6 +67,16 @@ function TeamsIndex() {
       <EmptyState icon={UsersThreeIcon} title={t('teams.selectChannel')} text={t('teams.empty')} />
     </main>
   );
+}
+
+/** /teams/:workspaceId opens the workgroup's default channel. */
+function WorkspaceIndex() {
+  const { workspaceId } = useParams();
+  const { workspaces, loaded } = useWorkspacesStore();
+  if (!loaded) return <main className="flex-1 bg-main" />;
+  const workspace = workspaces.find((w) => w.id === workspaceId);
+  const channel = workspace?.channels.find((c) => c.isDefault) ?? workspace?.channels[0];
+  return <Navigate to={workspace && channel ? `/teams/${workspace.id}/${channel.id}` : '/teams'} replace />;
 }
 
 function Placeholder({ section }: { section: 'activity' | 'calendar' | 'calls' | 'files' }) {
@@ -98,6 +111,8 @@ const router = createBrowserRouter([
         element: <TeamsSection />,
         children: [
           { index: true, element: <TeamsIndex /> },
+          { path: 'discover', element: <DiscoverView /> },
+          { path: ':workspaceId', element: <WorkspaceIndex /> },
           { path: ':workspaceId/:channelId', element: <ChannelView /> },
         ],
       },

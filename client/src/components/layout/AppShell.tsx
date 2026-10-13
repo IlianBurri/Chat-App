@@ -7,6 +7,7 @@ import { connectSocket, disconnectSocket } from '@/lib/socket';
 import { useAuthStore } from '@/stores/auth';
 import { useChatsStore } from '@/stores/chats';
 import { useMessagesStore } from '@/stores/messages';
+import { usePostsStore } from '@/stores/posts';
 import { useWorkspacesStore } from '@/stores/workspaces';
 import { AppBar } from './AppBar';
 import { TitleBar } from './TitleBar';
@@ -25,7 +26,9 @@ export function AppShell() {
     // drop cached histories (open chats reload theirs automatically).
     const onReconnect = () => {
       useMessagesStore.getState().reset();
+      usePostsStore.getState().reset();
       void useChatsStore.getState().load();
+      void useWorkspacesStore.getState().load();
     };
     socket.io.on('reconnect', onReconnect);
 
@@ -35,6 +38,8 @@ export function AppShell() {
       disconnectSocket();
       useChatsStore.getState().reset();
       useMessagesStore.getState().reset();
+      useWorkspacesStore.getState().reset();
+      usePostsStore.getState().reset();
     };
   }, []);
 

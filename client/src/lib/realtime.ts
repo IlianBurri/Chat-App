@@ -2,9 +2,11 @@ import type { Socket } from 'socket.io-client';
 import { useAuthStore } from '@/stores/auth';
 import { useChatsStore } from '@/stores/chats';
 import { useMessagesStore } from '@/stores/messages';
+import { usePostsStore } from '@/stores/posts';
 import { usePresenceStore } from '@/stores/presence';
 import { useTypingStore } from '@/stores/typing';
-import type { ChatSummary, MessageDto, ReactionSummary, Status } from './types';
+import { useWorkspacesStore } from '@/stores/workspaces';
+import type { ChatSummary, MessageDto, PostDto, ReactionSummary, Status } from './types';
 
 interface PresenceEvent {
   userId: string;
@@ -48,6 +50,19 @@ export function bindRealtime(socket: Socket): () => void {
     'chat:updated': (chat: ChatSummary) => chats().upsertChat(chat),
     'chat:removed': (e: { chatId: string }) => chats().removeChat(e.chatId),
     'chat:flags': (e: { chatId: string; markedUnread: boolean }) => chats().applyFlags(e.chatId, { markedUnread: e.markedUnread }),
+
+    'post:changed': (e: { post: PostDto; kind: 'post' | 'reply' | 'edit'; actorId: string }) => {
+      usePostsStore.getState().upsert(e.post);
+      const workspaces = useWorkspacesStore.getState();
+      // New content from someone else marks the channel unread, unless it is open right now.
+      if (e.kind !== 'edit' && e.actorId !== meId() && workspaces.activeChannelId !== e.post.channelId) {
+        workspaces.setUnread(e.post.channelId, true);
+      }
+    },
+    'workspaces:changed': () => void useWorkspacesStore.getState().load(),
+    'channel:read': (e: { channelId: string }) => useWorkspacesStore.getState().setUnread(e.channelId, false),
+    'channel:notes': (e: { channelId: string; notes: string }) => usePostsStore.getState().setNotes(e.channelId, e.notes),
+    'channel:removed': (e: { channelId: string }) => usePostsStore.getState().forget(e.channelId),
   };
 
   for (const [event, handler] of Object.entries(handlers)) socket.on(event, handler);

@@ -3,6 +3,7 @@ import { Server } from 'socket.io';
 import { config } from '../config';
 import { prisma } from '../db';
 import { readCookie, verifySession } from '../lib/auth';
+import { visibleChannelIds } from '../lib/workspaces';
 import { presence } from '../services/presence';
 import { broadcastPresence, presenceSnapshot, rooms, setIo } from './realtime';
 
@@ -24,7 +25,6 @@ export function createSocketServer(httpServer: HttpServer) {
       select: {
         manualStatus: true,
         chatMemberships: { select: { chatId: true } },
-        workspaceMemberships: { select: { workspace: { select: { channels: { select: { id: true } } } } } },
       },
     });
     if (!user) {
@@ -37,7 +37,8 @@ export function createSocketServer(httpServer: HttpServer) {
     await socket.join([
       rooms.user(userId),
       ...user.chatMemberships.map((m) => rooms.chat(m.chatId)),
-      ...user.workspaceMemberships.flatMap((m) => m.workspace.channels.map((c) => rooms.channel(c.id))),
+      // Only channels the user can see, so private posts stay private.
+      ...(await visibleChannelIds(userId)).map(rooms.channel),
     ]);
 
     presence.connect(userId, socket.id, user.manualStatus);

@@ -29,6 +29,15 @@ function BlockView({ block, meId }: { block: Block; meId?: string }) {
           <Inlines nodes={block.children} meId={meId} />
         </p>
       );
+    case 'heading': {
+      const Heading = (['h3', 'h4', 'h5'] as const)[block.level - 1];
+      const size = block.level === 1 ? 'text-lg' : block.level === 2 ? 'text-base' : 'text-sm';
+      return (
+        <Heading className={clsx('leading-snug font-semibold', size)}>
+          <Inlines nodes={block.children} meId={meId} />
+        </Heading>
+      );
+    }
     case 'codeblock':
       return (
         <pre className="overflow-x-auto rounded-md bg-black/5 p-2 font-mono text-[13px] leading-snug dark:bg-white/10">
