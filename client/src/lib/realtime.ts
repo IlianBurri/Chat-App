@@ -1,4 +1,5 @@
 import type { Socket } from 'socket.io-client';
+import { useActivityStore } from '@/stores/activity';
 import { useAuthStore } from '@/stores/auth';
 import { useChatsStore } from '@/stores/chats';
 import { useMessagesStore } from '@/stores/messages';
@@ -6,7 +7,8 @@ import { usePostsStore } from '@/stores/posts';
 import { usePresenceStore } from '@/stores/presence';
 import { useTypingStore } from '@/stores/typing';
 import { useWorkspacesStore } from '@/stores/workspaces';
-import type { ChatSummary, MessageDto, PostDto, ReactionSummary, Status } from './types';
+import { alertForMessage, alertForNotification, alertForPost } from './alerts';
+import type { ChatSummary, MessageDto, NotificationDto, PostDto, ReactionSummary, Status } from './types';
 
 interface PresenceEvent {
   userId: string;
@@ -32,6 +34,7 @@ export function bindRealtime(socket: Socket): () => void {
       messages().upsert(message);
       chats().applyMessage(message, meId(), true);
       useTypingStore.getState().clearUser(message.chatId, message.author.id);
+      alertForMessage(message);
     },
     'message:updated': (message: MessageDto) => {
       messages().upsert(message);
@@ -58,11 +61,21 @@ export function bindRealtime(socket: Socket): () => void {
       if (e.kind !== 'edit' && e.actorId !== meId() && workspaces.activeChannelId !== e.post.channelId) {
         workspaces.setUnread(e.post.channelId, true);
       }
+      if (e.kind !== 'edit') alertForPost(e.post, e.kind, e.actorId);
     },
     'workspaces:changed': () => void useWorkspacesStore.getState().load(),
     'channel:read': (e: { channelId: string }) => useWorkspacesStore.getState().setUnread(e.channelId, false),
     'channel:notes': (e: { channelId: string; notes: string }) => usePostsStore.getState().setNotes(e.channelId, e.notes),
     'channel:removed': (e: { channelId: string }) => usePostsStore.getState().forget(e.channelId),
+
+    'notification:new': (e: { notification: NotificationDto; unreadCount: number }) => {
+      useActivityStore.getState().added(e.notification, e.unreadCount);
+      alertForNotification(e.notification);
+    },
+    'notification:removed': (e: { ids: string[]; unreadCount: number }) => useActivityStore.getState().removed(e.ids, e.unreadCount),
+    'notification:read': (e: { ids: string[] | 'all'; unreadCount: number }) =>
+      useActivityStore.getState().readChanged(e.ids, true, e.unreadCount),
+    'notification:unread': (e: { id: string; unreadCount: number }) => useActivityStore.getState().readChanged([e.id], false, e.unreadCount),
   };
 
   for (const [event, handler] of Object.entries(handlers)) socket.on(event, handler);

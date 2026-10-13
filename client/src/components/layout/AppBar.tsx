@@ -5,8 +5,7 @@ import { NavLink } from 'react-router';
 import { Badge } from '@/components/ui/Badge';
 import { useComingSoon } from '@/components/ui/ComingSoon';
 import { Tooltip } from '@/components/ui/Tooltip';
-import { isUnread, useChatsStore } from '@/stores/chats';
-import { useWorkspacesStore } from '@/stores/workspaces';
+import { useBadgeCounts } from '@/stores/badges';
 
 interface NavEntry {
   to: string;
@@ -19,15 +18,12 @@ interface NavEntry {
 export function AppBar() {
   const { t } = useTranslation();
   const showComingSoon = useComingSoon((s) => s.show);
-  const unreadChats = useChatsStore((s) => s.chats.filter((c) => !c.muted && isUnread(c)).length);
-  const unreadChannels = useWorkspacesStore((s) =>
-    s.workspaces.reduce((n, w) => n + w.channels.filter((c) => c.unread && !c.muted && !c.hidden).length, 0),
-  );
+  const badges = useBadgeCounts();
 
   const entries: NavEntry[] = [
-    { to: '/activity', icon: BellIcon, label: t('nav.activity') },
-    { to: '/chat', icon: ChatsCircleIcon, label: t('nav.chat'), badge: unreadChats },
-    { to: '/teams', icon: UsersThreeIcon, label: t('nav.teams'), badge: unreadChannels },
+    { to: '/activity', icon: BellIcon, label: t('nav.activity'), badge: badges.activity },
+    { to: '/chat', icon: ChatsCircleIcon, label: t('nav.chat'), badge: badges.chat },
+    { to: '/teams', icon: UsersThreeIcon, label: t('nav.teams'), badge: badges.teams },
     { to: '/calendar', icon: CalendarBlankIcon, label: t('nav.calendar') },
     { to: '/calls', icon: PhoneIcon, label: t('nav.calls') },
     { to: '/files', icon: CloudIcon, label: t('nav.files') },

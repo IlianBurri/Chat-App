@@ -1,8 +1,11 @@
 import clsx from 'clsx';
 import { DesktopIcon, MoonIcon, SunIcon } from '@phosphor-icons/react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/Button';
 import { Dialog } from '@/components/ui/Dialog';
 import { LANGUAGES } from '@/i18n';
+import { notificationPermission } from '@/lib/desktopNotify';
 import { useUiStore, type ThemePreference } from '@/stores/ui';
 
 const THEMES = [
@@ -64,6 +67,8 @@ export function SettingsDialog({ open, onClose }: { open: boolean; onClose: () =
           </select>
         </div>
 
+        <NotificationSettings />
+
         <div>
           <h3 className="mb-2 text-sm font-semibold">{t('settings.keyboardShortcuts')}</h3>
           <dl className="grid grid-cols-[1fr_auto] gap-y-1.5 text-sm">
@@ -83,5 +88,38 @@ export function SettingsDialog({ open, onClose }: { open: boolean; onClose: () =
         </div>
       </div>
     </Dialog>
+  );
+}
+
+function NotificationSettings() {
+  const { t } = useTranslation();
+  const enabled = useUiStore((s) => s.desktopNotifications);
+  const setEnabled = useUiStore((s) => s.setDesktopNotifications);
+  const [permission, setPermission] = useState(notificationPermission);
+
+  return (
+    <fieldset>
+      <legend className="mb-2 text-sm font-semibold">{t('settings.notifications')}</legend>
+      <label className="flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          checked={enabled}
+          disabled={permission === 'unsupported'}
+          onChange={(e) => setEnabled(e.target.checked)}
+          className="size-4 accent-[var(--ui-accent)]"
+        />
+        {t('settings.desktopNotifications')}
+      </label>
+      <div className="mt-1.5 ml-6 space-y-1.5 text-xs text-muted">
+        {permission === 'default' && enabled ? (
+          <Button size="sm" onClick={() => void Notification.requestPermission().then(setPermission)}>
+            {t('activity.permissionAllow')}
+          </Button>
+        ) : (
+          <p>{t(`settings.permission.${permission}`)}</p>
+        )}
+        <p>{t('settings.notificationRules')}</p>
+      </div>
+    </fieldset>
   );
 }

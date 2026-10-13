@@ -10,6 +10,7 @@ import {
 } from '../lib/chats';
 import { HttpError } from '../lib/http-error';
 import { messageInclude, toMessageDto } from '../lib/messages';
+import { markNotificationsRead } from '../lib/notifications';
 import { currentUserId } from '../middleware/auth';
 import { getIo, rooms } from '../socket/realtime';
 
@@ -169,6 +170,7 @@ chatsRouter.post('/:chatId/read', async (req, res) => {
 
   const receipt = { chatId: chat.id, userId, readAt: existing && existing.readAt > readAt ? existing.readAt : readAt };
   getIo().to(rooms.chat(chat.id)).emit('read:updated', receipt);
+  await markNotificationsRead(userId, { chatId: chat.id }, receipt.readAt);
   res.json({ receipt });
 });
 

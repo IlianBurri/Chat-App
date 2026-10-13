@@ -129,7 +129,7 @@ async function main() {
   );
 
   // A reply and a poll so the demo shows these features.
-  await prisma.message.create({
+  const benReply = await prisma.message.create({
     data: {
       chatId: annaBen.chat.id,
       authorId: u.ben,
@@ -293,7 +293,10 @@ async function main() {
             author: 'ben',
             hoursAgo: 8,
             content: 'Wir sollten auf Vite 8 aktualisieren. Wer hat Zeit für ein kurzes Pairing?',
-            replies: [['david', 7, 'Ich, heute Nachmittag passt.']],
+            replies: [
+              ['david', 7, 'Ich, heute Nachmittag passt.'],
+              ['ben', 2, '@Anna Keller, sollen wir das Update noch vor dem Release einplanen?'],
+            ],
           },
         ],
       },
@@ -336,6 +339,43 @@ async function main() {
       { name: 'Leads', private: ['elif', 'felix'] },
     ],
   });
+
+  // ------------------------------------------------------------- activity
+  // Anna's feed: an unread mention and reply, and reactions she has already seen.
+  const mention = await prisma.reply.findFirstOrThrow({
+    where: { authorId: u.ben, content: { startsWith: '@Anna Keller' } },
+    include: { post: true },
+  });
+  const notifications = [
+    {
+      type: 'mention',
+      actorId: u.ben,
+      channelId: mention.post.channelId,
+      postId: mention.postId,
+      replyId: mention.id,
+      preview: mention.content,
+      createdAt: mention.createdAt,
+    },
+    {
+      type: 'reply',
+      actorId: u.ben,
+      chatId: annaBen.chat.id,
+      messageId: benReply.id,
+      preview: benReply.content,
+      createdAt: benReply.createdAt,
+    },
+    ...(['ben', 'elif'] as const).map((who) => ({
+      type: 'reaction',
+      actorId: u[who],
+      emoji: '👍',
+      chatId: lunch.chat.id,
+      messageId: lunch.ids[3],
+      preview: 'Perfekt, bis gleich.',
+      createdAt: ago(3 * HOUR - 5 * MINUTE),
+      readAt: ago(2 * HOUR),
+    })),
+  ];
+  for (const n of notifications) await prisma.notification.create({ data: { userId: u.anna, ...n } });
 
   // ------------------------------------------------------------- meetings
   const today = new Date(now);

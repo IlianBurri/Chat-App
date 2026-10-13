@@ -169,3 +169,60 @@ export type SystemEvent =
   | { event: 'added'; userIds: string[] }
   | { event: 'left' }
   | { event: 'renamed'; name: string };
+
+export type NotificationType = 'mention' | 'reply' | 'reaction' | 'missed_call' | 'meeting';
+
+/** An entry of the activity feed. */
+export interface NotificationDto {
+  id: string;
+  type: NotificationType;
+  actor: (UserRef & { avatarUrl: string | null }) | null;
+  preview: string | null;
+  emoji: string | null;
+  chatId: string | null;
+  channelId: string | null;
+  workspaceId: string | null;
+  messageId: string | null;
+  postId: string | null;
+  replyId: string | null;
+  createdAt: string;
+  read: boolean;
+}
+
+export interface SearchConversationHit {
+  kind: 'message' | 'post' | 'reply';
+  id: string;
+  author: UserRef & { avatarUrl: string | null };
+  subject: string | null;
+  excerpt: string;
+  createdAt: string;
+  chatId?: string;
+  workspaceId?: string;
+  channelId?: string;
+  postId?: string;
+}
+
+type WorkspaceRef = Pick<WorkspaceSummary, 'id' | 'name' | 'color' | 'logoUrl'>;
+
+export type SearchGroupHit =
+  | ({ kind: 'workspace' } & WorkspaceRef)
+  | { kind: 'channel'; id: string; name: string; type: 'standard' | 'private'; isDefault: boolean; workspace: WorkspaceRef }
+  | { kind: 'chat'; id: string; name: string };
+
+export interface SearchFileHit {
+  id: string;
+  name: string;
+  mimeType: string;
+  size: number;
+  createdAt: string;
+  chatId: string | null;
+  channelId: string | null;
+  workspaceId: string | null;
+}
+
+export interface SearchResults {
+  people: PublicUser[];
+  groups: SearchGroupHit[];
+  messages: SearchConversationHit[];
+  files: SearchFileHit[];
+}

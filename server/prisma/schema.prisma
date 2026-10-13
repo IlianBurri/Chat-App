@@ -400,6 +400,8 @@ model Notification {
   type      String
   /// Short text shown in the activity feed
   preview   String?
+  /// Emoji of a reaction notification
+  emoji     String?
   chatId    String?
   channelId String?
   messageId String?
@@ -416,4 +418,7 @@ model Notification {
   reply   Reply?   @relation(fields: [replyId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
+  @@index([messageId])
+  @@index([postId])
+  @@index([replyId])
 }

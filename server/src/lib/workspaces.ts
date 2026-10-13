@@ -69,6 +69,20 @@ export async function notifyWorkspacesChanged(userIds: string[]) {
   for (const id of unique) io.to(rooms.user(id)).emit('workspaces:changed');
 }
 
+/** Everyone who can see a channel: its members if private, otherwise the whole workgroup. */
+export async function channelAudience(channel: { id: string; workspaceId: string; type: string }) {
+  const user = { select: { id: true, name: true } };
+  const rows =
+    channel.type === 'private'
+      ? await prisma.channelMember.findMany({
+          // Private channel members must still belong to the workgroup.
+          where: { channelId: channel.id, user: { workspaceMemberships: { some: { workspaceId: channel.workspaceId } } } },
+          select: { user },
+        })
+      : await prisma.workspaceMember.findMany({ where: { workspaceId: channel.workspaceId }, select: { user } });
+  return rows.map((r) => r.user);
+}
+
 export async function workspaceMemberIds(workspaceId: string) {
   const members = await prisma.workspaceMember.findMany({ where: { workspaceId }, select: { userId: true } });
   return members.map((m) => m.userId);

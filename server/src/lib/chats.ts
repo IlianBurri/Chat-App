@@ -1,7 +1,10 @@
 import { prisma } from '../db';
 import { getIo, rooms } from '../socket/realtime';
 import { forbidden, notFound } from './http-error';
+import { findMentions } from './mentions';
 import { messageInclude, toMessageDto } from './messages';
+import { notify, type NewNotification } from './notifications';
+import { plainExcerpt } from './text';
 import { publicUserSelect, toPublicUser } from './users';
 
 /** Throws 404 when the chat does not exist or the user is not a member. */
@@ -164,5 +167,26 @@ export async function createMessage(data: {
     readAt: now,
     lastReadMessageId: message.id,
   });
+  if (message.type === 'text' && !message.forwardedFromId) await notifyChatMessage(message);
   return dto;
+}
+
+/** Mentions and replies in a chat end up in the activity feed of the people concerned. */
+async function notifyChatMessage(message: { id: string; chatId: string; authorId: string; content: string; replyToId: string | null }) {
+  const members = await prisma.chatMember.findMany({
+    where: { chatId: message.chatId },
+    select: { user: { select: { id: true, name: true } } },
+  });
+  const base = { actorId: message.authorId, chatId: message.chatId, messageId: message.id, preview: plainExcerpt(message.content) };
+  const items: NewNotification[] = findMentions(
+    message.content,
+    members.map((m) => m.user),
+  ).userIds.map((userId) => ({ ...base, userId, type: 'mention' }));
+
+  if (message.replyToId) {
+    const original = await prisma.message.findUnique({ where: { id: message.replyToId }, select: { authorId: true, deletedAt: true } });
+    const stillMember = members.some((m) => m.user.id === original?.authorId);
+    if (original && !original.deletedAt && stillMember) items.push({ ...base, userId: original.authorId, type: 'reply' });
+  }
+  await notify(items);
 }

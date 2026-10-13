@@ -41,7 +41,7 @@ export function wouldRemoveLastOwner(targetRole: string, ownerCount: number, nex
 }
 
 /** Display names of the default channel in every supported language. */
-const RESERVED_CHANNEL_NAMES = ['general', 'allgemein'];
+export const RESERVED_CHANNEL_NAMES = ['general', 'allgemein'];
 
 /** Channel names are unique per workgroup (trimmed, case-insensitive); the default channel's names are reserved. */
 export function channelNameTaken(name: string, existing: { id: string; name: string }[], ignoreId?: string) {

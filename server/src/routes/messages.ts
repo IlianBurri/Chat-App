@@ -9,7 +9,9 @@ import {
   requireOwnMessage,
 } from '../lib/chats';
 import { HttpError } from '../lib/http-error';
+import { plainExcerpt } from '../lib/text';
 import { summarizeReactions } from '../lib/messages';
+import { retractNotifications, syncReactionNotification } from '../lib/notifications';
 import { currentUserId } from '../middleware/auth';
 import { getIo, rooms } from '../socket/realtime';
 
@@ -38,6 +40,7 @@ messagesRouter.delete('/:messageId', async (req, res) => {
     prisma.message.update({ where: { id: message.id }, data: { deletedAt: new Date(), pinnedAt: null, pinnedById: null } }),
     prisma.reaction.deleteMany({ where: { messageId: message.id } }),
   ]);
+  await retractNotifications({ messageId: message.id });
   res.json({ message: await emitMessage('message:updated', message.id) });
 });
 
@@ -61,6 +64,14 @@ messagesRouter.post('/:messageId/reactions', async (req, res) => {
   });
   const payload = { chatId: message.chatId, messageId: message.id, reactions: summarizeReactions(all) };
   getIo().to(rooms.chat(message.chatId)).emit('reaction:updated', payload);
+  await syncReactionNotification({
+    added: !existing,
+    actorId: userId,
+    authorId: message.authorId,
+    emoji,
+    preview: plainExcerpt(message.content),
+    target: { chatId: message.chatId, messageId: message.id },
+  });
   res.json(payload);
 });
 

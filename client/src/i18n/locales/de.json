@@ -52,7 +52,17 @@
   "search": {
     "placeholder": "Personen, Nachrichten, Dateien und Gruppen suchen",
     "label": "Suche",
-    "comingSoon": "Die Suche kommt mit Meilenstein 4."
+    "results": "Suchergebnisse",
+    "sections": {
+      "people": "Personen",
+      "groups": "Arbeitsgruppen, Kanäle und Gruppenchats",
+      "messages": "Nachrichten",
+      "files": "Dateien"
+    },
+    "searching": "Suche läuft…",
+    "noResults": "Keine Ergebnisse für «{{query}}»",
+    "workgroup": "Arbeitsgruppe",
+    "groupChat": "Gruppenchat"
   },
   "settings": {
     "title": "Einstellungen",
@@ -65,7 +75,16 @@
     "keyboardShortcuts": "Tastenkombinationen",
     "shortcutSearch": "Suchen",
     "shortcutSend": "Nachricht senden",
-    "shortcutNewLine": "Neue Zeile"
+    "shortcutNewLine": "Neue Zeile",
+    "notifications": "Benachrichtigungen",
+    "desktopNotifications": "Desktop-Benachrichtigungen anzeigen",
+    "permission": {
+      "default": "Dein Browser wurde noch nicht gefragt.",
+      "granted": "In diesem Browser erlaubt.",
+      "denied": "In diesem Browser blockiert. Du kannst sie in den Website-Einstellungen freigeben.",
+      "unsupported": "Dieser Browser unterstützt keine Desktop-Benachrichtigungen."
+    },
+    "notificationRules": "Stummgeschaltete Chats und Kanäle melden sich nur bei @-Erwähnungen. Bei «Nicht stören» erscheinen keine Pop-ups; die Zähler laufen weiter."
   },
   "status": {
     "available": "Verfügbar",
@@ -267,7 +286,6 @@
     }
   },
   "placeholder": {
-    "activity": "Erwähnungen, Antworten, Reaktionen und verpasste Anrufe erscheinen hier (Meilenstein 4).",
     "calendar": "Der Kalender mit Tag-, Arbeitswochen-, Wochen- und Monatsansicht kommt mit Meilenstein 6.",
     "calls": "Audio- und Videoanrufe kommen mit Meilenstein 7.",
     "files": "Hier werden alle geteilten Dateien aufgelistet (Meilenstein 5).",
@@ -365,5 +383,45 @@
     "replyingTo": "Antwort an {{name}}",
     "cancelReply": "Antwort abbrechen",
     "mentionEveryone": "Benachrichtigt alle"
+  },
+  "activity": {
+    "title": "Aktivität",
+    "filter": "Aktivität filtern",
+    "filters": {
+      "unread": "Ungelesen",
+      "mention": "@Erwähnungen",
+      "reply": "Antworten",
+      "reaction": "Reaktionen",
+      "missed_call": "Verpasste Anrufe"
+    },
+    "markAllRead": "Alle als gelesen markieren",
+    "empty": "Erwähnungen, Antworten, Reaktionen und verpasste Anrufe erscheinen hier.",
+    "emptyFiltered": "Für diesen Filter gibt es nichts.",
+    "emptyTitle": "Bleib auf dem Laufenden",
+    "emptyText": "Wähle links einen Eintrag, um direkt zur Nachricht zu springen.",
+    "loadMore": "Mehr laden",
+    "permissionText": "Erhalte Desktop-Benachrichtigungen für neue Nachrichten, auch wenn Hallo im Hintergrund ist.",
+    "permissionAllow": "Im Browser erlauben",
+    "permissionDismiss": "Keine Desktop-Benachrichtigungen",
+    "unread": "Ungelesen",
+    "itemMenu": "Optionen für die Aktivität",
+    "gone": "Diese Nachricht ist nicht mehr verfügbar.",
+    "chat": "Chat",
+    "channel": "Kanal",
+    "someone": "Jemand",
+    "text": {
+      "mention_chat": "{{name}} hat dich erwähnt",
+      "mention_channel": "{{name}} hat dich erwähnt",
+      "reply_chat": "{{name}} hat auf deine Nachricht geantwortet",
+      "reply_channel": "{{name}} hat in einer Unterhaltung geantwortet, an der du teilnimmst",
+      "reaction_chat": "{{name}} hat mit {{emoji}} auf deine Nachricht reagiert",
+      "reaction_channel": "{{name}} hat mit {{emoji}} auf deinen Beitrag reagiert",
+      "missed_call": "Verpasster Anruf von {{name}}",
+      "meeting": "{{name}} hat dich zu einer Besprechung eingeladen"
+    }
+  },
+  "alerts": {
+    "inChat": "{{name}} in {{chat}}",
+    "inChannel": "{{name}} in {{workspace}} › {{channel}}"
   }
 }

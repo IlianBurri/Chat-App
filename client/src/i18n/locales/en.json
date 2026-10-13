@@ -52,7 +52,17 @@
   "search": {
     "placeholder": "Search people, messages, files and groups",
     "label": "Search",
-    "comingSoon": "Search is coming in milestone 4."
+    "results": "Search results",
+    "sections": {
+      "people": "People",
+      "groups": "Workgroups, channels and group chats",
+      "messages": "Messages",
+      "files": "Files"
+    },
+    "searching": "Searching…",
+    "noResults": "No results for “{{query}}”",
+    "workgroup": "Workgroup",
+    "groupChat": "Group chat"
   },
   "settings": {
     "title": "Settings",
@@ -65,7 +75,16 @@
     "keyboardShortcuts": "Keyboard shortcuts",
     "shortcutSearch": "Search",
     "shortcutSend": "Send message",
-    "shortcutNewLine": "New line"
+    "shortcutNewLine": "New line",
+    "notifications": "Notifications",
+    "desktopNotifications": "Show desktop notifications",
+    "permission": {
+      "default": "Your browser has not been asked yet.",
+      "granted": "Allowed in this browser.",
+      "denied": "Blocked in this browser. You can allow them in the site settings.",
+      "unsupported": "This browser does not support desktop notifications."
+    },
+    "notificationRules": "Muted chats and channels only notify you about @mentions. While your status is “Do not disturb” there are no pop-ups; badges keep counting."
   },
   "status": {
     "available": "Available",
@@ -267,7 +286,6 @@
     }
   },
   "placeholder": {
-    "activity": "Mentions, replies, reactions and missed calls will show up here (milestone 4).",
     "calendar": "The calendar with day, work week, week and month views arrives in milestone 6.",
     "calls": "Audio and video calls arrive in milestone 7.",
     "files": "All your shared files will be listed here (milestone 5).",
@@ -365,5 +383,45 @@
     "replyingTo": "Replying to {{name}}",
     "cancelReply": "Cancel reply",
     "mentionEveryone": "Notifies everyone"
+  },
+  "activity": {
+    "title": "Activity",
+    "filter": "Filter activity",
+    "filters": {
+      "unread": "Unread",
+      "mention": "@Mentions",
+      "reply": "Replies",
+      "reaction": "Reactions",
+      "missed_call": "Missed calls"
+    },
+    "markAllRead": "Mark all as read",
+    "empty": "Mentions, replies, reactions and missed calls will show up here.",
+    "emptyFiltered": "Nothing here for this filter.",
+    "emptyTitle": "Stay in the loop",
+    "emptyText": "Select an entry on the left to jump straight to the message.",
+    "loadMore": "Load more",
+    "permissionText": "Get desktop notifications for new messages, even when Hallo is in the background.",
+    "permissionAllow": "Allow in browser",
+    "permissionDismiss": "No desktop notifications",
+    "unread": "Unread",
+    "itemMenu": "Activity options",
+    "gone": "This message is no longer available.",
+    "chat": "Chat",
+    "channel": "Channel",
+    "someone": "Someone",
+    "text": {
+      "mention_chat": "{{name}} mentioned you",
+      "mention_channel": "{{name}} mentioned you",
+      "reply_chat": "{{name}} replied to your message",
+      "reply_channel": "{{name}} replied in a conversation you are part of",
+      "reaction_chat": "{{name}} reacted {{emoji}} to your message",
+      "reaction_channel": "{{name}} reacted {{emoji}} to your post",
+      "missed_call": "Missed call from {{name}}",
+      "meeting": "{{name}} invited you to a meeting"
+    }
+  },
+  "alerts": {
+    "inChat": "{{name}} in {{chat}}",
+    "inChannel": "{{name}} in {{workspace}} › {{channel}}"
   }
 }

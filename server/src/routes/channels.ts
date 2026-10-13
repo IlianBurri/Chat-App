@@ -3,7 +3,8 @@ import { z } from 'zod';
 import { prisma } from '../db';
 import { forbidden, HttpError } from '../lib/http-error';
 import { channelNameTaken } from '../lib/permissions';
-import { emitPost, postInclude, toPostDto } from '../lib/posts';
+import { markNotificationsRead } from '../lib/notifications';
+import { emitPost, notifyChannelContent, postInclude, toPostDto } from '../lib/posts';
 import { publicUserSelect, toPublicUser } from '../lib/users';
 import { notifyWorkspacesChanged, requireChannelAccess, workspaceMemberIds } from '../lib/workspaces';
 import { currentUserId } from '../middleware/auth';
@@ -147,6 +148,7 @@ channelsRouter.post('/:channelId/read', async (req, res) => {
     update: { lastReadAt: now },
   });
   getIo().to(rooms.user(userId)).emit('channel:read', { channelId: channel.id });
+  await markNotificationsRead(userId, { channelId: channel.id }, now);
   res.status(204).end();
 });
 
@@ -181,5 +183,7 @@ channelsRouter.post('/:channelId/posts', async (req, res) => {
   const post = await prisma.post.create({
     data: { channelId: channel.id, authorId: userId, subject: input.subject || null, content: input.content, createdAt: now, lastActivityAt: now },
   });
-  res.status(201).json({ post: await emitPost(post.id, 'post', userId) });
+  const dto = await emitPost(post.id, 'post', userId);
+  await notifyChannelContent({ channel, postId: post.id, authorId: userId, content: input.content });
+  res.status(201).json({ post: dto });
 });

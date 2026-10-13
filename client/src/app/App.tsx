@@ -5,6 +5,7 @@ import { createBrowserRouter, Navigate, Outlet, RouterProvider, useParams } from
 import { AppShell } from '@/components/layout/AppShell';
 import { ListPane } from '@/components/layout/ListPane';
 import { EmptyState, PlaceholderView } from '@/components/layout/PlaceholderView';
+import { ActivityList } from '@/features/activity/ActivityList';
 import { AuthPage } from '@/features/auth/AuthPage';
 import { ChatList } from '@/features/chat/ChatList';
 import { ChatEmpty, ChatView } from '@/features/chat/ChatView';
@@ -13,6 +14,7 @@ import { ChannelView } from '@/features/teams/ChannelView';
 import { DiscoverView } from '@/features/teams/DiscoverView';
 import { TeamsDialogs } from '@/features/teams/TeamsDialogs';
 import { TeamsList } from '@/features/teams/TeamsList';
+import { setNavigator } from '@/lib/links';
 import { useAuthStore } from '@/stores/auth';
 import { useWorkspacesStore } from '@/stores/workspaces';
 import { useTheme } from './useTheme';
@@ -79,9 +81,23 @@ function WorkspaceIndex() {
   return <Navigate to={workspace && channel ? `/teams/${workspace.id}/${channel.id}` : '/teams'} replace />;
 }
 
-function Placeholder({ section }: { section: 'activity' | 'calendar' | 'calls' | 'files' }) {
+function ActivitySection() {
   const { t } = useTranslation();
-  const icons = { activity: BellIcon, calendar: CalendarBlankIcon, calls: PhoneIcon, files: CloudIcon };
+  return (
+    <>
+      <ListPane label={t('activity.title')}>
+        <ActivityList />
+      </ListPane>
+      <main className="flex flex-1 bg-main">
+        <EmptyState icon={BellIcon} title={t('activity.emptyTitle')} text={t('activity.emptyText')} />
+      </main>
+    </>
+  );
+}
+
+function Placeholder({ section }: { section: 'calendar' | 'calls' | 'files' }) {
+  const { t } = useTranslation();
+  const icons = { calendar: CalendarBlankIcon, calls: PhoneIcon, files: CloudIcon };
   return <PlaceholderView icon={icons[section]} title={t(`nav.${section}`)} text={t(`placeholder.${section}`)} />;
 }
 
@@ -116,7 +132,7 @@ const router = createBrowserRouter([
           { path: ':workspaceId/:channelId', element: <ChannelView /> },
         ],
       },
-      { path: 'activity', element: <Placeholder section="activity" /> },
+      { path: 'activity', element: <ActivitySection /> },
       { path: 'calendar', element: <Placeholder section="calendar" /> },
       { path: 'calls', element: <Placeholder section="calls" /> },
       { path: 'files', element: <Placeholder section="files" /> },
@@ -124,6 +140,8 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
+setNavigator((path) => void router.navigate(path));
 
 export function App() {
   useTheme();

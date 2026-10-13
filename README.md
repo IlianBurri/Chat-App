@@ -2,7 +2,7 @@
 
 Hallo ist eine Kommunikations- und Kollaborations-App für Firmen: Einzel- und Gruppenchats, Arbeitsgruppen mit Themenkanälen, Audio-/Videoanrufe, Kalender und Dateiablage an einem Ort.
 
-> **Stand:** Meilenstein 3 von 8 – Chats sowie Arbeitsgruppen mit Kanälen in Echtzeit. Funktionen späterer Meilensteine sind in der App als „Kommt bald“ markiert.
+> **Stand:** Meilenstein 4 von 8 – Chats, Arbeitsgruppen mit Kanälen, Aktivitätsfeed, Benachrichtigungen, globale Suche und automatischer Status. Funktionen späterer Meilensteine sind in der App als „Kommt bald“ markiert.
 
 ## Voraussetzungen
 
@@ -95,13 +95,14 @@ Auswahlfelder sind im Schema bewusst als Text gespeichert, damit es ohne Änderu
 1. In `server/prisma/schema.prisma` `provider = "postgresql"` setzen.
 2. Den Treiberadapter in `server/src/db.ts` auf `@prisma/adapter-pg` umstellen.
 3. `DATABASE_URL` auf die PostgreSQL-Verbindung setzen und `npm run dev` starten.
+4. Damit die Suche Gross-/Kleinschreibung ignoriert, in `textMatch` in `server/src/routes/search.ts` `mode: 'insensitive'` ergänzen (SQLite ignoriert sie für ASCII-Buchstaben von selbst).
 
 ## Meilensteine
 
 1. ✅ Projekt-Setup, Anmeldung, Grundlayout, Demo-Daten
 2. ✅ Einzel- und Gruppenchats in Echtzeit (Reaktionen, Bearbeiten/Löschen, Lesestatus, Tippindikator, Antworten, Umfragen, @-Erwähnungen)
 3. ✅ Arbeitsgruppen und Kanäle (Beiträge mit Antwort-Threads, Notizen, private Kanäle, Rollen Besitzer/Mitglied/Gast, Beitreten oder erstellen)
-4. ⏳ Aktivitätsfeed, Benachrichtigungen, Suche, automatischer Status
+4. ✅ Aktivitätsfeed (Erwähnungen, Antworten, Reaktionen; filterbar, Sprung zur Nachricht), Browser-Benachrichtigungen mit Badges und Stummschalten, globale Suche (Ctrl/Cmd+K), Status „Abwesend“ nach 5 Minuten Inaktivität
 5. ⏳ Dateien und Uploads
 6. ⏳ Kalender und Besprechungsplanung
 7. ⏳ Audio-/Videoanrufe mit Bildschirmfreigabe

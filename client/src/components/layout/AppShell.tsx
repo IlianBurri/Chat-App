@@ -1,10 +1,14 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router';
 import { ComingSoonDialog } from '@/components/ui/ComingSoon';
 import { Toaster } from '@/components/ui/Toaster';
+import { watchIdle } from '@/lib/idle';
 import { bindRealtime } from '@/lib/realtime';
 import { connectSocket, disconnectSocket } from '@/lib/socket';
+import { useActivityStore } from '@/stores/activity';
 import { useAuthStore } from '@/stores/auth';
+import { useBadgeCounts } from '@/stores/badges';
 import { useChatsStore } from '@/stores/chats';
 import { useMessagesStore } from '@/stores/messages';
 import { usePostsStore } from '@/stores/posts';
@@ -15,13 +19,23 @@ import { TitleBar } from './TitleBar';
 /** Signed-in layout: title bar on top, app bar left, section content right. */
 export function AppShell() {
   const user = useAuthStore((s) => s.user);
+  useTitleBadge();
 
   useEffect(() => {
     void useChatsStore.getState().load();
     void useWorkspacesStore.getState().load();
+    void useActivityStore.getState().load();
 
     const socket = connectSocket();
     const unbind = bindRealtime(socket);
+
+    // "Away" after a few minutes without input; the server combines all open tabs.
+    let idle = false;
+    const stopIdle = watchIdle((value) => {
+      idle = value;
+      socket.emit('presence:idle', value);
+    });
+
     // After a reconnect we may have missed events: refresh the chat list and
     // drop cached histories (open chats reload theirs automatically).
     const onReconnect = () => {
@@ -29,10 +43,13 @@ export function AppShell() {
       usePostsStore.getState().reset();
       void useChatsStore.getState().load();
       void useWorkspacesStore.getState().load();
+      void useActivityStore.getState().load();
+      if (idle) socket.emit('presence:idle', true);
     };
     socket.io.on('reconnect', onReconnect);
 
     return () => {
+      stopIdle();
       unbind();
       socket.io.off('reconnect', onReconnect);
       disconnectSocket();
@@ -40,6 +57,7 @@ export function AppShell() {
       useMessagesStore.getState().reset();
       useWorkspacesStore.getState().reset();
       usePostsStore.getState().reset();
+      useActivityStore.getState().reset();
     };
   }, []);
 
@@ -58,4 +76,16 @@ export function AppShell() {
       <Toaster />
     </div>
   );
+}
+
+/** "(3) Hallo" in the browser tab while there is something unread. */
+function useTitleBadge() {
+  const { t } = useTranslation();
+  const { activity, chat, teams } = useBadgeCounts();
+  const total = activity + chat + teams;
+  const name = t('app.name');
+  useEffect(() => {
+    document.title = total > 0 ? `(${total}) ${name}` : name;
+  }, [total, name]);
+  useEffect(() => () => void (document.title = name), [name]);
 }

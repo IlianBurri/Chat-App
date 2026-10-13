@@ -2,8 +2,11 @@ import type { Prisma } from '../generated/prisma/client';
 import { prisma } from '../db';
 import { getIo, rooms } from '../socket/realtime';
 import { forbidden, notFound } from './http-error';
+import { findMentions } from './mentions';
 import { summarizeReactions } from './messages';
-import { requireChannelAccess } from './workspaces';
+import { notify, type NewNotification } from './notifications';
+import { plainExcerpt } from './text';
+import { channelAudience, requireChannelAccess } from './workspaces';
 
 /** Upper bound of replies sent with a post; threads are short in practice. */
 export const MAX_REPLIES = 500;
@@ -92,4 +95,35 @@ export function assertAuthor(item: { authorId: string; deletedAt: Date | null },
 export function assertCanDelete(item: { authorId: string; deletedAt: Date | null }, userId: string, canModerate: boolean) {
   if (item.deletedAt) throw notFound('Post');
   if (item.authorId !== userId && !canModerate) throw forbidden();
+}
+
+/**
+ * Activity for new channel content: mentioned people (everyone for @channel)
+ * and, for replies, the post author and everyone who already replied.
+ */
+export async function notifyChannelContent(input: {
+  channel: { id: string; workspaceId: string; type: string };
+  postId: string;
+  replyId?: string;
+  authorId: string;
+  content: string;
+}) {
+  const { channel, postId, replyId, authorId, content } = input;
+  const audience = await channelAudience(channel);
+  const base = { actorId: authorId, channelId: channel.id, postId, replyId: replyId ?? null, preview: plainExcerpt(content) };
+  const mentions = findMentions(content, audience, { channel: true });
+  const mentioned = mentions.everyone ? audience.map((p) => p.id) : mentions.userIds;
+  const items: NewNotification[] = mentioned.map((userId) => ({ ...base, userId, type: 'mention' }));
+
+  if (replyId) {
+    const thread = await prisma.post.findUniqueOrThrow({
+      where: { id: postId },
+      select: { authorId: true, replies: { where: { deletedAt: null }, select: { authorId: true } } },
+    });
+    const inAudience = new Set(audience.map((p) => p.id));
+    for (const userId of new Set([thread.authorId, ...thread.replies.map((r) => r.authorId)])) {
+      if (inAudience.has(userId)) items.push({ ...base, userId, type: 'reply' });
+    }
+  }
+  await notify(items);
 }
