@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../db';
+import { fileInclude, toFileDto } from '../lib/files';
 import { canSeeChannel, RESERVED_CHANNEL_NAMES } from '../lib/permissions';
 import { excerptAround } from '../lib/text';
 import { publicUserSelect, toPublicUser } from '../lib/users';
@@ -81,8 +82,8 @@ searchRouter.get('/', async (req, res) => {
       take: LIMIT.messages,
     }),
     prisma.file.findMany({
-      where: { originalName: match, OR: [{ chat: myChats }, { channelId: { in: channelIds } }] },
-      select: { id: true, originalName: true, mimeType: true, size: true, createdAt: true, chatId: true, channelId: true, channel: { select: { workspaceId: true } } },
+      where: { originalName: match, pending: false, OR: [{ chat: myChats }, { channelId: { in: channelIds } }] },
+      include: fileInclude,
       orderBy: { createdAt: 'desc' },
       take: LIMIT.files,
     }),
@@ -135,15 +136,6 @@ searchRouter.get('/', async (req, res) => {
       ...groupChats.map((c) => ({ kind: 'chat' as const, id: c.id, name: c.name ?? '' })),
     ].slice(0, LIMIT.groups),
     messages: conversation,
-    files: files.map((f) => ({
-      id: f.id,
-      name: f.originalName,
-      mimeType: f.mimeType,
-      size: f.size,
-      createdAt: f.createdAt,
-      chatId: f.chatId,
-      channelId: f.channelId,
-      workspaceId: f.channel?.workspaceId ?? null,
-    })),
+    files: files.map(toFileDto),
   });
 });

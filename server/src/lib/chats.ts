@@ -1,6 +1,7 @@
 import { prisma } from '../db';
 import { getIo, rooms } from '../socket/realtime';
 import { forbidden, notFound } from './http-error';
+import { assertPendingFiles, attachFiles, emitFilesChanged } from './files';
 import { findMentions } from './mentions';
 import { messageInclude, toMessageDto } from './messages';
 import { notify, type NewNotification } from './notifications';
@@ -43,7 +44,10 @@ export async function chatSummaries(userId: string, chatIds?: string[]) {
           messages: {
             orderBy: { createdAt: 'desc' },
             take: 1,
-            include: { author: { select: { id: true, name: true } } },
+            include: {
+              author: { select: { id: true, name: true } },
+              files: { where: { pending: false }, select: { originalName: true }, take: 1 },
+            },
           },
           readReceipts: { where: { userId } },
         },
@@ -68,6 +72,7 @@ export async function chatSummaries(userId: string, chatIds?: string[]) {
               id: last.id,
               type: last.type,
               content: last.deletedAt ? null : last.content,
+              fileName: last.deletedAt ? null : (last.files[0]?.originalName ?? null),
               deleted: last.deletedAt !== null,
               author: last.author,
               createdAt: last.createdAt,
@@ -124,8 +129,11 @@ export async function createMessage(data: {
   type?: string;
   replyToId?: string | null;
   forwardedFromId?: string | null;
+  /** The author's pending uploads for this chat */
+  fileIds?: string[];
   poll?: { question: string; multiple: boolean; options: string[] };
 }) {
+  await assertPendingFiles(data.fileIds, data.authorId, { chatId: data.chatId });
   const now = new Date();
   const message = await prisma.$transaction(async (tx) => {
     const created = await tx.message.create({
@@ -160,6 +168,10 @@ export async function createMessage(data: {
     return created;
   });
 
+  if (data.fileIds?.length) {
+    await attachFiles(data.fileIds, data.authorId, { chatId: data.chatId, messageId: message.id });
+    emitFilesChanged({ chatId: data.chatId });
+  }
   const dto = await emitMessage('message:new', message.id);
   getIo().to(rooms.chat(data.chatId)).emit('read:updated', {
     chatId: data.chatId,

@@ -4,6 +4,7 @@ import { ArrowBendUpLeftIcon, DotsThreeIcon, LinkSimpleIcon, PencilSimpleIcon, S
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Markdown } from '@/components/chat/Markdown';
+import { Attachments } from '@/components/files/Attachments';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { EmojiPicker } from '@/components/ui/EmojiPicker';
@@ -181,7 +182,8 @@ function ThreadItem({ kind, item, highlighted, onReply, onDelete, onReact, onSav
         ) : (
           <>
             {subject && <h3 className="mt-0.5 text-base leading-snug font-semibold">{subject}</h3>}
-            <Markdown source={item.content} mentions={mentionTargets} meId={meId} className="mt-0.5 text-sm leading-relaxed" />
+            {item.content && <Markdown source={item.content} mentions={mentionTargets} meId={meId} className="mt-0.5 text-sm leading-relaxed" />}
+            <Attachments files={item.files} />
           </>
         )}
 
@@ -292,7 +294,8 @@ export const PostCard = memo(function PostCard({ post, highlightId }: PostCardPr
                 candidates={candidates}
                 enterSends
                 onCancel={() => setReplying(false)}
-                onSubmit={(content) => posts().reply(post.id, content)}
+                uploadTarget={{ channelId: post.channelId }}
+                onSubmit={(content, _subject, fileIds) => posts().reply(post.id, content, fileIds)}
               />
             </div>
           ) : (

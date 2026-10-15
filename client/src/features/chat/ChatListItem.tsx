@@ -31,7 +31,11 @@ export function ChatListItem({ chat, meId, now }: { chat: ChatSummary; meId: str
         ? t('chat.systemPreview')
         : last.type === 'poll'
           ? `📊 ${last.content ?? ''}`
-          : previewText(last.content ?? '');
+          : last.content
+            ? previewText(last.content)
+            : last.fileName
+              ? `📎 ${last.fileName}`
+              : '';
     const author = last.author.id === meId ? t('common.you') : last.author.name.split(' ')[0];
     preview = last.type !== 'system' && (chat.type === 'group' || last.author.id === meId) ? `${author}: ${text}` : text;
   }

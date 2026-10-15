@@ -302,6 +302,8 @@ model File {
   storedName   String   @unique
   mimeType     String
   size         Int
+  /// Uploaded from a composer but not sent yet; removed if never sent
+  pending      Boolean  @default(false)
   createdAt    DateTime @default(now())
   chatId       String?
   channelId    String?

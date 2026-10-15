@@ -25,6 +25,8 @@ export interface ChatSummary {
     id: string;
     type: MessageType;
     content: string | null;
+    /** First attachment, for previews of messages without text */
+    fileName: string | null;
     deleted: boolean;
     author: { id: string; name: string };
     createdAt: string;
@@ -107,6 +109,7 @@ export interface ReplyDto {
   editedAt: string | null;
   deleted: boolean;
   reactions: ReactionSummary[];
+  files: FileDto[];
 }
 
 export interface PostDto {
@@ -120,6 +123,8 @@ export interface PostDto {
   lastActivityAt: string;
   deleted: boolean;
   reactions: ReactionSummary[];
+  /** Attachments of the post itself (replies carry their own) */
+  files: FileDto[];
   replies: ReplyDto[];
 }
 
@@ -156,6 +161,7 @@ export interface MessageDto {
   replyTo: { id: string; author: UserRef; content: string | null; deleted: boolean } | null;
   forwardedFrom: { author: UserRef } | null;
   reactions: ReactionSummary[];
+  files: FileDto[];
   poll: PollDto | null;
 }
 
@@ -209,20 +215,25 @@ export type SearchGroupHit =
   | { kind: 'channel'; id: string; name: string; type: 'standard' | 'private'; isDefault: boolean; workspace: WorkspaceRef }
   | { kind: 'chat'; id: string; name: string };
 
-export interface SearchFileHit {
+/** An uploaded file and where it was shared. */
+export interface FileDto {
   id: string;
   name: string;
   mimeType: string;
   size: number;
   createdAt: string;
+  uploader: UserRef;
   chatId: string | null;
   channelId: string | null;
   workspaceId: string | null;
+  messageId: string | null;
+  postId: string | null;
+  replyId: string | null;
 }
 
 export interface SearchResults {
   people: PublicUser[];
   groups: SearchGroupHit[];
   messages: SearchConversationHit[];
-  files: SearchFileHit[];
+  files: FileDto[];
 }

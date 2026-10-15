@@ -2,8 +2,12 @@
  * Demo data: 6 users, 2 workgroups with channels and threads, chats, meetings.
  * Runs on every `npm run dev`; skips when data exists unless called with --force.
  */
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import bcrypt from 'bcryptjs';
+import { config } from '../src/config';
 import { prisma } from '../src/db';
+import { demoFiles } from './demoFiles';
 
 export const DEMO_PASSWORD = 'Demo1234!';
 
@@ -92,7 +96,7 @@ async function main() {
     ['ben', 11, 'Kannst du danach nochmals drüberschauen?'],
   ]);
 
-  await createChat('direct', ['anna', 'clara'], [
+  const annaClara = await createChat('direct', ['anna', 'clara'], [
     ['clara', 3 * 24 * 60, 'Die neuen Icons für die Einstellungen sind fertig.'],
     ['anna', 3 * 24 * 60 - 20, 'Wunderbar, danke Clara!', [['clara', '❤️']]],
     ['clara', 90, 'Morgen 10 Uhr Design-Review, passt dir das?'],
@@ -376,6 +380,39 @@ async function main() {
     })),
   ];
   for (const n of notifications) await prisma.notification.create({ data: { userId: u.anna, ...n } });
+
+  // ---------------------------------------------------------------- files
+  // Small generated files, so previews and the Files app have content. Names on
+  // disk are fixed, so a reset overwrites them instead of piling up copies.
+  const uploadDir = resolve(config.uploadDir);
+  mkdirSync(uploadDir, { recursive: true });
+  const postBySubject = (subject: string) => prisma.post.findFirstOrThrow({ where: { subject } });
+  const [palette, goals, feedback, maintenance] = await Promise.all(
+    ['Neue Farbpalette', 'Q4-Ziele', 'Feedback von Nordwind', 'Wartungsfenster am Freitag'].map(postBySubject),
+  );
+  const targets = {
+    palette: { channelId: palette.channelId, postId: palette.id },
+    goals: { channelId: goals.channelId, postId: goals.id },
+    feedback: { channelId: feedback.channelId, postId: feedback.id },
+    // Uploaded in the channel's files tab, not attached to a post
+    general: { channelId: maintenance.channelId },
+    icons: { chatId: annaClara.chat.id, messageId: annaClara.ids[0] },
+  };
+  for (const file of demoFiles) {
+    const content = Buffer.from(file.content, 'utf8');
+    writeFileSync(resolve(uploadDir, file.storedName), content);
+    await prisma.file.create({
+      data: {
+        uploaderId: u[file.uploader],
+        originalName: file.name,
+        storedName: file.storedName,
+        mimeType: file.mimeType,
+        size: content.length,
+        createdAt: ago(file.hoursAgo * HOUR),
+        ...targets[file.target],
+      },
+    });
+  }
 
   // ------------------------------------------------------------- meetings
   const today = new Date(now);

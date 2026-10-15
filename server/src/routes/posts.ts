@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../db';
+import { assertPendingFiles, attachFiles, deleteFiles, emitFilesChanged, fileIdsSchema, hasContentOrFiles } from '../lib/files';
 import { HttpError } from '../lib/http-error';
 import { plainExcerpt } from '../lib/text';
 import { retractNotifications, syncReactionNotification } from '../lib/notifications';
@@ -58,6 +59,8 @@ postsRouter.delete('/:postId', async (req, res) => {
     prisma.reaction.deleteMany({ where: { postId: post.id } }),
   ]);
   await retractNotifications({ postId: post.id, replyId: null });
+  await deleteFiles({ postId: post.id, replyId: null });
+  emitFilesChanged({ channelId: post.channelId });
   res.json({ post: await emitPost(post.id, 'edit', userId) });
 });
 
@@ -74,13 +77,21 @@ postsRouter.post('/:postId/replies', async (req, res) => {
   const userId = currentUserId(req);
   const { post, channel } = await requirePostAccess(req.params.postId, userId);
   if (post.deletedAt) throw new HttpError(400, 'validation', 'Cannot reply to a deleted post');
-  const input = z.object({ content }).parse(req.body);
+  const input = z
+    .object({ content: z.string().trim().max(10_000), fileIds: fileIdsSchema })
+    .refine(hasContentOrFiles, 'Write a reply or attach a file')
+    .parse(req.body);
+  await assertPendingFiles(input.fileIds, userId, { channelId: channel.id });
   const now = new Date();
   const [reply] = await prisma.$transaction([
     prisma.reply.create({ data: { postId: post.id, authorId: userId, content: input.content, createdAt: now } }),
     // Replying moves the thread to the bottom of the channel.
     prisma.post.update({ where: { id: post.id }, data: { lastActivityAt: now } }),
   ]);
+  if (input.fileIds?.length) {
+    await attachFiles(input.fileIds, userId, { channelId: channel.id, postId: post.id, replyId: reply.id });
+    emitFilesChanged({ channelId: channel.id });
+  }
   const dto = await emitPost(post.id, 'reply', userId);
   await notifyChannelContent({ channel, postId: post.id, replyId: reply.id, authorId: userId, content: input.content });
   res.status(201).json({ post: dto });
@@ -99,13 +110,15 @@ repliesRouter.patch('/:replyId', async (req, res) => {
 
 repliesRouter.delete('/:replyId', async (req, res) => {
   const userId = currentUserId(req);
-  const { reply, can } = await requireReplyAccess(req.params.replyId, userId);
+  const { reply, can, channel } = await requireReplyAccess(req.params.replyId, userId);
   assertCanDelete(reply, userId, can.moderate);
   await prisma.$transaction([
     prisma.reply.update({ where: { id: reply.id }, data: { deletedAt: new Date() } }),
     prisma.reaction.deleteMany({ where: { replyId: reply.id } }),
   ]);
   await retractNotifications({ replyId: reply.id });
+  await deleteFiles({ replyId: reply.id });
+  emitFilesChanged({ channelId: channel.id });
   res.json({ post: await emitPost(reply.postId, 'edit', userId) });
 });
 

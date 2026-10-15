@@ -1,20 +1,24 @@
 import clsx from 'clsx';
-import { PaperPlaneRightIcon, PaperclipIcon, SmileyIcon, TextAaIcon } from '@phosphor-icons/react';
+import { PaperPlaneRightIcon, SmileyIcon, TextAaIcon } from '@phosphor-icons/react';
 import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FormatToolbar, MentionSuggestions } from '@/components/editor/EditorParts';
+import { AttachButton, AttachmentTray, DropOverlay } from '@/components/files/AttachmentTray';
+import { useAttachments } from '@/components/files/useAttachments';
 import { useTextEditor, type MentionCandidate } from '@/components/editor/useTextEditor';
 import { Button } from '@/components/ui/Button';
-import { useComingSoon } from '@/components/ui/ComingSoon';
 import { EmojiPicker } from '@/components/ui/EmojiPicker';
 import { IconButton } from '@/components/ui/IconButton';
 import { Popover } from '@/components/ui/Popover';
 import { useToast } from '@/components/ui/Toaster';
+import type { UploadTarget } from '@/lib/files';
 
 interface PostEditorProps {
   label: string;
   candidates: MentionCandidate[];
-  onSubmit: (content: string, subject: string) => Promise<void>;
+  onSubmit: (content: string, subject: string, fileIds: string[]) => Promise<void>;
+  /** Allows attachments (new posts and replies; edits keep their files) */
+  uploadTarget?: UploadTarget;
   onCancel?: () => void;
   initialText?: string;
   initialSubject?: string;
@@ -41,16 +45,19 @@ export function PostEditor({
   enterSends = false,
   submitLabel,
   autoFocus = true,
+  uploadTarget,
 }: PostEditorProps) {
   const { t } = useTranslation();
   const showToast = useToast((s) => s.show);
-  const showComingSoon = useComingSoon((s) => s.show);
   const [text, setText] = useState(initialText);
   const [subject, setSubject] = useState(initialSubject);
   const [rich, setRich] = useState(richByDefault);
   const [sending, setSending] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const editor = useTextEditor({ text, onTextChange: setText, candidates, textareaRef });
+  // Hooks can't be conditional; without a target the attachment UI is simply hidden.
+  const attachments = useAttachments(uploadTarget ?? { channelId: '' });
+  const canSend = (text.trim().length > 0 || attachments.hasFiles) && !attachments.uploading;
 
   useEffect(() => {
     if (!autoFocus) return;
@@ -68,15 +75,22 @@ export function PostEditor({
 
   const submit = async () => {
     const content = text.trim();
-    if (!content || sending) return;
+    if (attachments.uploading) {
+      showToast(t('files.waitForUpload'), 'error');
+      return;
+    }
+    if (!canSend || sending) return;
     setSending(true);
     // Clear right away; the text comes back if saving fails.
     const previous = { text, subject };
+    const files = attachments.take();
     setText('');
     setSubject('');
     try {
-      await onSubmit(content, previous.subject.trim());
+      await onSubmit(content, previous.subject.trim(), files.fileIds);
+      files.release();
     } catch {
+      files.restore();
       setText(previous.text);
       setSubject(previous.subject);
       showToast(t('composer.sendFailed'), 'error');
@@ -105,7 +119,11 @@ export function PostEditor({
   return (
     <div className="relative">
       <MentionSuggestions mentions={editor.mentions} className="left-0" />
-      <div className="rounded-lg border border-line bg-input focus-within:border-b-accent focus-within:shadow-[inset_0_-2px_0_var(--ui-accent)]">
+      <div
+        {...(uploadTarget ? attachments.dropProps : {})}
+        className="relative rounded-lg border border-line bg-input focus-within:border-b-accent focus-within:shadow-[inset_0_-2px_0_var(--ui-accent)]"
+      >
+        <DropOverlay visible={attachments.dragging} />
         {(withSubject || rich) && (
           <div className="border-b border-line px-3 pt-2">
             {withSubject && (
@@ -128,11 +146,13 @@ export function PostEditor({
           placeholder={label}
           {...editor.textareaProps}
           onKeyDown={onKeyDown}
+          onPaste={uploadTarget ? attachments.onPaste : undefined}
           className={clsx(
             'block w-full resize-none bg-transparent px-3 py-2.5 text-sm leading-relaxed outline-none placeholder:text-subtle focus-visible:outline-none',
             (withSubject || rich) && 'min-h-20',
           )}
         />
+        <AttachmentTray attachments={attachments} />
         <div className="flex items-center gap-0.5 px-2 pb-1.5">
           <IconButton
             label={rich ? t('composer.collapse') : t('composer.format')}
@@ -149,7 +169,9 @@ export function PostEditor({
           >
             <EmojiPicker onSelect={editor.insertText} />
           </Popover>
-          <IconButton label={t('composer.attach')} icon={PaperclipIcon} size="sm" onClick={() => showComingSoon(t('composer.attach'))} />
+          {uploadTarget && (
+            <AttachButton attachments={attachments} />
+          )}
           <div className="ml-auto flex items-center gap-1.5">
             {onCancel && (
               <Button size="sm" variant="ghost" onClick={onCancel}>
@@ -157,7 +179,7 @@ export function PostEditor({
               </Button>
             )}
             {submitLabel ? (
-              <Button size="sm" variant="primary" disabled={!text.trim() || sending} onClick={() => void submit()}>
+              <Button size="sm" variant="primary" disabled={!canSend || sending} onClick={() => void submit()}>
                 {submitLabel}
               </Button>
             ) : (
@@ -165,8 +187,8 @@ export function PostEditor({
                 label={t('composer.send')}
                 icon={PaperPlaneRightIcon}
                 size="sm"
-                className={clsx(text.trim() && 'text-accent hover:text-accent')}
-                disabled={!text.trim() || sending}
+                className={clsx(canSend && 'text-accent hover:text-accent')}
+                disabled={!canSend || sending}
                 onClick={() => void submit()}
               />
             )}

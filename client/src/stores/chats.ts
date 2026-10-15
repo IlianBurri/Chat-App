@@ -80,6 +80,7 @@ export const useChatsStore = create<ChatsState>((set, get) => {
           id: message.id,
           type: message.type,
           content: message.deleted ? null : message.content,
+          fileName: message.deleted ? null : (message.files[0]?.name ?? null),
           deleted: message.deleted,
           author: { id: message.author.id, name: message.author.name },
           createdAt: message.createdAt,

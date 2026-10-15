@@ -19,11 +19,11 @@ interface PostsState {
   setNotes: (channelId: string, notes: string) => void;
   saveNotes: (channelId: string, notes: string) => Promise<void>;
   upsert: (post: PostDto) => void;
-  create: (channelId: string, input: { subject?: string; content: string }) => Promise<PostDto>;
+  create: (channelId: string, input: { subject?: string; content: string; fileIds?: string[] }) => Promise<PostDto>;
   edit: (postId: string, input: { subject?: string | null; content: string }) => Promise<void>;
   remove: (postId: string) => Promise<void>;
   react: (postId: string, emoji: string) => Promise<void>;
-  reply: (postId: string, content: string) => Promise<void>;
+  reply: (postId: string, content: string, fileIds?: string[]) => Promise<void>;
   editReply: (replyId: string, content: string) => Promise<void>;
   removeReply: (replyId: string) => Promise<void>;
   reactReply: (replyId: string, emoji: string) => Promise<void>;
@@ -102,7 +102,7 @@ export const usePostsStore = create<PostsState>((set, get) => {
     edit: async (postId, input) => void (await apply(api.patch(`/posts/${postId}`, input))),
     remove: async (postId) => void (await apply(api.delete(`/posts/${postId}`))),
     react: async (postId, emoji) => void (await apply(api.post(`/posts/${postId}/reactions`, { emoji }))),
-    reply: async (postId, content) => void (await apply(api.post(`/posts/${postId}/replies`, { content }))),
+    reply: async (postId, content, fileIds) => void (await apply(api.post(`/posts/${postId}/replies`, { content, fileIds }))),
     editReply: async (replyId, content) => void (await apply(api.patch(`/replies/${replyId}`, { content }))),
     removeReply: async (replyId) => void (await apply(api.delete(`/replies/${replyId}`))),
     reactReply: async (replyId, emoji) => void (await apply(api.post(`/replies/${replyId}/reactions`, { emoji }))),

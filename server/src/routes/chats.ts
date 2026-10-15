@@ -8,6 +8,7 @@ import {
   emitChatToMembers,
   requireChatMember,
 } from '../lib/chats';
+import { fileIdsSchema, hasContentOrFiles } from '../lib/files';
 import { HttpError } from '../lib/http-error';
 import { messageInclude, toMessageDto } from '../lib/messages';
 import { markNotificationsRead } from '../lib/notifications';
@@ -115,11 +116,14 @@ chatsRouter.get('/:chatId/messages', async (req, res) => {
   });
 });
 
-const newMessage = z.object({
-  content,
-  subject: z.string().trim().max(200).optional(),
-  replyToId: id.optional(),
-});
+const newMessage = z
+  .object({
+    content: z.string().trim().max(10_000),
+    subject: z.string().trim().max(200).optional(),
+    replyToId: id.optional(),
+    fileIds: fileIdsSchema,
+  })
+  .refine(hasContentOrFiles, 'Write a message or attach a file');
 
 chatsRouter.post('/:chatId/messages', async (req, res) => {
   const userId = currentUserId(req);

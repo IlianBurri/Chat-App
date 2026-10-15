@@ -16,7 +16,16 @@ import { chatTitle, directPartner, useChatsStore } from '@/stores/chats';
 import { useStatus } from '@/stores/presence';
 import { AddPeopleDialog, RenameChatDialog } from './ChatDialogs';
 
-export function ChatHeader({ chat, meId }: { chat: ChatSummary; meId: string }) {
+export type ChatTab = 'chat' | 'files';
+
+interface ChatHeaderProps {
+  chat: ChatSummary;
+  meId: string;
+  tab: ChatTab;
+  onTabChange: (tab: ChatTab) => void;
+}
+
+export function ChatHeader({ chat, meId, tab, onTabChange }: ChatHeaderProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const showComingSoon = useComingSoon((s) => s.show);
@@ -50,10 +59,11 @@ export function ChatHeader({ chat, meId }: { chat: ChatSummary; meId: string }) 
       <Tabs
         label={title}
         className="ml-3"
-        active="chat"
+        active={tab}
+        onChange={(id) => onTabChange(id as ChatTab)}
         tabs={[
           { id: 'chat', label: t('chat.tabs.chat') },
-          { id: 'files', label: t('chat.tabs.files'), onSelect: () => showComingSoon(t('chat.tabs.files')) },
+          { id: 'files', label: t('chat.tabs.files') },
         ]}
         onAdd={() => showComingSoon(t('chat.tabs.add'))}
         addLabel={t('chat.tabs.add')}

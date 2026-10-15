@@ -2,7 +2,7 @@
 
 Hallo ist eine Kommunikations- und Kollaborations-App für Firmen: Einzel- und Gruppenchats, Arbeitsgruppen mit Themenkanälen, Audio-/Videoanrufe, Kalender und Dateiablage an einem Ort.
 
-> **Stand:** Meilenstein 4 von 8 – Chats, Arbeitsgruppen mit Kanälen, Aktivitätsfeed, Benachrichtigungen, globale Suche und automatischer Status. Funktionen späterer Meilensteine sind in der App als „Kommt bald“ markiert.
+> **Stand:** Meilenstein 5 von 8 – Chats, Arbeitsgruppen mit Kanälen, Aktivitätsfeed, Benachrichtigungen, globale Suche, automatischer Status sowie Dateien und Uploads. Funktionen späterer Meilensteine sind in der App als „Kommt bald“ markiert.
 
 ## Voraussetzungen
 
@@ -56,7 +56,7 @@ Der Server funktioniert ohne Konfiguration. Wer etwas ändern will, kopiert `ser
 | `PORT` | `4000` | Port des API-Servers |
 | `DATABASE_URL` | `file:./dev.db` | Datenbankverbindung |
 | `JWT_SECRET` | Entwicklungswert | Schlüssel für Sitzungs-Tokens, **in Produktion Pflicht** |
-| `UPLOAD_DIR` | `uploads` | Ablageort für hochgeladene Dateien |
+| `UPLOAD_DIR` | `uploads` | Ablageort für hochgeladene Dateien (max. 25 MB pro Datei; der Ordner gehört ins Backup) |
 
 ## Technik
 
@@ -103,7 +103,7 @@ Auswahlfelder sind im Schema bewusst als Text gespeichert, damit es ohne Änderu
 2. ✅ Einzel- und Gruppenchats in Echtzeit (Reaktionen, Bearbeiten/Löschen, Lesestatus, Tippindikator, Antworten, Umfragen, @-Erwähnungen)
 3. ✅ Arbeitsgruppen und Kanäle (Beiträge mit Antwort-Threads, Notizen, private Kanäle, Rollen Besitzer/Mitglied/Gast, Beitreten oder erstellen)
 4. ✅ Aktivitätsfeed (Erwähnungen, Antworten, Reaktionen; filterbar, Sprung zur Nachricht), Browser-Benachrichtigungen mit Badges und Stummschalten, globale Suche (Ctrl/Cmd+K), Status „Abwesend“ nach 5 Minuten Inaktivität
-5. ⏳ Dateien und Uploads
+5. ✅ Dateien und Uploads (Anhänge in Chats, Beiträgen und Antworten per Büroklammer, Drag & Drop oder Einfügen; Bildvorschau mit Betrachter; „Dateien“-Tabs in Chats und Kanälen; Dateien-App mit Ansichten und Filter; Downloads nur für Berechtigte)
 6. ⏳ Kalender und Besprechungsplanung
 7. ⏳ Audio-/Videoanrufe mit Bildschirmfreigabe
 8. ⏳ Responsive Layout, Feinschliff, End-to-End-Tests

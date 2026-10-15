@@ -31,7 +31,7 @@ interface MessagesState {
   upsert: (message: MessageDto) => void;
   setReactions: (chatId: string, messageId: string, reactions: ReactionSummary[]) => void;
   setReceipt: (chatId: string, receipt: ReadReceipt) => void;
-  send: (chatId: string, input: { content: string; subject?: string; replyToId?: string }) => Promise<void>;
+  send: (chatId: string, input: { content: string; subject?: string; replyToId?: string; fileIds?: string[] }) => Promise<void>;
   edit: (messageId: string, content: string, subject?: string | null) => Promise<void>;
   remove: (messageId: string) => Promise<void>;
   react: (messageId: string, emoji: string) => Promise<void>;

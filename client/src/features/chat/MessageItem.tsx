@@ -4,6 +4,7 @@ import { CheckIcon, EyeIcon, PencilSimpleIcon, PushPinIcon, ShareFatIcon, SignOu
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Markdown } from '@/components/chat/Markdown';
+import { Attachments } from '@/components/files/Attachments';
 import { Avatar } from '@/components/ui/Avatar';
 import { dateLocale, previewText } from '@/lib/format';
 import type { MentionTarget } from '@/lib/markdown';
@@ -119,7 +120,8 @@ function MessageBody({
         ) : (
           <>
             {message.subject && <p className="mb-1 text-base font-semibold">{message.subject}</p>}
-            <Markdown source={message.content} mentions={members} meId={meId} />
+            {message.content && <Markdown source={message.content} mentions={members} meId={meId} />}
+            <Attachments files={message.files} />
           </>
         )}
 

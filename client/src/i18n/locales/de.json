@@ -253,7 +253,6 @@
     "noPostsTitle": "Noch keine Beiträge",
     "noPostsText": "Starte die erste Unterhaltung mit «Neuer Beitrag».",
     "loadFailed": "Die Beiträge konnten nicht geladen werden.",
-    "filesSoon": "Hier erscheinen die Dateien dieses Kanals (Meilenstein 5).",
     "errors": {
       "lastOwner": "Eine Arbeitsgruppe braucht mindestens einen Besitzer. Mache zuerst jemand anderen zum Besitzer.",
       "lastMember": "Ein privater Kanal braucht mindestens ein Mitglied.",
@@ -288,7 +287,6 @@
   "placeholder": {
     "calendar": "Der Kalender mit Tag-, Arbeitswochen-, Wochen- und Monatsansicht kommt mit Meilenstein 6.",
     "calls": "Audio- und Videoanrufe kommen mit Meilenstein 7.",
-    "files": "Hier werden alle geteilten Dateien aufgelistet (Meilenstein 5).",
     "more": "Weitere Apps"
   },
   "listPane": {
@@ -423,5 +421,48 @@
   "alerts": {
     "inChat": "{{name}} in {{chat}}",
     "inChannel": "{{name}} in {{workspace}} › {{channel}}"
+  },
+  "files": {
+    "title": "Dateien",
+    "views": "Dateiansichten",
+    "view": {
+      "all": "Zuletzt",
+      "mine": "Von mir hochgeladen",
+      "chats": "Aus Chats",
+      "channels": "Aus Arbeitsgruppen"
+    },
+    "filter": "Nach Name filtern",
+    "noMatch": "Keine Datei passt zu diesem Namen.",
+    "emptyTitle": "Noch keine Dateien",
+    "emptyApp": "Dateien, die du in Chats und Kanälen teilst, erscheinen hier.",
+    "emptyTab": "Lade eine Datei hoch oder ziehe sie hierher. Anhänge von Nachrichten erscheinen ebenfalls hier.",
+    "upload": "Hochladen",
+    "uploaded": "«{{name}}» hochgeladen",
+    "uploadingName": "«{{name}}» wird hochgeladen … {{percent}} %",
+    "uploading": "Wird hochgeladen … {{percent}} %",
+    "failed": "Hochladen fehlgeschlagen",
+    "uploadFailed": "«{{name}}» konnte nicht hochgeladen werden.",
+    "tooLarge": "«{{name}}» ist grösser als 25 MB.",
+    "tooMany": "Höchstens {{count}} Dateien pro Nachricht.",
+    "remove": "{{name}} entfernen",
+    "attachments": "Anhänge",
+    "dropHere": "Dateien hier ablegen, um sie anzuhängen",
+    "download": "Herunterladen",
+    "openImage": "Bild {{name}} öffnen",
+    "count_one": "{{count}} Datei",
+    "count_other": "{{count}} Dateien",
+    "columns": {
+      "name": "Name",
+      "location": "Ort",
+      "sharedBy": "Geteilt von",
+      "date": "Datum",
+      "size": "Grösse",
+      "actions": "Aktionen"
+    },
+    "actionsFor": "Optionen für {{name}}",
+    "showInConversation": "In der Unterhaltung anzeigen",
+    "deleteTitle": "Datei löschen?",
+    "deleteText": "«{{name}}» wird für alle entfernt. Die Nachricht, mit der sie gesendet wurde, bleibt bestehen.",
+    "waitForUpload": "Bitte warte, bis die Dateien hochgeladen sind."
   }
 }
