@@ -1,5 +1,7 @@
 import cookieParser from 'cookie-parser';
 import express from 'express';
+import { join, sep } from 'node:path';
+import { config } from './config';
 import { HttpError } from './lib/http-error';
 import { requireAuth } from './middleware/auth';
 import { requireClientHeader } from './middleware/csrf';
@@ -25,6 +27,12 @@ export function createApp() {
 
   app.use(express.json({ limit: '1mb' }));
   app.use(cookieParser());
+  app.use((_req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('Referrer-Policy', 'same-origin');
+    next();
+  });
 
   const api = express.Router();
   api.use(requireClientHeader);
@@ -50,6 +58,24 @@ export function createApp() {
   });
 
   app.use('/api', api);
+  if (config.clientDir) serveClient(app, config.clientDir);
   app.use(errorHandler);
   return app;
+}
+
+/** Production: the built web app, with every unknown path answered by index.html (client-side routing). */
+function serveClient(app: express.Express, dir: string) {
+  app.use(
+    express.static(dir, {
+      index: false,
+      setHeaders: (res, path) => {
+        // Vite puts a content hash into every file name under assets/.
+        if (path.includes(`${sep}assets${sep}`)) res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      },
+    }),
+  );
+  app.get(/^(?!\/(api|socket\.io)(\/|$))/, (_req, res) => {
+    res.setHeader('Cache-Control', 'no-cache');
+    res.sendFile(join(dir, 'index.html'));
+  });
 }
