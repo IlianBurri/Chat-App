@@ -140,7 +140,13 @@
     "system": {
       "added": "{{actor}} added {{names}}",
       "left": "{{actor}} left the chat",
-      "renamed": "{{actor}} renamed the chat to \"{{name}}\""
+      "renamed": "{{actor}} renamed the chat to \"{{name}}\"",
+      "callEnded_audio": "Call ended · {{duration}}",
+      "callEnded_video": "Video call ended · {{duration}}",
+      "callUnanswered": "Nobody answered your call",
+      "callMissed": "Missed call from {{name}}",
+      "callEndedShort": "Call ended",
+      "callMissedShort": "Missed call"
     },
     "systemPreview": "Chat updated",
     "typingOne": "{{name}} is typing…",
@@ -285,7 +291,6 @@
     }
   },
   "placeholder": {
-    "calls": "Audio and video calls arrive in milestone 7.",
     "more": "More apps"
   },
   "listPane": {
@@ -482,7 +487,6 @@
   },
   "meetings": {
     "join": "Join",
-    "callFeature": "Joining meetings (audio and video calls)",
     "clickToSchedule": "Click to schedule a meeting",
     "more_one": "+{{count}} more",
     "more_other": "+{{count}} more",
@@ -533,5 +537,117 @@
     "participants_one": "{{count}} person · {{accepted}} accepted",
     "participants_other": "{{count}} people · {{accepted}} accepted",
     "organizedByYou": "Organised by you"
+  },
+  "calls": {
+    "title": "Calls",
+    "chat": "Chat",
+    "people": "People",
+    "peopleCount_one": "People ({{count}})",
+    "peopleCount_other": "People ({{count}})",
+    "react": "React",
+    "reactions": "Reactions",
+    "sendReaction": "Send {{emoji}}",
+    "raiseHand": "Raise hand",
+    "lowerHand": "Lower hand",
+    "view": "View",
+    "gallery": "Gallery",
+    "speakerView": "Speaker",
+    "more": "More",
+    "deviceSettings": "Device settings",
+    "fullscreen": "Full screen",
+    "exitFullscreen": "Exit full screen",
+    "camera": "Camera",
+    "mic": "Mic",
+    "share": "Share",
+    "stopSharing": "Stop sharing",
+    "leave": "Leave",
+    "blur": "Blur background",
+    "blurFailed": "The background could not be blurred on this device.",
+    "duration": "Call duration",
+    "controls": "Call controls",
+    "inCallLabel": "Call: {{title}}",
+    "you": "{{name}} (you)",
+    "muted": "Muted",
+    "micOn": "Microphone on",
+    "cameraOn": "Camera on",
+    "cameraOff": "Camera off",
+    "handRaised": "Hand raised",
+    "speaking": "Speaking",
+    "presenting": "{{name}} is presenting",
+    "connectionFailed": "Connection failed",
+    "pin": "Pin {{name}}",
+    "unpin": "Unpin {{name}}",
+    "invite": "Add people",
+    "invitePlaceholder": "Enter a name",
+    "ring": "Call",
+    "invited_one": "Calling {{count}} person …",
+    "invited_other": "Calling {{count}} people …",
+    "inThisCall": "In this call",
+    "chatHint": "Messages here are only visible during the call.",
+    "chatEmpty": "No messages yet.",
+    "chatInput": "Message to everyone in the call",
+    "joinRunning_one": "Join the running call ({{count}} person)",
+    "joinRunning_other": "Join the running call ({{count}} people)",
+    "meetNowTitle": "Meeting with {{name}}",
+    "videoShort": "Video",
+    "audioShort": "Audio",
+    "callBackAudio": "Call {{name}}",
+    "callBackVideo": "Video call {{name}}",
+    "lobby": {
+      "label": "Join {{title}}",
+      "subtitle": "Choose your audio and video options",
+      "join": "Join now",
+      "joining": "Joining …"
+    },
+    "mediaError": {
+      "denied": "The browser does not allow access to camera or microphone. Allow it in the address bar and try again.",
+      "unavailable": "No camera or microphone was found. You can still join and listen."
+    },
+    "devices": {
+      "title": "Devices",
+      "camera": "Camera",
+      "mic": "Microphone",
+      "speaker": "Speaker",
+      "unnamed": "Device {{index}}"
+    },
+    "incoming": {
+      "title": "{{name}} is calling",
+      "video": "Video call",
+      "audio": "Audio call",
+      "decline": "Decline",
+      "acceptAudio": "Accept with audio only",
+      "acceptVideo": "Accept with video"
+    },
+    "ended": {
+      "moved": "The call continues in another window.",
+      "unanswered": "Nobody answered.",
+      "declined": "{{name}} declined the call."
+    },
+    "declinedBy": "{{name}} declined the call.",
+    "errors": {
+      "join": "Could not join the call. Please try again.",
+      "notAllowed": "You cannot join this call.",
+      "mic": "The microphone could not be turned on.",
+      "camera": "The camera could not be turned on.",
+      "screen": "Screen sharing could not be started.",
+      "chat": "The message could not be sent.",
+      "invite": "Nobody could be called."
+    },
+    "history": {
+      "title": "History",
+      "empty": "Calls you make or receive show up here.",
+      "outgoing": "Outgoing",
+      "incoming": "Incoming",
+      "missed": "Missed",
+      "unanswered": "Not answered",
+      "declined": "Declined"
+    },
+    "dial": {
+      "title": "Make a call",
+      "text": "Call one or more people directly. The call belongs to your chat with them.",
+      "people": "People to call",
+      "video": "Video call",
+      "audio": "Audio call"
+    }
   }
 }

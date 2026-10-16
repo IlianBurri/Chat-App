@@ -4,6 +4,8 @@ import { Outlet } from 'react-router';
 import { ComingSoonDialog } from '@/components/ui/ComingSoon';
 import { Toaster } from '@/components/ui/Toaster';
 import { MeetingDetails } from '@/features/calendar/MeetingDetails';
+import { CallOverlay } from '@/features/calls/CallOverlay';
+import { leaveCall } from '@/features/calls/session';
 import { MeetingEditor } from '@/features/calendar/MeetingEditor';
 import { watchIdle } from '@/lib/idle';
 import { bindRealtime } from '@/lib/realtime';
@@ -52,6 +54,7 @@ export function AppShell() {
     socket.io.on('reconnect', onReconnect);
 
     return () => {
+      void leaveCall();
       stopIdle();
       unbind();
       socket.io.off('reconnect', onReconnect);
@@ -77,6 +80,7 @@ export function AppShell() {
         </div>
       </div>
       <MeetingEditor />
+      <CallOverlay />
       <MeetingDetails />
       <ComingSoonDialog />
       <Toaster />

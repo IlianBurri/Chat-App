@@ -3,11 +3,11 @@ import { CalendarBlankIcon } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toaster';
+import { joinMeeting } from '@/features/calls/startCall';
 import type { MeetingCard as MeetingCardDto } from '@/lib/types';
 import { useNow } from '@/lib/useNow';
 import { useMeetingsStore } from '@/stores/meetings';
 import { canJoin } from './calendarMath';
-import { joinMeeting } from './join';
 import { formatMeetingWhen } from './meetingFormat';
 
 /** Invitation card posted into a chat when a meeting is scheduled. */
@@ -44,7 +44,7 @@ export function MeetingCard({ meeting }: { meeting: MeetingCardDto }) {
           {t('meetings.details')}
         </Button>
         {canJoin({ start, end, cancelled: meeting.cancelled }, now) && (
-          <Button size="sm" variant="primary" onClick={() => joinMeeting()}>
+          <Button size="sm" variant="primary" onClick={() => joinMeeting(meeting)}>
             {t('meetings.join')}
           </Button>
         )}

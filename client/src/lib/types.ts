@@ -178,7 +178,17 @@ export interface ReadReceipt {
 export type SystemEvent =
   | { event: 'added'; userIds: string[] }
   | { event: 'left' }
-  | { event: 'renamed'; name: string };
+  | { event: 'renamed'; name: string }
+  | { event: 'call_ended'; media: 'audio' | 'video'; seconds: number }
+  | { event: 'call_missed'; media: 'audio' | 'video' };
+
+export function parseSystemEvent(content: string | null): SystemEvent | null {
+  try {
+    return content ? (JSON.parse(content) as SystemEvent) : null;
+  } catch {
+    return null;
+  }
+}
 
 export type NotificationType = 'mention' | 'reply' | 'reaction' | 'missed_call' | 'meeting';
 

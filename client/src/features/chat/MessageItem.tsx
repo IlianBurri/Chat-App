@@ -1,17 +1,18 @@
 import clsx from 'clsx';
 import { format } from 'date-fns';
-import { CheckIcon, EyeIcon, PencilSimpleIcon, PushPinIcon, ShareFatIcon, SignOutIcon, UserPlusIcon } from '@phosphor-icons/react';
+import { CheckIcon, EyeIcon, PencilSimpleIcon, PhoneIcon, PhoneXIcon, PushPinIcon, ShareFatIcon, SignOutIcon, UserPlusIcon } from '@phosphor-icons/react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Markdown } from '@/components/chat/Markdown';
 import { Attachments } from '@/components/files/Attachments';
 import { Avatar } from '@/components/ui/Avatar';
+import { MeetingCard } from '@/features/calendar/MeetingCard';
+import { formatDuration } from '@/features/calls/callMath';
 import { dateLocale, previewText } from '@/lib/format';
 import type { MentionTarget } from '@/lib/markdown';
-import type { MessageDto, SystemEvent } from '@/lib/types';
+import { parseSystemEvent, type MessageDto } from '@/lib/types';
 import { MessageEditor } from './MessageEditor';
 import { MessageToolbar, type MessageActions } from './MessageToolbar';
-import { MeetingCard } from '@/features/calendar/MeetingCard';
 import { PollCard } from './PollCard';
 import { ReactionChips } from './ReactionChips';
 
@@ -175,14 +176,6 @@ function MessageBody({
   );
 }
 
-function parseSystemEvent(content: string): SystemEvent | null {
-  try {
-    return JSON.parse(content) as SystemEvent;
-  } catch {
-    return null;
-  }
-}
-
 function SystemMessage({ message, members, meId }: { message: MessageDto; members: MentionTarget[]; meId: string }) {
   const { t } = useTranslation();
   const event = parseSystemEvent(message.content);
@@ -190,13 +183,25 @@ function SystemMessage({ message, members, meId }: { message: MessageDto; member
 
   const actor = message.author.id === meId ? t('common.you') : message.author.name;
   const nameOf = (id: string) => (id === meId ? t('common.you') : (members.find((m) => m.id === id)?.name ?? t('chat.someone')));
-  const Icon = event.event === 'left' ? SignOutIcon : event.event === 'added' ? UserPlusIcon : PencilSimpleIcon;
-  const text =
-    event.event === 'added'
-      ? t('chat.system.added', { actor, names: event.userIds.map(nameOf).join(', ') })
-      : event.event === 'left'
-        ? t('chat.system.left', { actor })
-        : t('chat.system.renamed', { actor, name: event.name });
+  const { icon: Icon, text } = describeSystemEvent(event);
+
+  function describeSystemEvent(e: NonNullable<typeof event>) {
+    switch (e.event) {
+      case 'added':
+        return { icon: UserPlusIcon, text: t('chat.system.added', { actor, names: e.userIds.map(nameOf).join(', ') }) };
+      case 'left':
+        return { icon: SignOutIcon, text: t('chat.system.left', { actor }) };
+      case 'renamed':
+        return { icon: PencilSimpleIcon, text: t('chat.system.renamed', { actor, name: e.name }) };
+      case 'call_ended':
+        return { icon: PhoneIcon, text: t(`chat.system.callEnded_${e.media}`, { duration: formatDuration(e.seconds * 1000) }) };
+      case 'call_missed':
+        return {
+          icon: PhoneXIcon,
+          text: message.author.id === meId ? t('chat.system.callUnanswered') : t('chat.system.callMissed', { name: message.author.name }),
+        };
+    }
+  }
 
   return (
     <div id={`message-${message.id}`} className="my-3 flex items-center justify-center gap-1.5 px-5 text-xs text-muted">

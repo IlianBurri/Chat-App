@@ -7,7 +7,7 @@ import { ContextMenu, useContextMenu } from '@/components/ui/ContextMenu';
 import { MenuItem, MenuSeparator } from '@/components/ui/Menu';
 import { useToast } from '@/components/ui/Toaster';
 import { formatListTimestamp, previewText } from '@/lib/format';
-import type { ChatSummary } from '@/lib/types';
+import { parseSystemEvent, type ChatSummary } from '@/lib/types';
 import { chatTitle, directPartner, isUnread, useChatsStore } from '@/stores/chats';
 import { useTypingNames } from '@/stores/typing';
 
@@ -25,19 +25,24 @@ export function ChatListItem({ chat, meId, now }: { chat: ChatSummary; meId: str
 
   let preview = '';
   if (last) {
+    const call = last.type === 'system' ? parseSystemEvent(last.content) : null;
     const text = last.deleted
       ? t('chat.deletedMessage')
-      : last.type === 'system'
-        ? t('chat.systemPreview')
-        : last.type === 'poll'
-          ? `📊 ${last.content ?? ''}`
-          : last.type === 'meeting'
-            ? `📅 ${last.content ?? ''}`
-          : last.content
-            ? previewText(last.content)
-            : last.fileName
-              ? `📎 ${last.fileName}`
-              : '';
+      : call?.event === 'call_ended'
+        ? `📞 ${t('chat.system.callEndedShort')}`
+        : call?.event === 'call_missed'
+          ? `📞 ${t('chat.system.callMissedShort')}`
+          : last.type === 'system'
+            ? t('chat.systemPreview')
+            : last.type === 'poll'
+              ? `📊 ${last.content ?? ''}`
+              : last.type === 'meeting'
+                ? `📅 ${last.content ?? ''}`
+                : last.content
+                  ? previewText(last.content)
+                  : last.fileName
+                    ? `📎 ${last.fileName}`
+                    : '';
     const author = last.author.id === meId ? t('common.you') : last.author.name.split(' ')[0];
     preview = last.type !== 'system' && (chat.type === 'group' || last.author.id === meId) ? `${author}: ${text}` : text;
   }

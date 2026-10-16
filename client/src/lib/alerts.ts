@@ -6,6 +6,7 @@ import { useUiStore } from '@/stores/ui';
 import { useWorkspacesStore } from '@/stores/workspaces';
 import { isWatching, mentionsName, notificationPermission, shouldAlert, showDesktopNotification } from './desktopNotify';
 import { channelPath, chatPath, notificationPath } from './links';
+import type { IncomingCall } from '@/features/calls/types';
 import type { MessageDto, NotificationDto, PostDto } from './types';
 
 /** Shared part of the alert decision: settings, permission and own status. */
@@ -82,5 +83,18 @@ export function alertForNotification(n: NotificationDto) {
     body: n.preview ?? '',
     tag: `notification-${n.id}`,
     path,
+  });
+}
+
+/** Someone is calling while the window is in the background. */
+export function alertForIncomingCall(call: IncomingCall) {
+  const { me, ...base } = baseContext();
+  const watching = document.visibilityState === 'visible' && document.hasFocus();
+  if (!me || !shouldAlert({ ...base, muted: false, mentioned: false, watching })) return;
+  showDesktopNotification({
+    title: i18n.t('calls.incoming.title', { name: call.caller.name }),
+    body: call.title ?? i18n.t(call.media === 'video' ? 'calls.incoming.video' : 'calls.incoming.audio'),
+    tag: `call-${call.key}`,
+    path: window.location.pathname + window.location.search,
   });
 }

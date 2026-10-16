@@ -1,10 +1,10 @@
 import clsx from 'clsx';
 import type { CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
+import { joinMeeting } from '@/features/calls/startCall';
 import type { MeetingDto } from '@/lib/types';
 import { useMeetingsStore } from '@/stores/meetings';
 import { canJoin, colorIndex, isPast } from './calendarMath';
-import { joinMeeting } from './join';
 import { formatTimeRange } from './meetingFormat';
 
 /** Colours of a meeting: strong border, tinted background. */
@@ -46,7 +46,7 @@ export function MeetingBlock({ meeting, now, style, heightPx }: { meeting: Meeti
       {joinable && (
         <button
           type="button"
-          onClick={() => joinMeeting()}
+          onClick={() => joinMeeting(meeting)}
           className={clsx(
             'absolute right-1 z-10 rounded bg-accent font-semibold text-accent-fg hover:bg-accent-hover',
             tiny ? 'top-0 h-4 px-1.5 text-[10px] leading-4' : 'top-1 h-6 px-2',

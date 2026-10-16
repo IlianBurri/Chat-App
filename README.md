@@ -57,13 +57,15 @@ Der Server funktioniert ohne Konfiguration. Wer etwas ändern will, kopiert `ser
 | `DATABASE_URL` | `file:./dev.db` | Datenbankverbindung |
 | `JWT_SECRET` | Entwicklungswert | Schlüssel für Sitzungs-Tokens, **in Produktion Pflicht** |
 | `UPLOAD_DIR` | `uploads` | Ablageort für hochgeladene Dateien (max. 25 MB pro Datei; der Ordner gehört ins Backup) |
+| `ICE_SERVERS` | leer | STUN/TURN-Server für Anrufe als JSON, z. B. `[{"urls":"stun:stun.example.org:3478"}]`. Auf einem Rechner oder im LAN nicht nötig; über verschiedene Netze braucht es STUN, oft auch TURN |
+| `CALL_RING_SECONDS` | `30` | So lange klingelt ein Anruf, bevor er als verpasst gilt |
 
 ## Technik
 
 - **Client:** React 19, TypeScript, Vite, Tailwind CSS 4, Zustand, React Router, Phosphor Icons, Twemoji-Farbschrift für einheitliche Emojis, i18next (Englisch und Deutsch)
 - **Server:** Node.js, Express 5, TypeScript, Socket.IO, Prisma 7 mit SQLite, zod
 - **Anmeldung:** E-Mail und Passwort (bcrypt), JWT im httpOnly-Cookie; ändernde Anfragen brauchen zusätzlich den Header `X-Client: 1` (CSRF-Schutz)
-- **Anrufe (ab Meilenstein 7):** WebRTC Peer-to-Peer, Signalisierung über Socket.IO
+- **Anrufe:** WebRTC als Mesh (jede Person direkt mit jeder, gedacht für kleine Runden bis etwa 6 Personen), Signalisierung über Socket.IO; Hintergrund-Weichzeichner mit MediaPipe Selfie Segmentation, läuft lokal im Browser
 
 ```
 client/            Web-App (Vite)
@@ -104,11 +106,12 @@ Auswahlfelder sind im Schema bewusst als Text gespeichert, damit es ohne Änderu
 3. ✅ Arbeitsgruppen und Kanäle (Beiträge mit Antwort-Threads, Notizen, private Kanäle, Rollen Besitzer/Mitglied/Gast, Beitreten oder erstellen)
 4. ✅ Aktivitätsfeed (Erwähnungen, Antworten, Reaktionen; filterbar, Sprung zur Nachricht), Browser-Benachrichtigungen mit Badges und Stummschalten, globale Suche (Ctrl/Cmd+K), Status „Abwesend“ nach 5 Minuten Inaktivität
 5. ✅ Dateien und Uploads (Anhänge in Chats, Beiträgen und Antworten per Büroklammer, Drag & Drop oder Einfügen; Bildvorschau mit Betrachter; „Dateien“-Tabs in Chats und Kanälen; Dateien-App mit Ansichten und Filter; Downloads nur für Berechtigte)
-6. ✅ Kalender und Besprechungsplanung (Tag, Arbeitswoche, Woche, Monat; planen aus dem Kalender oder per „+“ im Chat; eigener Besprechungschat mit Einladungskarte; Zusagen/Absagen, Bearbeiten, Absagen; „Teilnehmen“ ab 5 Minuten vor Beginn – der Anruf selbst folgt mit Meilenstein 7)
-7. ⏳ Audio-/Videoanrufe mit Bildschirmfreigabe
+6. ✅ Kalender und Besprechungsplanung (Tag, Arbeitswoche, Woche, Monat; planen aus dem Kalender oder per „+“ im Chat; eigener Besprechungschat mit Einladungskarte; Zusagen/Absagen, Bearbeiten, Absagen; „Teilnehmen“ ab 5 Minuten vor Beginn)
+7. ✅ Audio- und Videoanrufe (aus Chats, Kanälen und Besprechungen; Lobby mit Vorschau, Geräteauswahl und Hintergrund-Weichzeichner; Klingeln mit Annehmen/Ablehnen, verpasste Anrufe; Galerie- und Sprecheransicht, Sprecher-Erkennung; Stummschalten, Kamera, Bildschirmfreigabe, Hand heben, Reaktionen, Chat im Anruf; weitere Personen dazuholen; Anrufe-App mit Verlauf und Rückruf; Status „Im Anruf“)
 8. ⏳ Responsive Layout, Feinschliff, End-to-End-Tests
 
 ## Drittanbieter-Grafiken
 
 - Icons: [Phosphor Icons](https://phosphoricons.com) (MIT-Lizenz)
 - Emojis: [Twemoji](https://github.com/jdecked/twemoji) © Twitter, Inc. und weitere Mitwirkende, Grafiken unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); als Farbschrift über [twemoji-colr-font](https://github.com/mrdrogdrog/twemoji-color-font) (OFL-1.1)
+- Hintergrund-Weichzeichner: Modell „Selfie Segmenter“ und [@mediapipe/tasks-vision](https://github.com/google-ai-edge/mediapipe) © Google, [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0)
