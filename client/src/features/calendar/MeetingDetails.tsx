@@ -18,12 +18,12 @@ import { Button } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { Dialog } from '@/components/ui/Dialog';
 import { useToast } from '@/components/ui/Toaster';
+import { joinMeeting } from '@/features/calls/startCall';
 import type { MeetingDto, MeetingResponse } from '@/lib/types';
 import { useNow } from '@/lib/useNow';
 import { useAuthStore } from '@/stores/auth';
 import { useMeetingsStore } from '@/stores/meetings';
 import { canJoin } from './calendarMath';
-import { joinMeeting } from './join';
 import { meetingColorStyle } from './MeetingBlock';
 import { formatMeetingWhen } from './meetingFormat';
 
@@ -89,7 +89,10 @@ function DetailsDialog({ meeting, onClose }: { meeting: MeetingDto; onClose: () 
               </Button>
             )}
             {!meeting.cancelled && (
-              <Button variant="primary" icon={VideoCameraIcon} onClick={() => joinMeeting()}>
+              <Button variant="primary" icon={VideoCameraIcon} onClick={() => {
+                  onClose();
+                  joinMeeting(meeting);
+                }}>
                 {t('meetings.join')}
               </Button>
             )}

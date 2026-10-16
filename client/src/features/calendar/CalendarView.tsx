@@ -10,7 +10,7 @@ import { useToast } from '@/components/ui/Toaster';
 import { useNow } from '@/lib/useNow';
 import { meetingsInRange, useMeetingsStore } from '@/stores/meetings';
 import { CALENDAR_VIEWS, nextSlot, shiftAnchor, visibleDays, visibleRange, type CalendarView as View } from './calendarMath';
-import { joinMeeting } from './join';
+import { meetNow } from '@/features/calls/startCall';
 import { formatRangeLabel } from './meetingFormat';
 import { MonthGrid } from './MonthGrid';
 import { TimeGrid } from './TimeGrid';
@@ -79,7 +79,7 @@ export function CalendarView() {
         <CalendarBlankIcon className="size-5 text-accent" weight="fill" aria-hidden="true" />
         <h1 className="text-lg font-semibold">{t('calendar.title')}</h1>
         <div className="ml-auto flex items-center gap-2">
-          <Button icon={VideoCameraIcon} onClick={() => joinMeeting()}>
+          <Button icon={VideoCameraIcon} onClick={() => void meetNow()}>
             {t('calendar.meetNow')}
           </Button>
           <Button variant="primary" icon={PlusIcon} onClick={() => newMeeting()}>

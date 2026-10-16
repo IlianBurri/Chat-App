@@ -8,6 +8,8 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { IconButton } from '@/components/ui/IconButton';
 import { Menu } from '@/components/ui/Menu';
 import { Tabs } from '@/components/ui/Tabs';
+import { ActiveCallButton, useActiveCall } from '@/features/calls/ActiveCallButton';
+import { startChannelCall } from '@/features/calls/startCall';
 import { api } from '@/lib/api';
 import type { ChannelSummary, PostDto, ReplyDto, WorkspaceMember, WorkspaceSummary } from '@/lib/types';
 import { useAuthStore } from '@/stores/auth';
@@ -72,6 +74,8 @@ function Channel({ workspace, channel }: { workspace: WorkspaceSummary; channel:
   const [deleteTarget, setDeleteTarget] = useState<{ post: PostDto } | { reply: ReplyDto } | null>(null);
   const members = useChannelMembers(channel.id, workspace.memberCount);
   const name = channel.isDefault ? t('teams.general') : channel.name;
+  const callTarget = { kind: 'channel' as const, id: channel.id };
+  const running = useActiveCall(callTarget);
 
   // Load posts and details when the channel opens.
   useEffect(() => {
@@ -145,9 +149,13 @@ function Channel({ workspace, channel }: { workspace: WorkspaceSummary; channel:
             addLabel={t('teams.tabs.add')}
           />
           <div className="ml-auto flex items-center gap-1">
-            <Button variant="primary" size="sm" icon={VideoCameraIcon} onClick={() => showComingSoon(t('teams.meet'))}>
-              {t('teams.meet')}
-            </Button>
+            {running ? (
+              <ActiveCallButton target={callTarget} title={name} />
+            ) : (
+              <Button variant="primary" size="sm" icon={VideoCameraIcon} onClick={() => startChannelCall(channel.id, name)}>
+                {t('teams.meet')}
+              </Button>
+            )}
             <IconButton label={t('chat.participants')} icon={UsersThreeIcon} onClick={() => openDialog({ kind: 'members', workspace, channel })} />
             <Menu
               label={t('teams.channelOptions')}

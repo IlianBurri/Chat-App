@@ -10,6 +10,8 @@ export interface MeetingDraft {
   participants: PublicUser[];
   /** Planned from this chat: the invitation goes there instead of a new meeting chat */
   chatId?: string;
+  /** "Meet now": an ad-hoc meeting */
+  instant?: boolean;
 }
 
 type Editor = { mode: 'create'; draft: MeetingDraft } | { mode: 'edit'; meeting: MeetingDto };
@@ -95,6 +97,7 @@ export const useMeetingsStore = create<MeetingsState>((set, get) => ({
       : await api.post<{ meeting: MeetingDto }>('/meetings', {
           ...body,
           chatId: draft.chatId,
+          isInstant: draft.instant,
         });
     get().upsert(meeting);
     return meeting;

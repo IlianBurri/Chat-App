@@ -5,6 +5,7 @@ import { prisma } from '../db';
 import { readCookie, verifySession } from '../lib/auth';
 import { visibleChannelIds } from '../lib/workspaces';
 import { presence } from '../services/presence';
+import { registerCallHandlers } from './calls';
 import { broadcastPresence, presenceSnapshot, rooms, setIo } from './realtime';
 
 export function createSocketServer(httpServer: HttpServer) {
@@ -52,6 +53,8 @@ export function createSocketServer(httpServer: HttpServer) {
       const me = await prisma.user.findUnique({ where: { id: userId }, select: { name: true } });
       socket.to(rooms.chat(chatId)).emit('typing', { chatId, userId, name: me?.name ?? '', typing: typing === true });
     });
+
+    registerCallHandlers(io, socket, userId);
 
     socket.on('presence:idle', (idle: unknown) => {
       presence.setIdle(userId, socket.id, idle === true);

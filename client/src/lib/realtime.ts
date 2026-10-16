@@ -1,6 +1,12 @@
 import type { Socket } from 'socket.io-client';
+import { useToast } from '@/components/ui/Toaster';
+import { handleSignal, onCallEndedForMe, onMemberJoined, onMemberLeft, onMemberUpdated, rejoinAfterReconnect } from '@/features/calls/session';
+import type { ActiveCallDto, CallChatLine, CallMemberDto, IncomingCall } from '@/features/calls/types';
+import i18n from '@/i18n';
+import { api } from '@/lib/api';
 import { useActivityStore } from '@/stores/activity';
 import { useAuthStore } from '@/stores/auth';
+import { callKey, useCallStore } from '@/stores/call';
 import { useChatsStore } from '@/stores/chats';
 import { useMeetingsStore } from '@/stores/meetings';
 import { useMessagesStore } from '@/stores/messages';
@@ -8,13 +14,23 @@ import { usePostsStore } from '@/stores/posts';
 import { usePresenceStore } from '@/stores/presence';
 import { useTypingStore } from '@/stores/typing';
 import { useWorkspacesStore } from '@/stores/workspaces';
-import { alertForMessage, alertForNotification, alertForPost } from './alerts';
+import { alertForIncomingCall, alertForMessage, alertForNotification, alertForPost } from './alerts';
 import type { ChatSummary, MeetingDto, MessageDto, NotificationDto, PostDto, ReactionSummary, Status } from './types';
 
 interface PresenceEvent {
   userId: string;
   status: Status;
   statusMessage: string | null;
+}
+
+/** Running calls the user could join (after connecting or reconnecting). */
+async function loadActiveCalls() {
+  try {
+    const { calls } = await api.get<{ calls: ActiveCallDto[] }>('/calls/active');
+    useCallStore.getState().set({ active: Object.fromEntries(calls.map((c) => [c.key, c])) });
+  } catch {
+    // Banners just stay hidden until the next call event.
+  }
 }
 
 /** Routes server events into the stores. Returns a function that removes the handlers. */
@@ -28,6 +44,10 @@ export function bindRealtime(socket: Socket): () => void {
   // Payload types are declared per handler; socket.io itself is untyped here.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handlers: Record<string, (payload: any) => void> = {
+    connect: () => {
+      void loadActiveCalls();
+      void rejoinAfterReconnect();
+    },
     'presence:snapshot': (events: PresenceEvent[]) => events.forEach(applyPresence),
     'presence:update': applyPresence,
 
@@ -71,6 +91,31 @@ export function bindRealtime(socket: Socket): () => void {
 
     'meeting:upsert': (meeting: MeetingDto) => useMeetingsStore.getState().upsert(meeting),
     'meeting:removed': (e: { id: string }) => useMeetingsStore.getState().remove(e.id),
+
+    'call:incoming': (call: IncomingCall) => {
+      const current = useCallStore.getState();
+      if (current.phase === 'in-call' && current.target && callKey(current.target) === call.key) return;
+      current.addIncoming(call);
+      alertForIncomingCall(call);
+    },
+    'call:ring-stopped': (e: { key: string }) => useCallStore.getState().removeIncoming(e.key),
+    'call:active': (call: ActiveCallDto) => useCallStore.getState().setActive(call),
+    'call:inactive': (e: { key: string }) => {
+      useCallStore.getState().removeActive(e.key);
+      useCallStore.getState().removeIncoming(e.key);
+    },
+    'call:signal': (e: { from: string; data: Parameters<typeof handleSignal>[0]['data'] }) => void handleSignal(e),
+    'call:member-joined': (member: CallMemberDto) => onMemberJoined(member),
+    'call:member-left': (e: { socketId: string }) => onMemberLeft(e),
+    'call:member-updated': (member: CallMemberDto) => onMemberUpdated(member),
+    'call:chat': (line: CallChatLine) => useCallStore.getState().addChat(line),
+    'call:reaction': (e: { socketId: string; emoji: string }) => useCallStore.getState().addReaction(e.socketId, e.emoji),
+    'call:moved': () => onCallEndedForMe('moved'),
+    'call:unanswered': () => onCallEndedForMe('unanswered'),
+    'call:declined': (e: { name: string; direct: boolean }) => {
+      if (e.direct) onCallEndedForMe('declined', e.name);
+      else useToast.getState().show(i18n.t('calls.declinedBy', { name: e.name }), 'error');
+    },
 
     'notification:new': (e: { notification: NotificationDto; unreadCount: number }) => {
       useActivityStore.getState().added(e.notification, e.unreadCount);

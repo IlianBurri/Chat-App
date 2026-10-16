@@ -140,7 +140,13 @@
     "system": {
       "added": "{{actor}} hat {{names}} hinzugefügt",
       "left": "{{actor}} hat den Chat verlassen",
-      "renamed": "{{actor}} hat den Chat in «{{name}}» umbenannt"
+      "renamed": "{{actor}} hat den Chat in «{{name}}» umbenannt",
+      "callEnded_audio": "Anruf beendet · {{duration}}",
+      "callEnded_video": "Videoanruf beendet · {{duration}}",
+      "callUnanswered": "Niemand hat deinen Anruf angenommen",
+      "callMissed": "Verpasster Anruf von {{name}}",
+      "callEndedShort": "Anruf beendet",
+      "callMissedShort": "Verpasster Anruf"
     },
     "systemPreview": "Chat aktualisiert",
     "typingOne": "{{name}} schreibt…",
@@ -285,7 +291,6 @@
     }
   },
   "placeholder": {
-    "calls": "Audio- und Videoanrufe kommen mit Meilenstein 7.",
     "more": "Weitere Apps"
   },
   "listPane": {
@@ -482,7 +487,6 @@
   },
   "meetings": {
     "join": "Teilnehmen",
-    "callFeature": "An Besprechungen teilnehmen (Audio- und Videoanrufe)",
     "clickToSchedule": "Klicken, um eine Besprechung zu planen",
     "more_one": "+{{count}} weitere",
     "more_other": "+{{count}} weitere",
@@ -533,5 +537,117 @@
     "participants_one": "{{count}} Person · {{accepted}} zugesagt",
     "participants_other": "{{count}} Personen · {{accepted}} zugesagt",
     "organizedByYou": "Von dir organisiert"
+  },
+  "calls": {
+    "title": "Anrufe",
+    "chat": "Chat",
+    "people": "Personen",
+    "peopleCount_one": "Personen ({{count}})",
+    "peopleCount_other": "Personen ({{count}})",
+    "react": "Reagieren",
+    "reactions": "Reaktionen",
+    "sendReaction": "{{emoji}} senden",
+    "raiseHand": "Hand heben",
+    "lowerHand": "Hand senken",
+    "view": "Ansicht",
+    "gallery": "Galerie",
+    "speakerView": "Sprecher",
+    "more": "Mehr",
+    "deviceSettings": "Geräteeinstellungen",
+    "fullscreen": "Vollbild",
+    "exitFullscreen": "Vollbild beenden",
+    "camera": "Kamera",
+    "mic": "Mikrofon",
+    "share": "Teilen",
+    "stopSharing": "Teilen beenden",
+    "leave": "Verlassen",
+    "blur": "Hintergrund weichzeichnen",
+    "blurFailed": "Der Hintergrund kann auf diesem Gerät nicht weichgezeichnet werden.",
+    "duration": "Dauer des Anrufs",
+    "controls": "Anrufsteuerung",
+    "inCallLabel": "Anruf: {{title}}",
+    "you": "{{name}} (du)",
+    "muted": "Stummgeschaltet",
+    "micOn": "Mikrofon an",
+    "cameraOn": "Kamera an",
+    "cameraOff": "Kamera aus",
+    "handRaised": "Hand gehoben",
+    "speaking": "Spricht",
+    "presenting": "{{name}} präsentiert",
+    "connectionFailed": "Verbindung fehlgeschlagen",
+    "pin": "{{name}} anheften",
+    "unpin": "{{name}} lösen",
+    "invite": "Personen hinzufügen",
+    "invitePlaceholder": "Namen eingeben",
+    "ring": "Anrufen",
+    "invited_one": "{{count}} Person wird angerufen …",
+    "invited_other": "{{count}} Personen werden angerufen …",
+    "inThisCall": "In diesem Anruf",
+    "chatHint": "Nachrichten hier sind nur während des Anrufs sichtbar.",
+    "chatEmpty": "Noch keine Nachrichten.",
+    "chatInput": "Nachricht an alle im Anruf",
+    "joinRunning_one": "Am laufenden Anruf teilnehmen ({{count}} Person)",
+    "joinRunning_other": "Am laufenden Anruf teilnehmen ({{count}} Personen)",
+    "meetNowTitle": "Besprechung mit {{name}}",
+    "videoShort": "Video",
+    "audioShort": "Audio",
+    "callBackAudio": "{{name}} anrufen",
+    "callBackVideo": "Videoanruf mit {{name}}",
+    "lobby": {
+      "label": "{{title}} beitreten",
+      "subtitle": "Wähle deine Audio- und Videooptionen",
+      "join": "Jetzt teilnehmen",
+      "joining": "Wird verbunden …"
+    },
+    "mediaError": {
+      "denied": "Der Browser erlaubt keinen Zugriff auf Kamera oder Mikrofon. Erlaube ihn in der Adressleiste und versuche es erneut.",
+      "unavailable": "Keine Kamera oder kein Mikrofon gefunden. Du kannst trotzdem teilnehmen und zuhören."
+    },
+    "devices": {
+      "title": "Geräte",
+      "camera": "Kamera",
+      "mic": "Mikrofon",
+      "speaker": "Lautsprecher",
+      "unnamed": "Gerät {{index}}"
+    },
+    "incoming": {
+      "title": "{{name}} ruft an",
+      "video": "Videoanruf",
+      "audio": "Audioanruf",
+      "decline": "Ablehnen",
+      "acceptAudio": "Nur mit Audio annehmen",
+      "acceptVideo": "Mit Video annehmen"
+    },
+    "ended": {
+      "moved": "Der Anruf geht in einem anderen Fenster weiter.",
+      "unanswered": "Niemand hat geantwortet.",
+      "declined": "{{name}} hat den Anruf abgelehnt."
+    },
+    "declinedBy": "{{name}} hat den Anruf abgelehnt.",
+    "errors": {
+      "join": "Beitreten hat nicht geklappt. Bitte versuche es erneut.",
+      "notAllowed": "Du kannst diesem Anruf nicht beitreten.",
+      "mic": "Das Mikrofon liess sich nicht einschalten.",
+      "camera": "Die Kamera liess sich nicht einschalten.",
+      "screen": "Die Bildschirmfreigabe liess sich nicht starten.",
+      "chat": "Die Nachricht konnte nicht gesendet werden.",
+      "invite": "Niemand konnte angerufen werden."
+    },
+    "history": {
+      "title": "Verlauf",
+      "empty": "Anrufe, die du tätigst oder erhältst, erscheinen hier.",
+      "outgoing": "Ausgehend",
+      "incoming": "Eingehend",
+      "missed": "Verpasst",
+      "unanswered": "Nicht angenommen",
+      "declined": "Abgelehnt"
+    },
+    "dial": {
+      "title": "Anruf tätigen",
+      "text": "Rufe eine oder mehrere Personen direkt an. Der Anruf gehört zu deinem Chat mit ihnen.",
+      "people": "Wen anrufen?",
+      "video": "Videoanruf",
+      "audio": "Audioanruf"
+    }
   }
 }

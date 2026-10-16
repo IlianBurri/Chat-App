@@ -11,6 +11,8 @@ import { Popover, usePopover } from '@/components/ui/Popover';
 import { StatusIcon } from '@/components/ui/StatusIcon';
 import { Tabs } from '@/components/ui/Tabs';
 import { useToast } from '@/components/ui/Toaster';
+import { ActiveCallButton, useActiveCall } from '@/features/calls/ActiveCallButton';
+import { startChatCall } from '@/features/calls/startCall';
 import type { ChatSummary, PublicUser, Status } from '@/lib/types';
 import { chatTitle, directPartner, useChatsStore } from '@/stores/chats';
 import { useStatus } from '@/stores/presence';
@@ -36,6 +38,8 @@ export function ChatHeader({ chat, meId, tab, onTabChange }: ChatHeaderProps) {
   const partner = directPartner(chat, meId);
   const title = chatTitle(chat, meId);
   const isGroup = chat.type === 'group';
+  const callTarget = { kind: 'chat' as const, id: chat.id };
+  const running = useActiveCall(callTarget);
 
   const run = async (action: () => Promise<unknown>) => {
     try {
@@ -48,12 +52,12 @@ export function ChatHeader({ chat, meId, tab, onTabChange }: ChatHeaderProps) {
   return (
     <header className="flex h-14 shrink-0 items-center gap-3 border-b border-line px-4">
       {chat.meeting ? (
-          <MeetingAvatar />
-        ) : partner ? (
-          <Avatar user={partner} showStatus />
-        ) : (
-          <GroupAvatar members={chat.members.filter((m) => m.id !== meId)} />
-        )}
+        <MeetingAvatar />
+      ) : partner ? (
+        <Avatar user={partner} showStatus />
+      ) : (
+        <GroupAvatar members={chat.members.filter((m) => m.id !== meId)} />
+      )}
       <div className="min-w-0">
         <h1 className="truncate text-base leading-tight font-semibold">{title}</h1>
         {partner ? (
@@ -75,8 +79,13 @@ export function ChatHeader({ chat, meId, tab, onTabChange }: ChatHeaderProps) {
         addLabel={t('chat.tabs.add')}
       />
       <div className="ml-auto flex items-center gap-1">
-        <IconButton label={t('chat.videoCall')} icon={VideoCameraIcon} onClick={() => showComingSoon(t('chat.videoCall'))} />
-        <IconButton label={t('chat.audioCall')} icon={PhoneIcon} onClick={() => showComingSoon(t('chat.audioCall'))} />
+        <ActiveCallButton target={callTarget} title={title} />
+        {!running && (
+          <>
+            <IconButton label={t('chat.videoCall')} icon={VideoCameraIcon} onClick={() => startChatCall(chat.id, title, 'video')} />
+            <IconButton label={t('chat.audioCall')} icon={PhoneIcon} onClick={() => startChatCall(chat.id, title, 'audio')} />
+          </>
+        )}
         <Popover
           label={t('chat.participants')}
           placement="bottom-end"

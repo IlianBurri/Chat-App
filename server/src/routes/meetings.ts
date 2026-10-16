@@ -40,7 +40,7 @@ const meetingInput = z.object({
 });
 
 meetingsRouter.post('/', async (req, res) => {
-  const input = meetingInput.extend({ chatId: id.optional() }).parse(req.body);
+  const input = meetingInput.extend({ chatId: id.optional(), isInstant: z.boolean().optional() }).parse(req.body);
   res.status(201).json({ meeting: await createMeeting(currentUserId(req), input) });
 });
 

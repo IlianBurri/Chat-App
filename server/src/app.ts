@@ -6,6 +6,7 @@ import { requireClientHeader } from './middleware/csrf';
 import { errorHandler } from './middleware/error';
 import { activityRouter } from './routes/activity';
 import { authRouter } from './routes/auth';
+import { callsRouter } from './routes/calls';
 import { channelsRouter } from './routes/channels';
 import { chatsRouter } from './routes/chats';
 import { filesRouter } from './routes/files';
@@ -43,6 +44,7 @@ export function createApp() {
   api.use('/search', requireAuth, searchRouter);
   api.use('/files', requireAuth, filesRouter);
   api.use('/meetings', requireAuth, meetingsRouter);
+  api.use('/calls', requireAuth, callsRouter);
   api.use(() => {
     throw new HttpError(404, 'not_found', 'Unknown API route');
   });
