@@ -15,6 +15,7 @@ const entry = (id: string, patch: Partial<NotificationDto> = {}): NotificationDt
   messageId: 'm1',
   postId: null,
   replyId: null,
+  meetingId: null,
   createdAt: '2026-01-01T10:00:00Z',
   read: false,
   ...patch,

@@ -18,6 +18,7 @@ const msg = (author: string, createdAt: Date, type: MessageDto['type'] = 'text')
   forwardedFrom: null,
   reactions: [],
   files: [],
+  meeting: null,
   poll: null,
 });
 

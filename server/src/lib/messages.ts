@@ -9,6 +9,7 @@ export const messageInclude = {
   },
   forwardedFrom: { select: { author: { select: { id: true, name: true } } } },
   files: attachmentInclude,
+  meeting: { select: { id: true, title: true, start: true, end: true, organizerId: true, cancelledAt: true } },
   poll: {
     include: {
       options: { orderBy: { position: 'asc' }, include: { votes: { select: { userId: true } } } },
@@ -60,6 +61,17 @@ export function toMessageDto(m: MessageRow) {
     forwardedFrom: m.forwardedFrom ? { author: m.forwardedFrom.author } : null,
     reactions: deleted ? [] : summarizeReactions(m.reactions),
     files: deleted ? [] : m.files.map(toFileDto),
+    meeting:
+      m.meeting && !deleted
+        ? {
+            id: m.meeting.id,
+            title: m.meeting.title,
+            start: m.meeting.start,
+            end: m.meeting.end,
+            organizerId: m.meeting.organizerId,
+            cancelled: m.meeting.cancelledAt !== null,
+          }
+        : null,
     poll:
       m.poll && !deleted
         ? {

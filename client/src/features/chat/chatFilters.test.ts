@@ -21,6 +21,7 @@ const chat = (id: string, partner: string, overrides: Partial<ChatSummary> = {})
   members: [me, user(`u-${id}`, partner)],
   lastMessage: null,
   lastMessageAt: new Date(2026, 0, 1).toISOString(),
+  meeting: null,
   unreadCount: 0,
   pinned: false,
   muted: false,
@@ -48,6 +49,12 @@ describe('groupChats', () => {
   it('filters unread chats, including ones marked as unread', () => {
     const groups = groupChats(chats, 'unread', '', 'me');
     expect([...ids(groups.pinned), ...ids(groups.recent)]).toEqual(['b', 'd']);
+  });
+
+  it('shows only meeting chats under "Meetings"', () => {
+    const withMeeting = [...chats, chat('m', 'Review', { meeting: { id: 'mt', start: '', end: '', cancelled: false } })];
+    const groups = groupChats(withMeeting, 'meetings', '', 'me');
+    expect([...ids(groups.pinned), ...ids(groups.recent)]).toEqual(['m']);
   });
 
   it('filters by the other person’s name, case-insensitively', () => {

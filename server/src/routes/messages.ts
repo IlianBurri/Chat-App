@@ -36,7 +36,7 @@ messagesRouter.patch('/:messageId', async (req, res) => {
 messagesRouter.delete('/:messageId', async (req, res) => {
   const userId = currentUserId(req);
   const message = await requireOwnMessage(req.params.messageId, userId);
-  if (message.type === 'system') throw new HttpError(400, 'validation', 'This message cannot be deleted');
+  if (message.type === 'system' || message.type === 'meeting') throw new HttpError(400, 'validation', 'This message cannot be deleted');
   await prisma.$transaction([
     prisma.message.update({ where: { id: message.id }, data: { deletedAt: new Date(), pinnedAt: null, pinnedById: null } }),
     prisma.reaction.deleteMany({ where: { messageId: message.id } }),

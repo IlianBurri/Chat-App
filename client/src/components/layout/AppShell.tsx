@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router';
 import { ComingSoonDialog } from '@/components/ui/ComingSoon';
 import { Toaster } from '@/components/ui/Toaster';
+import { MeetingDetails } from '@/features/calendar/MeetingDetails';
+import { MeetingEditor } from '@/features/calendar/MeetingEditor';
 import { watchIdle } from '@/lib/idle';
 import { bindRealtime } from '@/lib/realtime';
 import { connectSocket, disconnectSocket } from '@/lib/socket';
@@ -10,6 +12,7 @@ import { useActivityStore } from '@/stores/activity';
 import { useAuthStore } from '@/stores/auth';
 import { useBadgeCounts } from '@/stores/badges';
 import { useChatsStore } from '@/stores/chats';
+import { useMeetingsStore } from '@/stores/meetings';
 import { useMessagesStore } from '@/stores/messages';
 import { usePostsStore } from '@/stores/posts';
 import { useWorkspacesStore } from '@/stores/workspaces';
@@ -58,6 +61,7 @@ export function AppShell() {
       useWorkspacesStore.getState().reset();
       usePostsStore.getState().reset();
       useActivityStore.getState().reset();
+      useMeetingsStore.getState().reset();
     };
   }, []);
 
@@ -72,6 +76,8 @@ export function AppShell() {
           <Outlet />
         </div>
       </div>
+      <MeetingEditor />
+      <MeetingDetails />
       <ComingSoonDialog />
       <Toaster />
     </div>

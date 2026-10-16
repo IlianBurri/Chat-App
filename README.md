@@ -2,7 +2,7 @@
 
 Hallo ist eine Kommunikations- und Kollaborations-App für Firmen: Einzel- und Gruppenchats, Arbeitsgruppen mit Themenkanälen, Audio-/Videoanrufe, Kalender und Dateiablage an einem Ort.
 
-> **Stand:** Meilenstein 5 von 8 – Chats, Arbeitsgruppen mit Kanälen, Aktivitätsfeed, Benachrichtigungen, globale Suche, automatischer Status sowie Dateien und Uploads. Funktionen späterer Meilensteine sind in der App als „Kommt bald“ markiert.
+> **Stand:** Meilenstein 6 von 8 – Chats, Arbeitsgruppen mit Kanälen, Aktivitätsfeed, Benachrichtigungen, globale Suche, automatischer Status, Dateien und Uploads sowie Kalender mit Besprechungsplanung. Funktionen späterer Meilensteine sind in der App als „Kommt bald“ markiert.
 
 ## Voraussetzungen
 
@@ -104,7 +104,7 @@ Auswahlfelder sind im Schema bewusst als Text gespeichert, damit es ohne Änderu
 3. ✅ Arbeitsgruppen und Kanäle (Beiträge mit Antwort-Threads, Notizen, private Kanäle, Rollen Besitzer/Mitglied/Gast, Beitreten oder erstellen)
 4. ✅ Aktivitätsfeed (Erwähnungen, Antworten, Reaktionen; filterbar, Sprung zur Nachricht), Browser-Benachrichtigungen mit Badges und Stummschalten, globale Suche (Ctrl/Cmd+K), Status „Abwesend“ nach 5 Minuten Inaktivität
 5. ✅ Dateien und Uploads (Anhänge in Chats, Beiträgen und Antworten per Büroklammer, Drag & Drop oder Einfügen; Bildvorschau mit Betrachter; „Dateien“-Tabs in Chats und Kanälen; Dateien-App mit Ansichten und Filter; Downloads nur für Berechtigte)
-6. ⏳ Kalender und Besprechungsplanung
+6. ✅ Kalender und Besprechungsplanung (Tag, Arbeitswoche, Woche, Monat; planen aus dem Kalender oder per „+“ im Chat; eigener Besprechungschat mit Einladungskarte; Zusagen/Absagen, Bearbeiten, Absagen; „Teilnehmen“ ab 5 Minuten vor Beginn – der Anruf selbst folgt mit Meilenstein 7)
 7. ⏳ Audio-/Videoanrufe mit Bildschirmfreigabe
 8. ⏳ Responsive Layout, Feinschliff, End-to-End-Tests
 

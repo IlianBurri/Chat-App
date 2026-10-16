@@ -9,6 +9,7 @@ import { authRouter } from './routes/auth';
 import { channelsRouter } from './routes/channels';
 import { chatsRouter } from './routes/chats';
 import { filesRouter } from './routes/files';
+import { meetingsRouter } from './routes/meetings';
 import { messagesRouter } from './routes/messages';
 import { pollsRouter } from './routes/polls';
 import { postsRouter, repliesRouter } from './routes/posts';
@@ -41,6 +42,7 @@ export function createApp() {
   api.use('/activity', requireAuth, activityRouter);
   api.use('/search', requireAuth, searchRouter);
   api.use('/files', requireAuth, filesRouter);
+  api.use('/meetings', requireAuth, meetingsRouter);
   api.use(() => {
     throw new HttpError(404, 'not_found', 'Unknown API route');
   });

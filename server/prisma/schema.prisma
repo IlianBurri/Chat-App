@@ -97,6 +97,8 @@ model Message {
   deletedAt       DateTime?
   replyToId       String?
   forwardedFromId String?
+  /// Set for type "meeting": the invitation card
+  meetingId       String?
   pinnedAt        DateTime?
   pinnedById      String?
 
@@ -107,6 +109,7 @@ model Message {
   replies       Message[]      @relation("MessageReplies")
   forwardedFrom Message?       @relation("MessageForwards", fields: [forwardedFromId], references: [id], onDelete: SetNull)
   forwards      Message[]      @relation("MessageForwards")
+  meeting       Meeting?       @relation(fields: [meetingId], references: [id], onDelete: SetNull)
   reactions     Reaction[]
   files         File[]
   poll          Poll?
@@ -324,7 +327,7 @@ model File {
 }
 
 model Meeting {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
   description String?
   start       DateTime
@@ -333,16 +336,20 @@ model Meeting {
   chatId      String?
   channelId   String?
   /// Call room used by "Join"
-  roomId      String   @unique @default(cuid())
+  roomId      String    @unique @default(cuid())
   /// Created via "Meet now"
-  isInstant   Boolean  @default(false)
-  createdAt   DateTime @default(now())
+  isInstant   Boolean   @default(false)
+  /// The chat was created for this meeting (shown under the "Meetings" chat filter)
+  ownsChat    Boolean   @default(false)
+  cancelledAt DateTime?
+  createdAt   DateTime  @default(now())
 
   organizer    User                 @relation(fields: [organizerId], references: [id], onDelete: Cascade)
   chat         Chat?                @relation(fields: [chatId], references: [id], onDelete: SetNull)
   channel      Channel?             @relation(fields: [channelId], references: [id], onDelete: SetNull)
   participants MeetingParticipant[]
   calls        Call[]
+  messages     Message[]
 
   @@index([start])
 }

@@ -32,6 +32,8 @@ export interface ChatSummary {
     createdAt: string;
   } | null;
   lastMessageAt: string;
+  /** Set when the chat was created for a meeting */
+  meeting: { id: string; start: string; end: string; cancelled: boolean } | null;
   unreadCount: number;
   pinned: boolean;
   muted: boolean;
@@ -163,6 +165,8 @@ export interface MessageDto {
   reactions: ReactionSummary[];
   files: FileDto[];
   poll: PollDto | null;
+  /** Invitation card of a meeting message */
+  meeting: MeetingCard | null;
 }
 
 export interface ReadReceipt {
@@ -191,6 +195,7 @@ export interface NotificationDto {
   messageId: string | null;
   postId: string | null;
   replyId: string | null;
+  meetingId: string | null;
   createdAt: string;
   read: boolean;
 }
@@ -236,4 +241,29 @@ export interface SearchResults {
   groups: SearchGroupHit[];
   messages: SearchConversationHit[];
   files: FileDto[];
+}
+
+export type MeetingResponse = 'none' | 'accepted' | 'tentative' | 'declined';
+
+export interface MeetingDto {
+  id: string;
+  title: string;
+  description: string | null;
+  start: string;
+  end: string;
+  chatId: string | null;
+  roomId: string;
+  isInstant: boolean;
+  cancelled: boolean;
+  organizer: PublicUser;
+  participants: { user: PublicUser; response: MeetingResponse }[];
+}
+
+export interface MeetingCard {
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+  organizerId: string;
+  cancelled: boolean;
 }

@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { UsersThreeIcon } from '@phosphor-icons/react';
+import { CalendarBlankIcon, UsersThreeIcon } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
 import { avatarColor, initials } from '@/lib/format';
 import type { PublicUser, Status } from '@/lib/types';
@@ -53,6 +53,16 @@ function PresenceDot({ userId, fallback, avatarSize }: { userId: string; fallbac
 }
 
 /** Avatar for group chats: two overlapping member avatars. */
+/** Tile for chats that belong to a meeting. */
+export function MeetingAvatar({ size = 'md' }: { size?: Size }) {
+  const px = SIZES[size];
+  return (
+    <span className="flex shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent" style={{ width: px, height: px }} aria-hidden="true">
+      <CalendarBlankIcon className="size-1/2" weight="fill" />
+    </span>
+  );
+}
+
 export function GroupAvatar({ members, size = 'md' }: { members: Pick<PublicUser, 'id' | 'name' | 'avatarUrl'>[]; size?: Size }) {
   const px = SIZES[size];
   if (members.length < 2) {

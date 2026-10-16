@@ -2,13 +2,14 @@ import type { Socket } from 'socket.io-client';
 import { useActivityStore } from '@/stores/activity';
 import { useAuthStore } from '@/stores/auth';
 import { useChatsStore } from '@/stores/chats';
+import { useMeetingsStore } from '@/stores/meetings';
 import { useMessagesStore } from '@/stores/messages';
 import { usePostsStore } from '@/stores/posts';
 import { usePresenceStore } from '@/stores/presence';
 import { useTypingStore } from '@/stores/typing';
 import { useWorkspacesStore } from '@/stores/workspaces';
 import { alertForMessage, alertForNotification, alertForPost } from './alerts';
-import type { ChatSummary, MessageDto, NotificationDto, PostDto, ReactionSummary, Status } from './types';
+import type { ChatSummary, MeetingDto, MessageDto, NotificationDto, PostDto, ReactionSummary, Status } from './types';
 
 interface PresenceEvent {
   userId: string;
@@ -67,6 +68,9 @@ export function bindRealtime(socket: Socket): () => void {
     'channel:read': (e: { channelId: string }) => useWorkspacesStore.getState().setUnread(e.channelId, false),
     'channel:notes': (e: { channelId: string; notes: string }) => usePostsStore.getState().setNotes(e.channelId, e.notes),
     'channel:removed': (e: { channelId: string }) => usePostsStore.getState().forget(e.channelId),
+
+    'meeting:upsert': (meeting: MeetingDto) => useMeetingsStore.getState().upsert(meeting),
+    'meeting:removed': (e: { id: string }) => useMeetingsStore.getState().remove(e.id),
 
     'notification:new': (e: { notification: NotificationDto; unreadCount: number }) => {
       useActivityStore.getState().added(e.notification, e.unreadCount);

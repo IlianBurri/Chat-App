@@ -285,7 +285,6 @@
     }
   },
   "placeholder": {
-    "calendar": "Der Kalender mit Tag-, Arbeitswochen-, Wochen- und Monatsansicht kommt mit Meilenstein 6.",
     "calls": "Audio- und Videoanrufe kommen mit Meilenstein 7.",
     "more": "Weitere Apps"
   },
@@ -464,5 +463,75 @@
     "deleteTitle": "Datei löschen?",
     "deleteText": "«{{name}}» wird für alle entfernt. Die Nachricht, mit der sie gesendet wurde, bleibt bestehen.",
     "waitForUpload": "Bitte warte, bis die Dateien hochgeladen sind."
+  },
+  "calendar": {
+    "title": "Kalender",
+    "meetNow": "Jetzt besprechen",
+    "newMeeting": "Neue Besprechung",
+    "today": "Heute",
+    "previous": "Vorheriger Zeitraum",
+    "next": "Nächster Zeitraum",
+    "view": "Kalenderansicht",
+    "views": {
+      "day": "Tag",
+      "workweek": "Arbeitswoche",
+      "week": "Woche",
+      "month": "Monat"
+    },
+    "loadError": "Besprechungen konnten nicht geladen werden. Erneut versuchen"
+  },
+  "meetings": {
+    "join": "Teilnehmen",
+    "callFeature": "An Besprechungen teilnehmen (Audio- und Videoanrufe)",
+    "clickToSchedule": "Klicken, um eine Besprechung zu planen",
+    "more_one": "+{{count}} weitere",
+    "more_other": "+{{count}} weitere",
+    "notFound": "Diese Besprechung ist nicht mehr verfügbar.",
+    "newTitle": "Neue Besprechung",
+    "editTitle": "Besprechung bearbeiten",
+    "send": "Einladung senden",
+    "scheduled": "Besprechung geplant",
+    "saved": "Besprechung aktualisiert",
+    "alreadyCancelled": "Diese Besprechung wurde bereits abgesagt.",
+    "form": {
+      "title": "Titel",
+      "participants": "Personen einladen",
+      "participantsPlaceholder": "Namen eingeben",
+      "date": "Datum",
+      "start": "Beginn",
+      "end": "Ende",
+      "endDate": "Enddatum",
+      "endBeforeStart": "Die Besprechung muss nach ihrem Beginn enden.",
+      "description": "Details",
+      "postedInChat": "Die Einladung wird in diesem Chat gepostet.",
+      "newChat": "Die Besprechung bekommt einen eigenen Chat mit allen Eingeladenen."
+    },
+    "card": "Besprechung",
+    "details": "Details",
+    "openChat": "Chat öffnen",
+    "organizedBy": "Organisiert von {{name}}",
+    "organizer": "Organisator",
+    "cancelled": "Abgesagt",
+    "startingNow": "Beginnt gleich",
+    "edit": "Bearbeiten",
+    "cancelMeeting": "Besprechung absagen",
+    "cancelTitle": "Besprechung absagen?",
+    "cancelText": "«{{title}}» verschwindet aus allen Kalendern. Der Chat bleibt erhalten.",
+    "cancelledToast": "Besprechung abgesagt",
+    "yourAnswer": "Deine Antwort",
+    "answer": {
+      "accepted": "Zusagen",
+      "tentative": "Mit Vorbehalt",
+      "declined": "Absagen"
+    },
+    "response": {
+      "none": "Keine Antwort",
+      "accepted": "Zugesagt",
+      "tentative": "Mit Vorbehalt",
+      "declined": "Abgesagt"
+    },
+    "participants_one": "{{count}} Person · {{accepted}} zugesagt",
+    "participants_other": "{{count}} Personen · {{accepted}} zugesagt",
+    "organizedByYou": "Von dir organisiert"
   }
 }

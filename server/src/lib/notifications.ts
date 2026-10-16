@@ -16,6 +16,7 @@ export interface NewNotification {
   messageId?: string | null;
   postId?: string | null;
   replyId?: string | null;
+  meetingId?: string | null;
 }
 
 /** Lower number wins when one event would notify the same person twice. */
@@ -55,6 +56,7 @@ export async function toNotificationDtos(rows: NotificationRow[]) {
     messageId: r.messageId,
     postId: r.postId,
     replyId: r.replyId,
+    meetingId: r.meetingId,
     createdAt: r.createdAt,
     read: r.readAt !== null,
   }));

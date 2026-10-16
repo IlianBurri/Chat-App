@@ -87,10 +87,8 @@ export function ChatList() {
           </div>
         ) : filter === 'channels' ? (
           <ChannelList />
-        ) : filter === 'meetings' ? (
-          <p className="px-4 py-6 text-sm text-muted">{t('chat.noMeetings')}</p>
         ) : groups.pinned.length + groups.recent.length === 0 ? (
-          <p className="px-4 py-6 text-sm text-muted">{t('chat.empty')}</p>
+          <p className="px-4 py-6 text-sm text-muted">{filter === 'meetings' ? t('chat.noMeetings') : t('chat.empty')}</p>
         ) : (
           <>
             {groups.pinned.length > 0 && (

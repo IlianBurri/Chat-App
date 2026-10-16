@@ -1,4 +1,4 @@
-import { BellIcon, CalendarBlankIcon, PhoneIcon, UsersThreeIcon } from '@phosphor-icons/react';
+import { BellIcon, PhoneIcon, UsersThreeIcon } from '@phosphor-icons/react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createBrowserRouter, Navigate, Outlet, RouterProvider, useParams } from 'react-router';
@@ -6,6 +6,7 @@ import { AppShell } from '@/components/layout/AppShell';
 import { ListPane } from '@/components/layout/ListPane';
 import { EmptyState, PlaceholderView } from '@/components/layout/PlaceholderView';
 import { ActivityList } from '@/features/activity/ActivityList';
+import { CalendarView } from '@/features/calendar/CalendarView';
 import { AuthPage } from '@/features/auth/AuthPage';
 import { ChatList } from '@/features/chat/ChatList';
 import { ChatEmpty, ChatView } from '@/features/chat/ChatView';
@@ -108,10 +109,9 @@ function FilesSection() {
   );
 }
 
-function Placeholder({ section }: { section: 'calendar' | 'calls' }) {
+function CallsPlaceholder() {
   const { t } = useTranslation();
-  const icons = { calendar: CalendarBlankIcon, calls: PhoneIcon };
-  return <PlaceholderView icon={icons[section]} title={t(`nav.${section}`)} text={t(`placeholder.${section}`)} />;
+  return <PlaceholderView icon={PhoneIcon} title={t('nav.calls')} text={t('placeholder.calls')} />;
 }
 
 const router = createBrowserRouter([
@@ -146,8 +146,8 @@ const router = createBrowserRouter([
         ],
       },
       { path: 'activity', element: <ActivitySection /> },
-      { path: 'calendar', element: <Placeholder section="calendar" /> },
-      { path: 'calls', element: <Placeholder section="calls" /> },
+      { path: 'calendar', element: <CalendarView /> },
+      { path: 'calls', element: <CallsPlaceholder /> },
       { path: 'files', element: <FilesSection /> },
       { path: '*', element: <Navigate to="/chat" replace /> },
     ],

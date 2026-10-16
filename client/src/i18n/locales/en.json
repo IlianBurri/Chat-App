@@ -285,7 +285,6 @@
     }
   },
   "placeholder": {
-    "calendar": "The calendar with day, work week, week and month views arrives in milestone 6.",
     "calls": "Audio and video calls arrive in milestone 7.",
     "more": "More apps"
   },
@@ -464,5 +463,75 @@
     "deleteTitle": "Delete file?",
     "deleteText": "“{{name}}” will be removed for everyone. The message it was sent with stays.",
     "waitForUpload": "Please wait until the files are uploaded."
+  },
+  "calendar": {
+    "title": "Calendar",
+    "meetNow": "Meet now",
+    "newMeeting": "New meeting",
+    "today": "Today",
+    "previous": "Previous period",
+    "next": "Next period",
+    "view": "Calendar view",
+    "views": {
+      "day": "Day",
+      "workweek": "Work week",
+      "week": "Week",
+      "month": "Month"
+    },
+    "loadError": "Could not load meetings. Try again"
+  },
+  "meetings": {
+    "join": "Join",
+    "callFeature": "Joining meetings (audio and video calls)",
+    "clickToSchedule": "Click to schedule a meeting",
+    "more_one": "+{{count}} more",
+    "more_other": "+{{count}} more",
+    "notFound": "This meeting is no longer available.",
+    "newTitle": "New meeting",
+    "editTitle": "Edit meeting",
+    "send": "Send invitation",
+    "scheduled": "Meeting scheduled",
+    "saved": "Meeting updated",
+    "alreadyCancelled": "This meeting has already been cancelled.",
+    "form": {
+      "title": "Title",
+      "participants": "Invite people",
+      "participantsPlaceholder": "Enter a name",
+      "date": "Date",
+      "start": "Start",
+      "end": "End",
+      "endDate": "End date",
+      "endBeforeStart": "The meeting must end after it starts.",
+      "description": "Details",
+      "postedInChat": "The invitation is posted in this chat.",
+      "newChat": "The meeting gets its own chat with everyone invited."
+    },
+    "card": "Meeting",
+    "details": "Details",
+    "openChat": "Open chat",
+    "organizedBy": "Organised by {{name}}",
+    "organizer": "Organiser",
+    "cancelled": "Cancelled",
+    "startingNow": "Starting now",
+    "edit": "Edit",
+    "cancelMeeting": "Cancel meeting",
+    "cancelTitle": "Cancel meeting?",
+    "cancelText": "“{{title}}” disappears from everyone’s calendar. The chat stays.",
+    "cancelledToast": "Meeting cancelled",
+    "yourAnswer": "Your answer",
+    "answer": {
+      "accepted": "Accept",
+      "tentative": "Tentative",
+      "declined": "Decline"
+    },
+    "response": {
+      "none": "No answer",
+      "accepted": "Accepted",
+      "tentative": "Tentative",
+      "declined": "Declined"
+    },
+    "participants_one": "{{count}} person · {{accepted}} accepted",
+    "participants_other": "{{count}} people · {{accepted}} accepted",
+    "organizedByYou": "Organised by you"
   }
 }

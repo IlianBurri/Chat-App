@@ -79,7 +79,7 @@ export function MessageToolbar({ message, own, actions, onOpenChange }: MessageT
         <MenuItem icon={LinkSimpleIcon} onSelect={() => actions.copyLink(message)}>
           {t('message.copyLink')}
         </MenuItem>
-        {own && (
+        {own && message.type !== 'meeting' && (
           <>
             <MenuSeparator />
             <MenuItem icon={TrashIcon} danger onSelect={() => actions.remove(message)}>

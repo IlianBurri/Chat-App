@@ -11,6 +11,7 @@ import type { MentionTarget } from '@/lib/markdown';
 import type { MessageDto, SystemEvent } from '@/lib/types';
 import { MessageEditor } from './MessageEditor';
 import { MessageToolbar, type MessageActions } from './MessageToolbar';
+import { MeetingCard } from '@/features/calendar/MeetingCard';
 import { PollCard } from './PollCard';
 import { ReactionChips } from './ReactionChips';
 
@@ -117,6 +118,8 @@ function MessageBody({
           <MessageEditor message={message} onDone={onEditDone} />
         ) : message.poll ? (
           <PollCard poll={message.poll} meId={meId} />
+        ) : message.meeting ? (
+          <MeetingCard meeting={message.meeting} />
         ) : (
           <>
             {message.subject && <p className="mb-1 text-base font-semibold">{message.subject}</p>}

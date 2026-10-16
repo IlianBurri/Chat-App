@@ -10,6 +10,7 @@ export function groupChats(chats: ChatSummary[], filter: ChatFilter, query: stri
     // Hidden chats come back as soon as there is something new.
     if (chat.hidden && !isUnread(chat)) return false;
     if (filter === 'unread' && !isUnread(chat)) return false;
+    if (filter === 'meetings' && !chat.meeting) return false;
     if (q && !chatTitle(chat, meId).toLowerCase().includes(q)) return false;
     return true;
   });

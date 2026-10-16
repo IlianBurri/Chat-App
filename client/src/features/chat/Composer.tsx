@@ -7,7 +7,6 @@ import { FormatToolbar, MentionSuggestions } from '@/components/editor/EditorPar
 import { AttachButton, AttachmentTray, DropOverlay } from '@/components/files/AttachmentTray';
 import { useAttachments } from '@/components/files/useAttachments';
 import { useTextEditor } from '@/components/editor/useTextEditor';
-import { useComingSoon } from '@/components/ui/ComingSoon';
 import { EmojiPicker } from '@/components/ui/EmojiPicker';
 import { IconButton } from '@/components/ui/IconButton';
 import { Menu, MenuItem } from '@/components/ui/Menu';
@@ -16,6 +15,8 @@ import { useToast } from '@/components/ui/Toaster';
 import { previewText } from '@/lib/format';
 import { getSocket } from '@/lib/socket';
 import type { MessageDto, PublicUser } from '@/lib/types';
+import { nextSlot } from '@/features/calendar/calendarMath';
+import { useMeetingsStore } from '@/stores/meetings';
 import { useMessagesStore } from '@/stores/messages';
 import { PollDialog } from './PollDialog';
 
@@ -47,7 +48,6 @@ export function Composer({ chatId, people, replyTo, onCancelReply, onEditLast }:
   const { t } = useTranslation();
   const send = useMessagesStore((s) => s.send);
   const showToast = useToast((s) => s.show);
-  const showComingSoon = useComingSoon((s) => s.show);
   const draft = useDrafts((s) => s.drafts[chatId]);
   const setDraft = useDrafts((s) => s.set);
   const text = draft?.text ?? '';
@@ -233,7 +233,12 @@ export function Composer({ chatId, people, replyTo, onCancelReply, onEditLast }:
             <MenuItem icon={ChartBarIcon} onSelect={() => setPollOpen(true)}>
               {t('poll.create')}
             </MenuItem>
-            <MenuItem icon={CalendarPlusIcon} onSelect={() => showComingSoon(t('composer.scheduleMeeting'))}>
+            <MenuItem icon={CalendarPlusIcon} onSelect={() =>
+                useMeetingsStore.getState().openEditor({
+                  mode: 'create',
+                  draft: { title: '', description: '', participants: people, chatId, ...nextSlot(new Date()) },
+                })
+              }>
               {t('composer.scheduleMeeting')}
             </MenuItem>
           </Menu>

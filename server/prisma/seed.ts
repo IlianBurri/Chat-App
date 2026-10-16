@@ -420,27 +420,67 @@ async function main() {
   const at = (dayOffset: number, hour: number, minute = 0) =>
     new Date(today.getTime() + dayOffset * DAY + hour * HOUR + minute * MINUTE);
 
-  const meetings: { title: string; start: Date; minutes: number; organizer: keyof typeof u; participants: (keyof typeof u)[] }[] = [
+  // Running while seeding, so the calendar shows a 'Join' button right away.
+  const soon = new Date(Math.floor(now / (5 * MINUTE)) * 5 * MINUTE);
+  const meetings: {
+    title: string;
+    start: Date;
+    minutes: number;
+    organizer: keyof typeof u;
+    participants: (keyof typeof u)[];
+    accepted?: (keyof typeof u)[];
+    description?: string;
+  }[] = [
+    { title: 'Kurzer Abgleich Release', start: soon, minutes: 30, organizer: 'ben', participants: ['anna', 'clara'], accepted: ['clara'] },
     { title: 'Daily Stand-up', start: at(0, 9), minutes: 15, organizer: 'anna', participants: ['ben', 'clara', 'david'] },
-    { title: 'Design-Review', start: at(1, 10), minutes: 60, organizer: 'clara', participants: ['anna', 'ben'] },
+    {
+      title: 'Design-Review',
+      start: at(1, 10),
+      minutes: 60,
+      organizer: 'clara',
+      participants: ['anna', 'ben'],
+      accepted: ['anna'],
+      description: 'Wir gehen die neuen Entwürfe für die Startseite und den Dunkelmodus durch.',
+    },
     { title: 'Demo Nordwind', start: at(2, 14), minutes: 45, organizer: 'felix', participants: ['anna', 'elif', 'david'] },
-    { title: 'Sprint-Planung', start: at(3, 13, 30), minutes: 90, organizer: 'anna', participants: ['ben', 'clara', 'david'] },
+    { title: 'Sprint-Planung', start: at(3, 13, 30), minutes: 90, organizer: 'anna', participants: ['ben', 'clara', 'david'], accepted: ['ben'] },
     { title: 'Kampagnen-Workshop', start: at(-1, 15), minutes: 60, organizer: 'elif', participants: ['anna', 'felix'] },
   ];
+  // Each meeting gets its own chat with the invitation card, as if planned in the calendar.
   for (const m of meetings) {
-    await prisma.meeting.create({
+    const createdAt = new Date(Math.min(m.start.getTime(), now) - 2 * DAY);
+    const chat = await prisma.chat.create({
+      data: {
+        type: 'group',
+        name: m.title,
+        createdAt,
+        lastMessageAt: createdAt,
+        members: { create: [m.organizer, ...m.participants].map((p) => ({ userId: u[p], joinedAt: createdAt })) },
+      },
+    });
+    const meeting = await prisma.meeting.create({
       data: {
         title: m.title,
+        description: m.description ?? null,
         start: m.start,
         end: new Date(m.start.getTime() + m.minutes * MINUTE),
         organizerId: u[m.organizer],
+        chatId: chat.id,
+        ownsChat: true,
+        createdAt,
         participants: {
           create: [
             { userId: u[m.organizer], response: 'accepted' },
-            ...m.participants.map((p) => ({ userId: u[p], response: 'none' })),
+            ...m.participants.map((p) => ({ userId: u[p], response: m.accepted?.includes(p) ? 'accepted' : 'none' })),
           ],
         },
       },
+    });
+    await prisma.message.create({
+      data: { chatId: chat.id, authorId: u[m.organizer], type: 'meeting', content: m.title, meetingId: meeting.id, createdAt },
+    });
+    await prisma.readReceipt.createMany({
+      data: [m.organizer, ...m.participants].map((p) => ({ chatId: chat.id, userId: u[p], readAt: createdAt })),
     });
   }
 

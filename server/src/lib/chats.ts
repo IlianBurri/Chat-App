@@ -50,6 +50,7 @@ export async function chatSummaries(userId: string, chatIds?: string[]) {
             },
           },
           readReceipts: { where: { userId } },
+          meetings: { where: { ownsChat: true }, take: 1, select: { id: true, start: true, end: true, cancelledAt: true } },
         },
       },
     },
@@ -62,6 +63,7 @@ export async function chatSummaries(userId: string, chatIds?: string[]) {
         where: { chatId: chat.id, authorId: { not: userId }, deletedAt: null, createdAt: { gt: readAt } },
       });
       const last = chat.messages[0];
+      const meeting = chat.meetings[0];
       return {
         id: chat.id,
         type: chat.type,
@@ -79,6 +81,7 @@ export async function chatSummaries(userId: string, chatIds?: string[]) {
             }
           : null,
         lastMessageAt: chat.lastMessageAt,
+        meeting: meeting ? { id: meeting.id, start: meeting.start, end: meeting.end, cancelled: meeting.cancelledAt !== null } : null,
         unreadCount,
         pinned: membership.pinned,
         muted: membership.muted,
@@ -132,6 +135,7 @@ export async function createMessage(data: {
   /** The author's pending uploads for this chat */
   fileIds?: string[];
   poll?: { question: string; multiple: boolean; options: string[] };
+  meetingId?: string;
 }) {
   await assertPendingFiles(data.fileIds, data.authorId, { chatId: data.chatId });
   const now = new Date();
@@ -145,6 +149,7 @@ export async function createMessage(data: {
         type: data.type ?? 'text',
         replyToId: data.replyToId ?? null,
         forwardedFromId: data.forwardedFromId ?? null,
+        meetingId: data.meetingId ?? null,
         createdAt: now,
         poll: data.poll
           ? {

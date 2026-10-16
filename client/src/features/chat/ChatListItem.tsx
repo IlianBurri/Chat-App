@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { BellIcon, BellSlashIcon, EnvelopeOpenIcon, EnvelopeSimpleIcon, EyeSlashIcon, PushPinIcon, PushPinSlashIcon, SignOutIcon } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
 import { NavLink, useMatch, useNavigate } from 'react-router';
-import { Avatar, GroupAvatar } from '@/components/ui/Avatar';
+import { Avatar, GroupAvatar, MeetingAvatar } from '@/components/ui/Avatar';
 import { ContextMenu, useContextMenu } from '@/components/ui/ContextMenu';
 import { MenuItem, MenuSeparator } from '@/components/ui/Menu';
 import { useToast } from '@/components/ui/Toaster';
@@ -31,6 +31,8 @@ export function ChatListItem({ chat, meId, now }: { chat: ChatSummary; meId: str
         ? t('chat.systemPreview')
         : last.type === 'poll'
           ? `📊 ${last.content ?? ''}`
+          : last.type === 'meeting'
+            ? `📅 ${last.content ?? ''}`
           : last.content
             ? previewText(last.content)
             : last.fileName
@@ -59,7 +61,13 @@ export function ChatListItem({ chat, meId, now }: { chat: ChatSummary; meId: str
           active ? 'bg-selected shadow-card' : 'hover:bg-hover',
         )}
       >
-        {partner ? <Avatar user={partner} showStatus /> : <GroupAvatar members={chat.members.filter((m) => m.id !== meId)} />}
+        {chat.meeting ? (
+          <MeetingAvatar />
+        ) : partner ? (
+          <Avatar user={partner} showStatus />
+        ) : (
+          <GroupAvatar members={chat.members.filter((m) => m.id !== meId)} />
+        )}
         <span className="min-w-0 flex-1">
           <span className="flex items-baseline gap-2">
             <span className={clsx('flex-1 truncate', unread ? 'font-bold' : 'font-medium')}>{title}</span>

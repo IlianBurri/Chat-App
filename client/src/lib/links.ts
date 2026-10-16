@@ -13,7 +13,15 @@ export function channelPath(workspaceId: string, channelId: string, postId?: str
 }
 
 /** Where an activity entry leads to, or null if its target is gone. */
-export function notificationPath(n: Pick<NotificationDto, 'chatId' | 'messageId' | 'workspaceId' | 'channelId' | 'postId' | 'replyId'>) {
+/** Opens the calendar at the meeting's week with its details shown. */
+export function meetingPath(meetingId: string) {
+  return `/calendar?meeting=${encodeURIComponent(meetingId)}`;
+}
+
+export function notificationPath(
+  n: Pick<NotificationDto, 'chatId' | 'messageId' | 'workspaceId' | 'channelId' | 'postId' | 'replyId' | 'meetingId'>,
+) {
+  if (n.meetingId) return meetingPath(n.meetingId);
   if (n.chatId) return chatPath(n.chatId, n.messageId);
   if (n.workspaceId && n.channelId) return channelPath(n.workspaceId, n.channelId, n.postId, n.replyId);
   return null;

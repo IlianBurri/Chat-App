@@ -28,6 +28,13 @@
   --ui-warning: #eaa300;
   --ui-offline: #8a8a93;
 
+  /* Calendar: one colour per meeting (border/text strength) */
+  --ui-meet-0: #5b5fc7;
+  --ui-meet-1: #0f7b8a;
+  --ui-meet-2: #b25a00;
+  --ui-meet-3: #3b7d23;
+  --ui-meet-4: #b4307a;
+
   --ui-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 2px 8px rgb(0 0 0 / 0.06);
   --ui-shadow-lg: 0 8px 24px rgb(0 0 0 / 0.14), 0 2px 6px rgb(0 0 0 / 0.08);
 }
@@ -56,6 +63,12 @@
   --ui-success: #54c56a;
   --ui-warning: #ffc83d;
   --ui-offline: #8c8c98;
+
+  --ui-meet-0: #8f95f7;
+  --ui-meet-1: #4cc2d1;
+  --ui-meet-2: #f0a35a;
+  --ui-meet-3: #7fcb64;
+  --ui-meet-4: #ee82bd;
 
   --ui-shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 2px 8px rgb(0 0 0 / 0.3);
   --ui-shadow-lg: 0 8px 24px rgb(0 0 0 / 0.5), 0 2px 6px rgb(0 0 0 / 0.4);

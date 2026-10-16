@@ -2,7 +2,7 @@ import { BellIcon, BellSlashIcon, DotsThreeIcon, PencilSimpleIcon, PhoneIcon, Pu
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
-import { Avatar, GroupAvatar } from '@/components/ui/Avatar';
+import { Avatar, GroupAvatar, MeetingAvatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { useComingSoon } from '@/components/ui/ComingSoon';
 import { IconButton } from '@/components/ui/IconButton';
@@ -47,7 +47,13 @@ export function ChatHeader({ chat, meId, tab, onTabChange }: ChatHeaderProps) {
 
   return (
     <header className="flex h-14 shrink-0 items-center gap-3 border-b border-line px-4">
-      {partner ? <Avatar user={partner} showStatus /> : <GroupAvatar members={chat.members.filter((m) => m.id !== meId)} />}
+      {chat.meeting ? (
+          <MeetingAvatar />
+        ) : partner ? (
+          <Avatar user={partner} showStatus />
+        ) : (
+          <GroupAvatar members={chat.members.filter((m) => m.id !== meId)} />
+        )}
       <div className="min-w-0">
         <h1 className="truncate text-base leading-tight font-semibold">{title}</h1>
         {partner ? (
