@@ -27,7 +27,8 @@ export function setSessionCookie(res: Response, userId: string) {
   res.cookie(config.cookieName, signSession(userId), {
     httpOnly: true,
     sameSite: 'lax',
-    secure: config.isProd,
+    // Only over HTTPS (directly or via a reverse proxy on this machine): a self-hosted server in a LAN runs on plain http.
+    secure: res.req.secure,
     maxAge: config.sessionDays * 24 * 60 * 60 * 1000,
     path: '/',
   });
