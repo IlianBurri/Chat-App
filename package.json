@@ -1,0 +1,26 @@
+{
+  "name": "hallo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Hallo – chat, workgroups, calls, calendar and files for companies",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "npm run setup -w server && concurrently -k -n server,client -c magenta,cyan \"npm run dev -w server\" \"npm run dev -w client\"",
+    "build": "npm run build -w client",
+    "start": "npm run setup -w server && npm run start -w server",
+    "db:reset": "npm run db:reset -w server",
+    "lint": "npm run lint -w server && npm run lint -w client",
+    "typecheck": "npm run typecheck -w server && npm run typecheck -w client",
+    "test": "npm run test -w server && npm run test -w client"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "concurrently": "^10.0.6"
+  },
+  "engines": {
+    "node": ">=20.12"
+  }
+}
