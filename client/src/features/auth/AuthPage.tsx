@@ -1,10 +1,10 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { Logo } from '@/components/brand/Logo';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
-import { ApiError } from '@/lib/api';
+import { api, ApiError } from '@/lib/api';
 import { useAuthStore } from '@/stores/auth';
 
 const DEMO_PASSWORD = 'Demo1234!';
@@ -26,6 +26,20 @@ export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  // Only servers seeded with demo data have these accounts (always in development, opt-in in production).
+  const [demoAvailable, setDemoAvailable] = useState(false);
+
+  useEffect(() => {
+    if (mode !== 'login') return;
+    let active = true;
+    api
+      .get<{ available: boolean }>('/auth/demo')
+      .then((r) => active && setDemoAvailable(r.available))
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [mode]);
 
   const run = async (action: () => Promise<void>) => {
     setBusy(true);
@@ -85,7 +99,7 @@ export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
           </p>
         </div>
 
-        {mode === 'login' && (
+        {mode === 'login' && demoAvailable && (
           <section aria-labelledby="demo-heading" className="rounded-lg bg-main p-4 shadow-card">
             <h2 id="demo-heading" className="text-sm font-semibold">
               {t('auth.demoAccounts')}

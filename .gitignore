@@ -8,6 +8,7 @@ coverage/
 
 # Server data
 server/dev.db*
+server/verify.db*
 server/uploads/
 server/src/generated/
 

@@ -1,4 +1,5 @@
 import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 if (existsSync('.env')) process.loadEnvFile('.env');
 
@@ -22,6 +23,14 @@ function parseIceServers(value: string | undefined): { urls: string | string[]; 
 
 export const config = {
   port: Number(process.env.PORT ?? 4000),
+  /** Network interface to listen on; unset = all interfaces */
+  host: process.env.HOST || undefined,
+  /** Built web client (client/dist) served next to the API; unset in development, where Vite serves it */
+  clientDir: process.env.CLIENT_DIR ? resolve(process.env.CLIENT_DIR) : undefined,
+  /** SQL that creates the tables in an empty database (bundled server without the Prisma CLI) */
+  schemaFile: process.env.SCHEMA_FILE || undefined,
+  /** Fill an empty database with demo users and conversations */
+  seedDemo: process.env.SEED_DEMO === '1',
   databaseUrl: process.env.DATABASE_URL ?? 'file:./dev.db',
   jwtSecret,
   isProd,

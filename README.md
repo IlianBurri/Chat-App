@@ -41,6 +41,7 @@ Zum Testen in Echtzeit meldest du dich in zwei Browserfenstern (z. B. einem norm
 |---|---|
 | `npm run dev` | Datenbank vorbereiten und Server + Client im Entwicklungsmodus starten |
 | `npm run build` | Client für die Produktion bauen (`client/dist`) |
+| `npm run bundle -w server` | Server als eine Datei bündeln (siehe [Produktion](#produktion)) |
 | `npm start` | Nur den API-Server starten (ohne Watch-Modus) |
 | `npm run db:reset` | Datenbank leeren und Demo-Daten neu einspielen |
 | `npm run typecheck` | TypeScript-Prüfung für Server und Client |
@@ -59,6 +60,30 @@ Der Server funktioniert ohne Konfiguration. Wer etwas ändern will, kopiert `ser
 | `UPLOAD_DIR` | `uploads` | Ablageort für hochgeladene Dateien (max. 25 MB pro Datei; der Ordner gehört ins Backup) |
 | `ICE_SERVERS` | leer | STUN/TURN-Server für Anrufe als JSON, z. B. `[{"urls":"stun:stun.example.org:3478"}]`. Auf einem Rechner oder im LAN nicht nötig; über verschiedene Netze braucht es STUN, oft auch TURN |
 | `CALL_RING_SECONDS` | `30` | So lange klingelt ein Anruf, bevor er als verpasst gilt |
+| `HOST` | alle Schnittstellen | Netzwerkschnittstelle, z. B. `127.0.0.1`, damit der Server nur lokal erreichbar ist |
+| `CLIENT_DIR` | leer | Gebauter Web-Client (`client/dist`); gesetzt liefert der Server App und API unter einer Adresse aus |
+| `SCHEMA_FILE` | leer | SQL-Datei aus `npm run bundle`; legt die Tabellen in einer leeren Datenbank an (statt `prisma db push`) |
+| `SEED_DEMO` | `0` | `1` füllt eine leere Datenbank mit den Demo-Konten. Ohne Demo-Daten zeigt die Anmeldeseite keine Demo-Konten |
+
+## Produktion
+
+Für einen eigenen Server ohne Entwicklungswerkzeuge:
+
+```bash
+npm run build                    # Web-Client nach client/dist
+npm run bundle -w server         # Server als eine Datei: server/dist/server.mjs + server/dist/schema.sql
+```
+
+Gestartet wird mit Node.js ≥ 22. Neben `server.mjs` muss nur das native Paket `better-sqlite3` installiert sein:
+
+```bash
+NODE_ENV=production JWT_SECRET="<langer Zufallswert>" PORT=4000 \
+DATABASE_URL="file:/var/lib/hallo/hallo.db" UPLOAD_DIR=/var/lib/hallo/uploads \
+SCHEMA_FILE=server/dist/schema.sql CLIENT_DIR=client/dist \
+node server/dist/server.mjs
+```
+
+Beim ersten Start legt der Server die Tabellen an. Das Sitzungs-Cookie bekommt das `Secure`-Flag, sobald die Seite über HTTPS aufgerufen wird (direkt oder über einen Reverse Proxy auf demselben Rechner); im LAN funktioniert die Anmeldung auch über `http://`.
 
 ## Technik
 

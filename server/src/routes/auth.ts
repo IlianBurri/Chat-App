@@ -58,6 +58,12 @@ authRouter.post('/logout', (_req, res) => {
   res.status(204).end();
 });
 
+// The login page only offers the demo accounts when this server was seeded with them.
+authRouter.get('/demo', async (_req, res) => {
+  const demoUser = await prisma.user.findUnique({ where: { email: 'anna@example.com' }, select: { id: true } });
+  res.json({ available: demoUser !== null });
+});
+
 authRouter.get('/me', requireAuth, async (req, res) => {
   const user = await prisma.user.findUnique({ where: { id: currentUserId(req) }, select: publicUserSelect });
   if (!user) throw new HttpError(401, 'unauthenticated', 'Please sign in');
