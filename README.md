@@ -85,6 +85,21 @@ node server/dist/server.mjs
 
 Beim ersten Start legt der Server die Tabellen an. Das Sitzungs-Cookie bekommt das `Secure`-Flag, sobald die Seite über HTTPS aufgerufen wird (direkt oder über einen Reverse Proxy auf demselben Rechner); im LAN funktioniert die Anmeldung auch über `http://`.
 
+## Desktop-App
+
+`desktop/` ist eine Electron-App. Beim ersten Start fragt ein Assistent, ob dieser Computer **selbst der Server** sein soll (der eingebaute Server läuft dann im Hintergrund, auf Wunsch im LAN erreichbar) oder ob sie sich **mit einem bestehenden Server verbindet**. Dazu kommen Menü, Symbol im Infobereich mit Ungelesen-Anzeige, Start beim Anmelden, Bildschirmfreigabe mit Auswahlfenster und Kamera/Mikrofon auch bei Servern im LAN ohne HTTPS.
+
+```bash
+cd desktop
+npm install       # eigenes Paket (kein Workspace): better-sqlite3 wird hier für Electron installiert
+npm start         # baut Client, Server-Bundle und App und startet sie
+npm run dev       # nur Hauptprozess neu bauen und starten (Client und Server unverändert)
+```
+
+Einstellungen, Datenbank, Uploads und das Server-Protokoll liegen im Benutzerdatenordner des Systems (Menü *Datei → Datenordner öffnen*). `DESKTOP_DATA_DIR` legt einen anderen Ordner fest, etwa für Tests. Die Icons in `desktop/build/` erzeugt `node scripts/icons.mjs` aus dem Logo.
+
+Electron bleibt bei Version 42, bis better-sqlite3 vorgebaute Binärdateien für neuere Versionen veröffentlicht; so braucht weder ein Entwicklungsrechner noch der Build-Server einen C++-Compiler.
+
 ## Technik
 
 - **Client:** React 19, TypeScript, Vite, Tailwind CSS 4, Zustand, React Router, Phosphor Icons, Twemoji-Farbschrift für einheitliche Emojis, i18next (Englisch und Deutsch)

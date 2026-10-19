@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self'" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="ui.css" />
+    <title></title>
+  </head>
+  <body>
+    <form class="picker" id="form">
+      <h1 data-t="picker.title"></h1>
+      <div class="sources">
+        <h2 data-t="picker.screens" id="screens-title"></h2>
+        <div class="grid" id="screens" role="group" aria-labelledby="screens-title"></div>
+        <h2 data-t="picker.windows" id="windows-title"></h2>
+        <div class="grid" id="windows" role="group" aria-labelledby="windows-title"></div>
+        <p class="muted" id="empty" data-t="picker.empty" hidden></p>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn" id="cancel" data-t="setup.cancel"></button>
+        <button type="submit" class="btn primary" id="share" data-t="picker.share" disabled></button>
+      </div>
+    </form>
+    <script type="module" src="picker.js"></script>
+  </body>
+</html>

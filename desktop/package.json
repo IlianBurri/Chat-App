@@ -1,0 +1,36 @@
+{
+  "name": "hallo-desktop",
+  "productName": "Hallo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Hallo – chat, workgroups, calls, calendar and files for companies",
+  "author": "Hallo",
+  "homepage": "https://ilianburri.github.io/Chat-App/",
+  "main": "dist/main.cjs",
+  "scripts": {
+    "postinstall": "node scripts/native.mjs",
+    "build": "node scripts/build.mjs",
+    "build:main": "node scripts/build.mjs --main-only",
+    "start": "npm run build && electron .",
+    "dev": "npm run build:main && electron .",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.11.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.0.0",
+    "electron": "~42.11.15",
+    "electron-builder": "^26.15.3",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.0.0",
+    "globals": "^17.0.0",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^5.0.4"
+  }
+}

@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self'" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="ui.css" />
+    <title></title>
+  </head>
+  <body>
+    <main class="page">
+      <form class="card" id="form" novalidate>
+        <div class="brand"><img src="logo.svg" alt="" /><span data-app></span></div>
+
+        <section data-step="mode">
+          <h1 data-t="setup.welcome" id="mode-title"></h1>
+          <p class="lead" data-t="setup.chooseMode"></p>
+          <div class="choices" role="group" aria-labelledby="mode-title">
+            <button type="button" class="choice" data-mode="host" aria-pressed="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="7" rx="1.5" />
+                <rect x="3" y="13" width="18" height="7" rx="1.5" />
+                <circle cx="7" cy="7.5" r="0.9" fill="currentColor" />
+                <circle cx="7" cy="16.5" r="0.9" fill="currentColor" />
+              </svg>
+              <span><strong data-t="setup.host"></strong><span class="muted" data-t="setup.hostHint"></span></span>
+            </button>
+            <button type="button" class="choice" data-mode="connect" aria-pressed="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1.2 1.2" stroke-linecap="round" />
+                <path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2" stroke-linecap="round" />
+              </svg>
+              <span><strong data-t="setup.connect"></strong><span class="muted" data-t="setup.connectHint"></span></span>
+            </button>
+          </div>
+          <div class="actions">
+            <button type="button" class="btn" data-action="cancel" data-t="setup.cancel" hidden></button>
+            <button type="button" class="btn primary" data-action="next" data-t="setup.next" disabled></button>
+          </div>
+        </section>
+
+        <section data-step="host" hidden>
+          <h1 data-t="setup.host"></h1>
+          <p class="lead" data-t="setup.hostHint"></p>
+          <label class="field">
+            <span data-t="setup.port"></span>
+            <input type="number" id="port" min="1024" max="65535" inputmode="numeric" aria-describedby="port-hint port-error" />
+            <p class="muted small message" id="port-hint" data-t="setup.portHint"></p>
+            <p class="message error" id="port-error" role="alert" hidden></p>
+          </label>
+          <label class="check">
+            <input type="checkbox" id="lan" />
+            <span><strong data-t="setup.lan"></strong><span class="muted small" id="lan-hint"></span></span>
+          </label>
+          <ul class="addresses" id="addresses" hidden></ul>
+          <label class="check spaced">
+            <input type="checkbox" id="demo" />
+            <span><strong data-t="setup.demo"></strong><span class="muted small" id="demo-hint"></span></span>
+          </label>
+          <div class="actions">
+            <button type="button" class="btn" data-action="back" data-t="setup.back"></button>
+            <button type="button" class="btn primary" data-action="next" data-t="setup.next"></button>
+          </div>
+        </section>
+
+        <section data-step="connect" hidden>
+          <h1 data-t="setup.connect"></h1>
+          <p class="lead" data-t="setup.connectHint"></p>
+          <label class="field">
+            <span data-t="setup.url"></span>
+            <input type="text" id="url" autocomplete="url" spellcheck="false" aria-describedby="url-message" />
+            <p class="message" id="url-message" role="status"></p>
+          </label>
+          <div class="actions">
+            <button type="button" class="btn" data-action="back" data-t="setup.back"></button>
+            <button type="button" class="btn primary" data-action="next" data-t="setup.next"></button>
+          </div>
+        </section>
+
+        <section data-step="general" hidden>
+          <h1 data-t="setup.general" class="gap-below"></h1>
+          <label class="check">
+            <input type="checkbox" id="autostart" />
+            <span><strong data-t="setup.autostart"></strong></span>
+          </label>
+          <label class="check">
+            <input type="checkbox" id="closeToTray" />
+            <span><strong data-t="setup.closeToTray"></strong><span class="muted small" data-t="setup.closeToTrayHint"></span></span>
+          </label>
+          <div class="actions">
+            <button type="button" class="btn" data-action="back" data-t="setup.back"></button>
+            <button type="submit" class="btn primary" id="finish"></button>
+          </div>
+        </section>
+      </form>
+    </main>
+    <script type="module" src="setup.js"></script>
+  </body>
+</html>

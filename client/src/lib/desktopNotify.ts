@@ -1,6 +1,13 @@
 import { navigateTo } from './links';
 import { previewText } from './format';
 
+declare global {
+  interface Window {
+    /** Set by the desktop app's preload (desktop/src/preload.ts); undefined in the browser. */
+    halloDesktop?: { platform: string; focus: () => void };
+  }
+}
+
 export interface AlertContext {
   /** The user switched desktop notifications on in the settings */
   enabled: boolean;
@@ -48,6 +55,8 @@ export function showDesktopNotification(input: { title: string; body: string; ta
     });
     notification.onclick = () => {
       window.focus();
+      // In the desktop app the window may sit hidden in the tray; window.focus() cannot bring it back.
+      window.halloDesktop?.focus();
       navigateTo(input.path);
       notification.close();
     };
