@@ -12,7 +12,6 @@ import {
   MAX_FILE_SIZE,
   requireFileAccess,
   storedNameFor,
-  storedPath,
   toFileDto,
   uploadDir,
 } from '../lib/files';
@@ -129,7 +128,9 @@ filesRouter.get('/:fileId/content', async (req, res) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('Content-Security-Policy', "default-src 'none'; sandbox");
   res.setHeader('Cache-Control', 'private, max-age=86400');
-  res.sendFile(storedPath(file.storedName), (err) => {
+  // With `root`, the dotfile check only covers the stored name, not the upload folder's path
+  // (the desktop app keeps uploads in ~/.config/… on Linux).
+  res.sendFile(file.storedName, { root: uploadDir }, (err) => {
     if (err && !res.headersSent) res.status(404).json({ code: 'not_found', message: 'File content missing' });
   });
 });
