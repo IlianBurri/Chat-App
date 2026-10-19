@@ -98,6 +98,28 @@ npm run dev       # nur Hauptprozess neu bauen und starten (Client und Server un
 
 Einstellungen, Datenbank, Uploads und das Server-Protokoll liegen im Benutzerdatenordner des Systems (Menü *Datei → Datenordner öffnen*). `DESKTOP_DATA_DIR` legt einen anderen Ordner fest, etwa für Tests. Die Icons in `desktop/build/` erzeugt `node scripts/icons.mjs` aus dem Logo.
 
+### Installer
+
+`npm run dist` (in `desktop/`) baut den Installer für das aktuelle Betriebssystem nach `desktop/release/`:
+
+| System | Datei | Art |
+|---|---|---|
+| Windows | `Hallo-Setup.exe` | Setup-Assistent (Deutsch/Englisch), ohne Administratorrechte, Ordner wählbar |
+| macOS | `Hallo-mac-arm64.dmg`, `Hallo-mac-x64.dmg` | Disk-Image für Apple Silicon bzw. Intel |
+| Linux | `Hallo-linux-x86_64.AppImage`, `hallo-linux-amd64.deb` | AppImage für alle Distributionen, Paket für Debian/Ubuntu |
+
+Die Dateinamen enthalten bewusst keine Version: `https://github.com/IlianBurri/Chat-App/releases/latest/download/<Datei>` zeigt so immer auf die neueste Version. Darauf bauen die Installationsbefehle auf, die vor dem Installieren die Prüfsumme aus `SHA256SUMS.txt` kontrollieren:
+
+```powershell
+irm https://ilianburri.github.io/Chat-App/install.ps1 | iex             # Windows (PowerShell)
+```
+
+```bash
+curl -fsSL https://ilianburri.github.io/Chat-App/install.sh | sh        # macOS und Linux
+```
+
+Ohne Code-Signatur-Zertifikat zeigen Windows (SmartScreen) und macOS (Gatekeeper) beim Öffnen einer im Browser heruntergeladenen Datei eine Warnung; die Installationsbefehle sind davon nicht betroffen. Mit Zertifikat signiert electron-builder automatisch (Umgebungsvariablen `CSC_LINK`/`CSC_KEY_PASSWORD`, für macOS zusätzlich `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD`, `APPLE_TEAM_ID` zum Notarisieren).
+
 Electron bleibt bei Version 42, bis better-sqlite3 vorgebaute Binärdateien für neuere Versionen veröffentlicht; so braucht weder ein Entwicklungsrechner noch der Build-Server einen C++-Compiler.
 
 ## Technik

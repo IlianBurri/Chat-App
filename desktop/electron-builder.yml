@@ -1,0 +1,90 @@
+# Installers: npm run dist (current OS) – the GitHub release workflow builds all three.
+# File names carry no version, so https://github.com/<repo>/releases/latest/download/<name> always points
+# at the newest release (used by the website and the install commands in website/install.*).
+appId: app.hallo.desktop # same as APP_ID in src/main.ts
+productName: Hallo
+copyright: Copyright © 2026 Hallo
+directories:
+  output: release
+  buildResources: build
+
+# No asar: the server bundle loads the native better-sqlite3 module from node_modules next to it.
+asar: false
+npmRebuild: false
+beforeBuild: scripts/before-build.cjs
+files:
+  - package.json
+  - dist/**
+  - ui/**
+  - build/*.png
+  # At runtime only better-sqlite3 and its loader are needed, not the download tooling it depends on.
+  - '!node_modules/**'
+  - node_modules/better-sqlite3/{package.json,lib/**,build/Release/better_sqlite3.node}
+  - node_modules/{bindings,file-uri-to-path}/**
+
+publish:
+  provider: github
+  owner: IlianBurri
+  repo: Chat-App
+  releaseType: release
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: build/icon.png
+  artifactName: Hallo-Setup.${ext}
+nsis:
+  # Assisted installer with its own wizard pages instead of a one-click install.
+  oneClick: false
+  perMachine: false
+  allowElevation: true
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  shortcutName: Hallo
+  runAfterFinish: true
+  multiLanguageInstaller: true
+  installerLanguages: [de_DE, en_US]
+  # Chats, files and settings stay when uninstalling; they live in the user data folder.
+  deleteAppDataOnUninstall: false
+
+mac:
+  target:
+    - target: dmg
+      arch: [arm64, x64]
+  icon: build/icon.png
+  category: public.app-category.business
+  artifactName: Hallo-mac-${arch}.${ext}
+  hardenedRuntime: true
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+  extendInfo:
+    NSCameraUsageDescription: Hallo braucht die Kamera für Videoanrufe. / Hallo uses the camera for video calls.
+    NSMicrophoneUsageDescription: Hallo braucht das Mikrofon für Anrufe. / Hallo uses the microphone for calls.
+    NSLocalNetworkUsageDescription: Hallo verbindet sich mit dem Server deines Teams im lokalen Netzwerk. / Hallo connects to your team's server on the local network.
+dmg:
+  title: Hallo
+  writeUpdateInfo: false
+
+linux:
+  target:
+    - target: AppImage
+      arch: [x64]
+    - target: deb
+      arch: [x64]
+  icon: build/icon.png
+  category: Network
+  synopsis: Chat, Arbeitsgruppen, Anrufe, Kalender und Dateien
+  description: Hallo – Chat, Arbeitsgruppen, Anrufe, Kalender und Dateien für Teams, auf einem eigenen Server.
+  maintainer: Hallo <hallo@example.com>
+  executableName: hallo
+  desktop:
+    entry:
+      StartupWMClass: Hallo
+      Keywords: chat;team;meeting;call;
+appImage:
+  artifactName: Hallo-linux-x86_64.${ext}
+deb:
+  artifactName: hallo-linux-amd64.${ext}
+  depends: [libgtk-3-0, libnotify4, libnss3, libxss1, libxtst6, xdg-utils, libatspi2.0-0, libuuid1, libsecret-1-0]

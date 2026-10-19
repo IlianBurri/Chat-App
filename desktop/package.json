@@ -16,7 +16,8 @@
     "dev": "npm run build:main && electron .",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "dist": "npm run build && electron-builder --publish never && node scripts/native.mjs"
   },
   "dependencies": {
     "better-sqlite3": "^12.11.1"

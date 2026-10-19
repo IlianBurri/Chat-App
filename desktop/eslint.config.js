@@ -14,6 +14,12 @@ export default tseslint.config(
     },
   },
   {
+    // electron-builder loads its hooks with require().
+    files: ['scripts/**/*.cjs'],
+    languageOptions: { sourceType: 'commonjs' },
+    rules: { '@typescript-eslint/no-require-imports': 'off' },
+  },
+  {
     files: ['ui/**/*.js'],
     languageOptions: { globals: globals.browser, sourceType: 'module' },
   },
