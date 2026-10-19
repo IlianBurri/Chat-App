@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hallo herunterladen – Windows, macOS und Linux</title>
+    <meta name="description" content="Hallo für Windows, macOS und Linux herunterladen oder mit einem Befehl im Terminal installieren." />
+    <meta property="og:title" content="Hallo herunterladen – Windows, macOS und Linux" />
+    <meta property="og:description" content="Hallo für Windows, macOS und Linux herunterladen oder mit einem Befehl im Terminal installieren." />
+    <meta property="og:image" content="assets/screens/chat.webp" />
+    <meta name="theme-color" content="#5b5fc7" />
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script src="assets/site.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Zum Inhalt springen</a>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="./"><img src="assets/logo.svg" alt="" width="32" height="32" />Hallo</a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Menü">
+          <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+        </button>
+        <nav class="nav" id="nav" aria-label="Hauptnavigation">
+          <a href="./#funktionen">Funktionen</a>
+          <a href="anleitung.html">Anleitung</a>
+          <a href="sicherheit.html">Sicherheit</a>
+          <a class="btn small" href="download.html">Download</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="page-head">
+        <div class="wrap">
+          <h1>Hallo herunterladen</h1>
+          <p>Kostenlos für Windows, macOS und Linux. Wähle dein System, oder installiere Hallo mit einem einzigen Befehl.</p>
+          <p class="version" data-version hidden></p>
+        </div>
+      </div>
+
+      <section>
+        <div class="wrap">
+          <div class="platforms">
+            <article class="card platform" data-platform="windows">
+              <h3>
+                <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 5.5l7.5-1v7H3zm8.5-1.2L21 3v8.5h-9.5zM3 12.5h7.5v7L3 18.5zm8.5 0H21V21l-9.5-1.3z" /></svg>
+                Windows <span class="badge" hidden>Dein System</span>
+              </h3>
+              <p class="muted">Windows 10 und 11, 64 Bit. Setup-Assistent auf Deutsch, ohne Administratorrechte.</p>
+              <div class="files">
+                <a class="btn" href="https://github.com/IlianBurri/Chat-App/releases/latest/download/Hallo-Setup.exe">Hallo-Setup.exe</a>
+              </div>
+              <p class="command-label">PowerShell:</p>
+              <div class="command">
+                <code>irm https://ilianburri.github.io/Chat-App/install.ps1 | iex</code>
+                <button type="button" data-copy>Kopieren</button>
+              </div>
+            </article>
+
+            <article class="card platform" data-platform="mac">
+              <h3>
+                <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9s-1.9-.9-3.2-.8c-1.6 0-3.2 1-4 2.4-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8s1.9.8 3.2.8 2.1-1.2 2.9-2.4c.9-1.3 1.3-2.7 1.3-2.7s-2.4-1-2.4-4zM14 5.4c.7-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.9-1 2.9 1.1.1 2.1-.5 2.8-1.3z" /></svg>
+                macOS <span class="badge" hidden>Dein System</span>
+              </h3>
+              <p class="muted">macOS 12 oder neuer. Disk-Image öffnen und Hallo in den Ordner «Programme» ziehen.</p>
+              <div class="files">
+                <a class="btn" href="https://github.com/IlianBurri/Chat-App/releases/latest/download/Hallo-mac-arm64.dmg">Mac mit Apple-Chip</a>
+                <a class="btn ghost" href="https://github.com/IlianBurri/Chat-App/releases/latest/download/Hallo-mac-x64.dmg">Mac mit Intel-Prozessor</a>
+              </div>
+              <p class="command-label">Terminal:</p>
+              <div class="command">
+                <code>curl -fsSL https://ilianburri.github.io/Chat-App/install.sh | sh</code>
+                <button type="button" data-copy>Kopieren</button>
+              </div>
+            </article>
+
+            <article class="card platform" data-platform="linux">
+              <h3>
+                <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2c-2.2 0-3.6 1.9-3.6 4.6 0 1.4.3 2.3-.6 3.6C6.5 12 5 14 5 16.4c0 .6.1 1.1.3 1.6-.9.3-1.6.9-1.6 1.6 0 1.1 2 1.4 3.6 1.9 1.1.4 1.8.5 2.5.1.5-.3.8-.7 1.5-.7h1.4c.7 0 1 .4 1.5.7.7.4 1.4.3 2.5-.1 1.6-.5 3.6-.8 3.6-1.9 0-.7-.7-1.3-1.6-1.6.2-.5.3-1 .3-1.6 0-2.4-1.5-4.4-2.8-6.2-.9-1.3-.6-2.2-.6-3.6C15.6 3.9 14.2 2 12 2zm-1.6 4.2c.4 0 .7.5.7 1.1s-.3 1.1-.7 1.1-.7-.5-.7-1.1.3-1.1.7-1.1zm3.2 0c.4 0 .7.5.7 1.1s-.3 1.1-.7 1.1-.7-.5-.7-1.1.3-1.1.7-1.1zM12 9.4c.9 0 2 .6 2 1.1s-1.1 1.2-2 1.2-2-.7-2-1.2 1.1-1.1 2-1.1z" /></svg>
+                Linux <span class="badge" hidden>Dein System</span>
+              </h3>
+              <p class="muted">64 Bit (x86_64). AppImage für alle Distributionen, Paket für Debian und Ubuntu.</p>
+              <div class="files">
+                <a class="btn" href="https://github.com/IlianBurri/Chat-App/releases/latest/download/Hallo-linux-x86_64.AppImage">AppImage</a>
+                <a class="btn ghost" href="https://github.com/IlianBurri/Chat-App/releases/latest/download/hallo-linux-amd64.deb">.deb für Debian und Ubuntu</a>
+              </div>
+              <p class="command-label">Terminal:</p>
+              <div class="command">
+                <code>curl -fsSL https://ilianburri.github.io/Chat-App/install.sh | sh</code>
+                <button type="button" data-copy>Kopieren</button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="alt">
+        <div class="wrap">
+          <div class="grid two">
+            <div class="card">
+              <h3>Was die Installationsbefehle tun</h3>
+              <p>
+                Sie laden die neueste Version für dein System von GitHub herunter, prüfen die SHA-256-Prüfsumme und installieren erst, wenn sie
+                stimmt. Unter Windows landet Hallo für deinen Benutzer in <code>%LOCALAPPDATA%\Programs\Hallo</code>, unter macOS im Ordner
+                «Programme», unter Linux als Paket oder als AppImage in <code>~/.local/bin</code>. Die Skripte kannst du vorher ansehen:
+                <a href="install.ps1">install.ps1</a>, <a href="install.sh">install.sh</a>.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Prüfsummen</h3>
+              <p>
+                Zu jeder Version gibt es eine Datei
+                <a href="https://github.com/IlianBurri/Chat-App/releases/latest/download/SHA256SUMS.txt">SHA256SUMS.txt</a>. Vergleiche sie nach einem
+                Download im Browser mit <code>Get-FileHash Hallo-Setup.exe</code> (Windows) oder <code>shasum -a 256 &lt;Datei&gt;</code> (macOS,
+                Linux). Ältere Versionen findest du unter <a href="https://github.com/IlianBurri/Chat-App/releases">Releases</a>.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Systemanforderungen</h3>
+              <p>
+                64-Bit-System, 4 GB Arbeitsspeicher, 300 MB freier Speicher. Für Anrufe Kamera und Mikrofon. Als Server reicht ein normaler
+                Bürocomputer, der während der Arbeitszeit läuft.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Ohne Installation, im Browser</h3>
+              <p>
+                Läuft im Team bereits ein Hallo-Server, öffnest du Hallo auch im Browser über seine Adresse, etwa auf dem Handy. Für Anrufe im
+                Browser braucht der Server HTTPS; die Desktop-App kommt im lokalen Netzwerk auch ohne aus. Mehr dazu in der
+                <a href="anleitung.html#browser">Anleitung</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div>
+          <a class="brand" href="./"><img src="assets/logo.svg" alt="" width="28" height="28" />Hallo</a>
+          <p>Chat, Arbeitsgruppen, Anrufe, Kalender und Dateien – auf deinem eigenen Server.</p>
+        </div>
+        <nav aria-label="Weitere Seiten">
+          <a href="download.html">Download</a>
+          <a href="anleitung.html">Anleitung</a>
+          <a href="sicherheit.html">Sicherheit</a>
+          <a href="datenschutz.html">Datenschutz</a>
+          <a href="agb.html">AGB</a>
+          <a href="impressum.html">Impressum</a>
+          <a href="https://github.com/IlianBurri/Chat-App">Quellcode</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

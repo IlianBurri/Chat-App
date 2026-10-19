@@ -122,6 +122,20 @@ Ohne Code-Signatur-Zertifikat zeigen Windows (SmartScreen) und macOS (Gatekeeper
 
 Electron bleibt bei Version 42, bis better-sqlite3 vorgebaute Binärdateien für neuere Versionen veröffentlicht; so braucht weder ein Entwicklungsrechner noch der Build-Server einen C++-Compiler.
 
+## Website und Releases
+
+`website/` ist die statische Website (Infos, Download mit Systemerkennung, Anleitung, Sicherheit, Datenschutz, AGB, Impressum) samt den Installationsskripten. Sie braucht keinen Build-Schritt; zum Ansehen genügt ein beliebiger statischer Webserver. Kopf- und Fusszeile stehen in jeder Seite; bei Änderungen alle Seiten anpassen. Die Rechtstexte sind **Vorlagen**: Die gelb markierten Platzhalter ersetzen und die Texte prüfen lassen, bevor die Seite öffentlich ist.
+
+GitHub Actions in `.github/workflows/`:
+
+| Workflow | Auslöser | Was er tut |
+|---|---|---|
+| `ci.yml` | Push auf `main`, Pull Requests | Typecheck, Lint, Tests, Builds; dazu die Desktop-App |
+| `release.yml` | Tag `v*` (z. B. `git tag v0.2.0 && git push origin v0.2.0`) | Baut die Installer auf Windows, macOS und Linux, testet die Installationsbefehle damit und veröffentlicht ein GitHub-Release mit `SHA256SUMS.txt` |
+| `pages.yml` | Änderungen in `website/` auf `main` | Veröffentlicht die Website auf GitHub Pages |
+
+Einmalig einzurichten: **Settings → Pages → Source: GitHub Actions**. Downloads und Website sind nur erreichbar, wenn das Repository öffentlich ist (GitHub Pages für private Repositories braucht einen kostenpflichtigen Plan, Release-Dateien privater Repositories sind nicht öffentlich). Läuft die Website unter einer anderen Adresse als `https://ilianburri.github.io/Chat-App/`, die Adresse in den Seiten, in `website/404.html` (`<base>`), in `website/install.*` und in `desktop/package.json` (`homepage`) anpassen.
+
 ## Technik
 
 - **Client:** React 19, TypeScript, Vite, Tailwind CSS 4, Zustand, React Router, Phosphor Icons, Twemoji-Farbschrift für einheitliche Emojis, i18next (Englisch und Deutsch)

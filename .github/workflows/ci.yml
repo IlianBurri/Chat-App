@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            desktop/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Unit tests
+        run: npm test
+      - name: Build client and server bundle
+        run: npm run build && npm run bundle -w server
+
+      - name: Desktop – install
+        run: npm ci
+        working-directory: desktop
+      - name: Desktop – typecheck, lint, tests
+        working-directory: desktop
+        run: |
+          npm run typecheck
+          npm run lint
+          npm test
+
+      - name: Install scripts – syntax
+        run: sh -n website/install.sh

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sicherheit – Hallo</title>
+    <meta name="description" content="Wie Hallo deine Daten schützt: eigener Server, sichere Anmeldung, Zugriffsrechte, verschlüsselte Anrufe, geprüfte Downloads – und wo die Grenzen liegen." />
+    <meta property="og:title" content="Sicherheit – Hallo" />
+    <meta property="og:description" content="Wie Hallo deine Daten schützt: eigener Server, sichere Anmeldung, Zugriffsrechte, verschlüsselte Anrufe, geprüfte Downloads – und wo die Grenzen liegen." />
+    <meta property="og:image" content="assets/screens/chat.webp" />
+    <meta name="theme-color" content="#5b5fc7" />
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script src="assets/site.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Zum Inhalt springen</a>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="./"><img src="assets/logo.svg" alt="" width="32" height="32" />Hallo</a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Menü">
+          <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+        </button>
+        <nav class="nav" id="nav" aria-label="Hauptnavigation">
+          <a href="./#funktionen">Funktionen</a>
+          <a href="anleitung.html">Anleitung</a>
+          <a href="sicherheit.html" aria-current="page">Sicherheit</a>
+          <a class="btn small" href="download.html">Download</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="page-head">
+        <div class="wrap">
+          <h1>Sicherheit</h1>
+          <p>Wie Hallo deine Daten schützt, was du selbst beitragen kannst und wo die Grenzen liegen. Ohne Marketing-Sprech.</p>
+        </div>
+      </div>
+
+      <div class="wrap">
+        <article class="prose">
+          <h2>Deine Daten, dein Server</h2>
+          <p>
+            Hallo ist keine Cloud. Nachrichten, Dateien, Termine und Konten liegen in einer Datenbank auf dem Computer oder Server, den ihr selbst
+            betreibt. Wir, die Herausgeber von Hallo, haben keinen Zugriff darauf und betreiben keine Server, über die eure Daten laufen.
+          </p>
+          <ul class="checks">
+            <li>Keine Telemetrie und keine Nutzungsstatistik in App und Server.</li>
+            <li>Emojis, Weichzeichner-Modell und alle Programmteile sind eingebaut; die App lädt nichts von fremden Servern nach.</li>
+            <li>Die Desktop-App verbindet sich nur mit dem Server, den du eingestellt hast.</li>
+          </ul>
+
+          <h2>Anmeldung und Konten</h2>
+          <ul>
+            <li>Passwörter werden nur als bcrypt-Hash gespeichert (Kostenfaktor 12), nie im Klartext. Sie müssen mindestens 8 Zeichen lang sein.</li>
+            <li>Die Antwortzeit bei der Anmeldung verrät nicht, ob eine E-Mail-Adresse registriert ist.</li>
+            <li>Die Sitzung steckt in einem signierten Cookie, das für Skripte unlesbar ist (<code>HttpOnly</code>, <code>SameSite=Lax</code>), nach 7 Tagen abläuft und über HTTPS nur verschlüsselt übertragen wird (<code>Secure</code>).</li>
+            <li>Jede Anfrage, die etwas ändert, braucht einen eigenen Header der App. Fremde Webseiten können so keine Aktionen in deinem Namen auslösen (Schutz vor CSRF).</li>
+          </ul>
+
+          <h2>Zugriffsrechte</h2>
+          <ul>
+            <li>Chats sehen nur ihre Mitglieder. Kanäle einer Arbeitsgruppe sehen nur deren Mitglieder; Gäste nur das, wozu sie eingeladen wurden.</li>
+            <li>Dateien sind nur für Personen abrufbar, die den Chat oder Kanal sehen dürfen, in dem sie geteilt wurden.</li>
+            <li>Hochgeladene Dateien werden immer als Download in einer abgeschotteten Umgebung ausgeliefert. Eine präparierte HTML- oder SVG-Datei kann so keinen Code in der App ausführen.</li>
+          </ul>
+
+          <h2>Anrufe</h2>
+          <p>
+            Audio, Video und Bildschirmfreigabe laufen per WebRTC direkt zwischen den Teilnehmenden und sind dabei immer verschlüsselt (DTLS-SRTP).
+            Der Hallo-Server vermittelt nur den Verbindungsaufbau; die Medien laufen nicht über ihn. Wird ein TURN-Server als Relais genutzt, bleiben
+            die Medien auch dort verschlüsselt.
+          </p>
+
+          <h2>Desktop-App</h2>
+          <ul>
+            <li>Die Oberfläche läuft abgeschottet (Sandbox, Context Isolation, kein Node.js-Zugriff für Webinhalte).</li>
+            <li>Kamera, Mikrofon, Bildschirmfreigabe und Benachrichtigungen erlaubt die App nur für die Adresse deines Servers.</li>
+            <li>Links zu anderen Webseiten öffnen sich im Browser, nicht in der App.</li>
+            <li>Beim Teilen des Bildschirms wählst du jedes Mal selbst, welcher Bildschirm oder welches Fenster zu sehen ist.</li>
+          </ul>
+
+          <h2>Downloads und Installation</h2>
+          <ul>
+            <li>Die Installer werden automatisch mit GitHub Actions aus dem Quellcode im Repository gebaut, nicht auf einem privaten Rechner. Jede Version lässt sich so auf ihren Quellcode zurückführen.</li>
+            <li>Zu jeder Version gibt es SHA-256-Prüfsummen. Die Installationsbefehle installieren nur, wenn die Prüfsumme stimmt.</li>
+            <li>Die Installationsskripte (<a href="install.ps1">install.ps1</a>, <a href="install.sh">install.sh</a>) sind kurz und lesbar. Schau sie dir an, bevor du sie ausführst.</li>
+          </ul>
+
+          <h2>Was du selbst tun solltest</h2>
+          <ul>
+            <li><strong>HTTPS, sobald Hallo das lokale Netzwerk verlässt.</strong> Im Büronetz läuft die Verbindung zur App über <code>http://</code> und ist damit unverschlüsselt. Für den Zugriff über das Internet gehört der Server hinter einen Reverse Proxy mit HTTPS-Zertifikat.</li>
+            <li><strong>Datenträger verschlüsseln.</strong> Auf dem Server-Computer BitLocker (Windows), FileVault (macOS) bzw. LUKS (Linux) einschalten.</li>
+            <li><strong>Regelmässig sichern</strong> – siehe <a href="anleitung.html#daten">Daten und Sicherung</a>.</li>
+            <li><strong>Aktuell bleiben.</strong> Neue Versionen enthalten auch Sicherheitskorrekturen.</li>
+          </ul>
+
+          <h2>Grenzen</h2>
+          <p>Damit du Hallo richtig einschätzen kannst, auch das, was es (noch) nicht kann:</p>
+          <ul>
+            <li><strong>Keine Ende-zu-Ende-Verschlüsselung für Nachrichten und Dateien.</strong> Wer Zugriff auf den Server-Computer hat, kann die Datenbank lesen. Schütze den Server entsprechend.</li>
+            <li><strong>Keine Zwei-Faktor-Anmeldung</strong> und keine Begrenzung von Anmeldeversuchen. Setze Hallo deshalb nicht ohne weiteren Schutz direkt ins Internet.</li>
+            <li><strong>Installer ohne Code-Signatur.</strong> Windows und macOS zeigen deshalb beim ersten Öffnen eine Warnung. Prüfe die Prüfsumme oder nutze die Installationsbefehle.</li>
+          </ul>
+
+          <h2>Sicherheitslücke gefunden?</h2>
+          <p>
+            Bitte melde sie vertraulich an <span class="placeholder">[security@deine-domain.ch]</span> und nicht öffentlich, damit wir sie beheben können,
+            bevor sie ausgenutzt wird. Beschreibe, wie sich das Problem nachvollziehen lässt. Wir melden uns innert weniger Tage.
+          </p>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div>
+          <a class="brand" href="./"><img src="assets/logo.svg" alt="" width="28" height="28" />Hallo</a>
+          <p>Chat, Arbeitsgruppen, Anrufe, Kalender und Dateien – auf deinem eigenen Server.</p>
+        </div>
+        <nav aria-label="Weitere Seiten">
+          <a href="download.html">Download</a>
+          <a href="anleitung.html">Anleitung</a>
+          <a href="sicherheit.html">Sicherheit</a>
+          <a href="datenschutz.html">Datenschutz</a>
+          <a href="agb.html">AGB</a>
+          <a href="impressum.html">Impressum</a>
+          <a href="https://github.com/IlianBurri/Chat-App">Quellcode</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

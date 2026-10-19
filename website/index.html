@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hallo – Chat, Anrufe und Dateien auf deinem eigenen Server</title>
+    <meta name="description" content="Hallo vereint Chats, Arbeitsgruppen, Video-Anrufe, Kalender und Dateien in einer App für Windows, macOS und Linux. Der Server läuft bei dir." />
+    <meta property="og:title" content="Hallo – Zusammenarbeiten, ohne deine Daten abzugeben" />
+    <meta property="og:description" content="Chats, Arbeitsgruppen, Anrufe, Kalender und Dateien. Für Windows, macOS und Linux, auf deinem eigenen Server." />
+    <meta property="og:image" content="assets/screens/chat.webp" />
+    <meta name="theme-color" content="#5b5fc7" />
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script src="assets/site.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Zum Inhalt springen</a>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="./"><img src="assets/logo.svg" alt="" width="32" height="32" />Hallo</a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Menü">
+          <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+        </button>
+        <nav class="nav" id="nav" aria-label="Hauptnavigation">
+          <a href="./#funktionen">Funktionen</a>
+          <a href="anleitung.html">Anleitung</a>
+          <a href="sicherheit.html">Sicherheit</a>
+          <a class="btn small" href="download.html">Download</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <div class="wrap">
+          <div>
+            <span class="eyebrow">Für Windows, macOS und Linux</span>
+            <h1>Zusammenarbeiten, ohne deine Daten abzugeben.</h1>
+            <p class="lead">
+              Hallo vereint Chats, Arbeitsgruppen, Video-Anrufe, Kalender und Dateien in einer App. Der Server läuft bei dir: auf einem
+              Computer im Büro oder auf deinem eigenen Server.
+            </p>
+            <div class="cta">
+              <a class="btn" href="download.html" data-download-primary>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14" /></svg>
+                <span data-label>Herunterladen</span>
+              </a>
+              <a class="btn ghost" href="anleitung.html">So funktioniert's</a>
+            </div>
+            <p class="cta-note" data-download-note>Kostenlos für Windows, macOS und Linux</p>
+            <p class="alt-downloads">Andere Systeme und Installation per Befehl: <a href="download.html">alle Downloads</a></p>
+          </div>
+          <div class="window">
+            <div class="window-bar" aria-hidden="true"><span></span><span></span><span></span></div>
+            <picture>
+              <source srcset="assets/screens/chat-dark.webp" media="(prefers-color-scheme: dark)" />
+              <img src="assets/screens/chat.webp" width="2560" height="1560" alt="Hallo mit geöffnetem Chat: links die Chatliste, rechts der Verlauf mit Antworten und Reaktionen" />
+            </picture>
+          </div>
+        </div>
+      </section>
+
+      <section id="funktionen">
+        <div class="wrap">
+          <div class="section-head">
+            <h2>Alles, was dein Team für die Zusammenarbeit braucht</h2>
+            <p>Statt fünf verschiedener Dienste eine App, die sich anfühlt wie die Werkzeuge, die ihr kennt.</p>
+          </div>
+          <div class="grid three">
+            <article class="card">
+              <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" /></svg></div>
+              <h3>Chats</h3>
+              <p>Einzel- und Gruppenchats in Echtzeit, mit Antworten, Reaktionen, @-Erwähnungen, Formatierung und Lesebestätigung.</p>
+            </article>
+            <article class="card">
+              <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2" /><circle cx="17" cy="9.5" r="2.4" /><path d="M3.5 19c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6M15 14.6c2.6-.3 4.6 1.1 5.2 3.9" /></svg></div>
+              <h3>Arbeitsgruppen und Kanäle</h3>
+              <p>Projekte und Themen in Kanälen mit Beiträgen und Antworten. Rollen für Besitzer, Mitglieder und Gäste.</p>
+            </article>
+            <article class="card">
+              <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2" /><path d="M16 10.5l5-3v9l-5-3z" /></svg></div>
+              <h3>Anrufe und Besprechungen</h3>
+              <p>Audio- und Videoanrufe, Bildschirm teilen, Hintergrund weichzeichnen, Hand heben und Reaktionen.</p>
+            </article>
+            <article class="card">
+              <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2" /><path d="M3.5 10h17M8 3v4M16 3v4" /></svg></div>
+              <h3>Kalender</h3>
+              <p>Tag, Arbeitswoche, Woche und Monat. Besprechungen planen, Einladungen beantworten und mit einem Klick teilnehmen.</p>
+            </article>
+            <article class="card">
+              <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4" /></svg></div>
+              <h3>Dateien</h3>
+              <p>Dateien in Chats und Kanälen teilen, mit Bildvorschau und einer Übersicht aller Dateien an einem Ort.</p>
+            </article>
+            <article class="card">
+              <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6" /><path d="M15 15l5 5" /></svg></div>
+              <h3>Aktivität und Suche</h3>
+              <p>Erwähnungen und Antworten im Aktivitätsfeed, Benachrichtigungen und eine Suche über alles mit <kbd>Ctrl</kbd>+<kbd>K</kbd>.</p>
+            </article>
+          </div>
+
+          <div class="showcase">
+            <div>
+              <h2>Ordnung für jedes Projekt</h2>
+              <p class="lead">Arbeitsgruppen bündeln die Kanäle eines Teams. Jeder Beitrag hat seine Antworten direkt darunter, so bleiben Diskussionen beieinander.</p>
+              <ul class="checks">
+                <li>Öffentliche Gruppen zum Beitreten oder private auf Einladung</li>
+                <li>Gäste sehen nur, wozu sie eingeladen sind</li>
+                <li>Kanäle stummschalten, wichtige Chats anheften</li>
+              </ul>
+            </div>
+            <div class="window">
+              <div class="window-bar" aria-hidden="true"><span></span><span></span><span></span></div>
+              <img src="assets/screens/channel.webp" width="2560" height="1560" loading="lazy" alt="Ein Kanal in einer Arbeitsgruppe mit Beiträgen und Antworten" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="alt">
+        <div class="wrap">
+          <div class="section-head">
+            <h2>In drei Schritten startklar</h2>
+            <p>Keine Cloud-Konten, keine Kreditkarte. Ein Computer im Netzwerk genügt.</p>
+          </div>
+          <div class="grid three steps">
+            <div class="card">
+              <h3>Installieren</h3>
+              <p>Den Installer für Windows, macOS oder Linux herunterladen, oder mit einem einzigen Befehl im Terminal installieren.</p>
+            </div>
+            <div class="card">
+              <h3>Server starten oder verbinden</h3>
+              <p>Beim ersten Start fragt Hallo, ob dieser Computer der Server sein soll oder ob sich die App mit einem bestehenden Server verbindet.</p>
+            </div>
+            <div class="card">
+              <h3>Team einladen</h3>
+              <p>Kolleginnen und Kollegen installieren Hallo, geben die Server-Adresse ein und legen ihr Konto an. Fertig.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <div class="section-head">
+            <h2>Deine Daten bleiben bei dir</h2>
+            <p>Nachrichten, Dateien und Termine liegen in der Datenbank auf deinem Server, nicht bei uns und nicht bei Dritten.</p>
+          </div>
+          <div class="grid three">
+            <div class="card">
+              <h3>Eigener Server</h3>
+              <p>Hallo läuft auf einem Computer in deinem Büro oder auf deinem eigenen Server. Du entscheidest, wer Zugang hat.</p>
+            </div>
+            <div class="card">
+              <h3>Keine Telemetrie</h3>
+              <p>Die App sendet keine Nutzungsdaten. Emojis und der Hintergrund-Weichzeichner sind eingebaut und werden nicht aus dem Internet geladen.</p>
+            </div>
+            <div class="card">
+              <h3>Geprüfte Downloads</h3>
+              <p>Zu jeder Version gibt es SHA-256-Prüfsummen. Die Installationsbefehle installieren nur, wenn die Prüfsumme stimmt.</p>
+            </div>
+          </div>
+          <p class="more"><a href="sicherheit.html">Mehr zur Sicherheit von Hallo →</a></p>
+        </div>
+      </section>
+
+      <section class="alt download-band" id="download">
+        <div class="wrap">
+          <h2>Bereit, Hallo zu sagen?</h2>
+          <p class="lead">Kostenlos für Windows, macOS und Linux.</p>
+          <div class="cta">
+            <a class="btn" href="download.html" data-download-primary>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14" /></svg>
+              <span data-label>Herunterladen</span>
+            </a>
+            <a class="btn ghost" href="download.html">Alle Downloads</a>
+          </div>
+          <p class="version" data-version hidden></p>
+          <div data-command-for="windows">
+            <p class="command-label">Oder in der PowerShell installieren:</p>
+            <div class="command">
+              <code>irm https://ilianburri.github.io/Chat-App/install.ps1 | iex</code>
+              <button type="button" data-copy>Kopieren</button>
+            </div>
+          </div>
+          <div data-command-for="unix">
+            <p class="command-label">Oder im Terminal installieren (macOS und Linux):</p>
+            <div class="command">
+              <code>curl -fsSL https://ilianburri.github.io/Chat-App/install.sh | sh</code>
+              <button type="button" data-copy>Kopieren</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div>
+          <a class="brand" href="./"><img src="assets/logo.svg" alt="" width="28" height="28" />Hallo</a>
+          <p>Chat, Arbeitsgruppen, Anrufe, Kalender und Dateien – auf deinem eigenen Server.</p>
+        </div>
+        <nav aria-label="Weitere Seiten">
+          <a href="download.html">Download</a>
+          <a href="anleitung.html">Anleitung</a>
+          <a href="sicherheit.html">Sicherheit</a>
+          <a href="datenschutz.html">Datenschutz</a>
+          <a href="agb.html">AGB</a>
+          <a href="impressum.html">Impressum</a>
+          <a href="https://github.com/IlianBurri/Chat-App">Quellcode</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

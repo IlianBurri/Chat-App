@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Anleitung – Hallo installieren und einrichten</title>
+    <meta name="description" content="Schritt für Schritt: Hallo installieren, eigenen Server starten oder verbinden, Team einladen, Daten sichern und aktualisieren." />
+    <meta property="og:title" content="Anleitung – Hallo installieren und einrichten" />
+    <meta property="og:description" content="Schritt für Schritt: Hallo installieren, eigenen Server starten oder verbinden, Team einladen, Daten sichern und aktualisieren." />
+    <meta property="og:image" content="assets/screens/chat.webp" />
+    <meta name="theme-color" content="#5b5fc7" />
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script src="assets/site.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Zum Inhalt springen</a>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="./"><img src="assets/logo.svg" alt="" width="32" height="32" />Hallo</a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Menü">
+          <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+        </button>
+        <nav class="nav" id="nav" aria-label="Hauptnavigation">
+          <a href="./#funktionen">Funktionen</a>
+          <a href="anleitung.html" aria-current="page">Anleitung</a>
+          <a href="sicherheit.html">Sicherheit</a>
+          <a class="btn small" href="download.html">Download</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="page-head">
+        <div class="wrap">
+          <h1>Anleitung</h1>
+          <p>Von der Installation bis zum ersten Anruf mit deinem Team. Die meisten sind in zehn Minuten startklar.</p>
+        </div>
+      </div>
+
+      <div class="wrap">
+        <article class="prose">
+          <nav class="toc" aria-label="Inhalt">
+            <strong>Inhalt</strong>
+            <ol>
+              <li><a href="#installieren">Installieren</a></li>
+              <li><a href="#erster-start">Erster Start: eigener Server oder verbinden</a></li>
+              <li><a href="#team">Team einladen</a></li>
+              <li><a href="#alltag">Im Alltag</a></li>
+              <li><a href="#daten">Daten und Sicherung</a></li>
+              <li><a href="#aktualisieren">Aktualisieren und deinstallieren</a></li>
+              <li><a href="#browser">Hallo im Browser und über das Internet</a></li>
+              <li><a href="#probleme">Wenn etwas nicht klappt</a></li>
+            </ol>
+          </nav>
+
+          <h2 id="installieren">1. Installieren</h2>
+          <p>Am schnellsten geht es mit einem Befehl. Er lädt die passende Version, prüft die Prüfsumme und installiert Hallo:</p>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th>System</th><th>Befehl</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Windows (PowerShell)</td><td><code>irm https://ilianburri.github.io/Chat-App/install.ps1 | iex</code></td></tr>
+                <tr><td>macOS und Linux (Terminal)</td><td><code>curl -fsSL https://ilianburri.github.io/Chat-App/install.sh | sh</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Lieber mit der Maus? Dann lade den Installer auf der <a href="download.html">Download-Seite</a> herunter.</p>
+
+          <h3>Windows</h3>
+          <ol>
+            <li><code>Hallo-Setup.exe</code> öffnen.</li>
+            <li>
+              Zeigt Windows «Der Computer wurde durch Windows geschützt», auf <strong>Weitere Informationen</strong> und dann
+              <strong>Trotzdem ausführen</strong> klicken. Die Meldung kommt, weil der Installer noch nicht mit einem kostenpflichtigen Zertifikat
+              signiert ist.
+            </li>
+            <li>Sprache wählen, Installationsordner bestätigen und auf <strong>Installieren</strong> klicken. Administratorrechte braucht es nicht.</li>
+          </ol>
+
+          <h3>macOS</h3>
+          <ol>
+            <li>Das Disk-Image für deinen Mac öffnen: «Apple-Chip» für Macs ab 2020 mit M1 und neuer, sonst «Intel». Im Apple-Menü unter «Über diesen Mac» steht, welcher Chip verbaut ist.</li>
+            <li>Hallo in den Ordner <strong>Programme</strong> ziehen.</li>
+            <li>
+              Meldet macOS beim ersten Öffnen, dass Hallo nicht überprüft werden kann: in den <strong>Systemeinstellungen → Datenschutz &amp;
+              Sicherheit</strong> nach unten scrollen und <strong>Dennoch öffnen</strong> wählen. Mit dem Installationsbefehl im Terminal entfällt
+              dieser Schritt.
+            </li>
+            <li>Für Anrufe fragt macOS einmal nach Kamera und Mikrofon. Zum Teilen des Bildschirms Hallo unter <strong>Datenschutz &amp; Sicherheit</strong> bei der Bildschirmaufnahme erlauben (je nach macOS-Version «Bildschirmaufnahme» oder «Bildschirm- und Systemaudioaufnahme»).</li>
+          </ol>
+
+          <h3>Linux</h3>
+          <ul>
+            <li><strong>Debian, Ubuntu, Linux Mint:</strong> <code>sudo apt install ./hallo-linux-amd64.deb</code> im Download-Ordner.</li>
+            <li>
+              <strong>Andere Distributionen:</strong> das AppImage ausführbar machen (<code>chmod +x Hallo-linux-x86_64.AppImage</code>) und starten.
+              AppImages brauchen FUSE 2, je nach Distribution das Paket <code>libfuse2</code> oder <code>fuse2</code>.
+            </li>
+          </ul>
+
+          <h2 id="erster-start">2. Erster Start: eigener Server oder verbinden</h2>
+          <p>Beim ersten Start fragt ein Assistent, wie du Hallo nutzen möchtest. Später änderst du das jederzeit unter <strong>Datei → Einstellungen</strong> (<kbd>Ctrl</kbd>+<kbd>,</kbd>, auf dem Mac <kbd>⌘</kbd>+<kbd>,</kbd>).</p>
+
+          <h3>Eigenen Server starten</h3>
+          <p>
+            Dieser Computer wird der Server für dein Team. Hallo startet ihn im Hintergrund, sobald die App läuft. Wähle einen Computer, der während
+            der Arbeitszeit eingeschaltet ist.
+          </p>
+          <ul>
+            <li><strong>Port:</strong> Standard ist 4000. Nur ändern, wenn ein anderes Programm diesen Port schon nutzt.</li>
+            <li><strong>Im lokalen Netzwerk erreichbar:</strong> Ein, damit andere sich verbinden können. Der Assistent zeigt die Adressen dafür an. Aus, wenn du Hallo nur allein ausprobieren möchtest.</li>
+            <li><strong>Mit Demo-Daten starten:</strong> sechs Beispiel-Konten mit Chats und Terminen zum Ausprobieren, Passwort <code>Demo1234!</code>. Für den echten Einsatz besser leer starten.</li>
+          </ul>
+          <p>Danach registrierst du dich als erste Person mit Name, E-Mail und Passwort.</p>
+          <div class="tip">
+            <p>Windows fragt beim ersten Start mit «Im lokalen Netzwerk erreichbar», ob Hallo im Netzwerk kommunizieren darf. Erlaube den Zugriff für <strong>private Netzwerke</strong>, sonst erreichen die anderen den Server nicht.</p>
+          </div>
+
+          <h3>Mit einem Server verbinden</h3>
+          <p>
+            Gib die Adresse ein, die dir die Person mit dem Server nennt, etwa <code>192.168.1.20:4000</code>. Hallo prüft die Verbindung, bevor es
+            weitergeht. Danach meldest du dich an oder legst ein Konto an.
+          </p>
+
+          <h2 id="team">3. Team einladen</h2>
+          <ol>
+            <li>Auf dem Server-Computer im Menü <strong>Datei → Server-Adresse kopieren</strong> wählen (oder über das Hallo-Symbol im Infobereich).</li>
+            <li>Die Adresse an dein Team schicken, zusammen mit dem Link zur <a href="download.html">Download-Seite</a>.</li>
+            <li>Alle installieren Hallo, wählen <strong>Mit einem Server verbinden</strong> und legen ihr Konto an.</li>
+            <li>Arbeitsgruppen erstellst du unter <strong>Gruppen</strong>; dort lädst du Mitglieder und Gäste ein.</li>
+          </ol>
+
+          <h2 id="alltag">4. Im Alltag</h2>
+          <ul>
+            <li><strong>Infobereich:</strong> Schliesst du das Fenster, läuft Hallo im Infobereich (Windows, Linux) bzw. im Dock (macOS) weiter. So kommen Benachrichtigungen an, und der Server bleibt für dein Team erreichbar. Beenden über das Symbol oder <strong>Datei → Beenden</strong>.</li>
+            <li><strong>Ungelesenes:</strong> Ein Punkt am Symbol und eine Zahl im Dock zeigen neue Nachrichten.</li>
+            <li><strong>Beim Anmelden starten:</strong> in den Einstellungen oder im Menü des Symbols ein- und ausschalten. Hallo startet dann direkt im Hintergrund.</li>
+            <li><strong>Bildschirm teilen:</strong> Im Anruf auf «Teilen» klicken und einen Bildschirm oder ein Fenster wählen.</li>
+            <li><strong>Suche:</strong> <kbd>Ctrl</kbd>+<kbd>K</kbd> durchsucht Personen, Nachrichten, Dateien und Gruppen.</li>
+          </ul>
+
+          <h2 id="daten">5. Daten und Sicherung</h2>
+          <p>Auf dem Server-Computer liegen Datenbank, hochgeladene Dateien, Einstellungen und das Server-Protokoll in einem Ordner (Menü <strong>Datei → Datenordner öffnen</strong>):</p>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th>System</th><th>Datenordner</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Windows</td><td><code>%APPDATA%\Hallo</code></td></tr>
+                <tr><td>macOS</td><td><code>~/Library/Application Support/Hallo</code></td></tr>
+                <tr><td>Linux</td><td><code>~/.config/Hallo</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            <strong>Sichern:</strong> Hallo beenden und die Datei <code>hallo.db</code> sowie den Ordner <code>uploads</code> kopieren, am besten
+            regelmässig auf ein anderes Laufwerk. <strong>Wiederherstellen:</strong> Hallo beenden, beides zurückkopieren, Hallo starten.
+          </p>
+          <p>Auf den Computern, die sich nur verbinden, liegen keine Chats und Dateien, nur die Einstellungen.</p>
+
+          <h2 id="aktualisieren">6. Aktualisieren und deinstallieren</h2>
+          <p>
+            <strong>Aktualisieren:</strong> die neue Version herunterladen und installieren, oder den Installationsbefehl erneut ausführen. Daten und
+            Einstellungen bleiben erhalten. Aktualisiere zuerst den Server, dann die übrigen Computer.
+          </p>
+          <p>
+            <strong>Deinstallieren:</strong> Unter Windows über <strong>Einstellungen → Apps</strong>, unter macOS Hallo aus «Programme» in den Papierkorb
+            ziehen, unter Linux <code>sudo apt remove hallo</code> bzw. das AppImage löschen. Der Datenordner bleibt dabei bewusst erhalten; lösche ihn
+            von Hand, wenn du auch die Daten entfernen möchtest.
+          </p>
+
+          <h2 id="browser">7. Hallo im Browser und über das Internet</h2>
+          <p>
+            Jeder Hallo-Server liefert die App auch an Browser aus: Die Server-Adresse im Browser öffnen genügt, etwa auf dem Handy im selben WLAN.
+            Browser erlauben Kamera, Mikrofon und Bildschirmfreigabe aber nur über HTTPS. Im lokalen Netzwerk ohne HTTPS funktionieren Anrufe deshalb
+            nur in der Desktop-App.
+          </p>
+          <p>
+            Soll Hallo auch von unterwegs erreichbar sein, gehört der Server hinter einen Reverse Proxy mit HTTPS-Zertifikat (z.&nbsp;B. Caddy oder
+            nginx) auf einem Server mit fester Adresse. Für Anrufe über verschiedene Netzwerke hinweg braucht es zusätzlich einen STUN- bzw.
+            TURN-Server. Die nötigen Einstellungen beschreibt die
+            <a href="https://github.com/IlianBurri/Chat-App#produktion">Server-Dokumentation</a>.
+          </p>
+
+          <h2 id="probleme">8. Wenn etwas nicht klappt</h2>
+          <details class="faq">
+            <summary>«Port 4000 ist schon belegt»</summary>
+            <p>Läuft Hallo schon (auch im Infobereich)? Sonst nutzt ein anderes Programm den Port. Wähle unter <strong>Einstellungen</strong> einen anderen Port, etwa 4100, und gib deinem Team die neue Adresse.</p>
+          </details>
+          <details class="faq">
+            <summary>«Server ist nicht erreichbar»</summary>
+            <p>
+              Läuft Hallo auf dem Server-Computer, und ist dort «Im lokalen Netzwerk erreichbar» eingeschaltet? Sind beide Computer im selben
+              Netzwerk (nicht im Gäste-WLAN)? Hat die Firewall des Server-Computers Hallo für private Netzwerke erlaubt? Danach in Hallo auf
+              <strong>Erneut versuchen</strong> klicken.
+            </p>
+          </details>
+          <details class="faq">
+            <summary>Kamera oder Mikrofon funktionieren nicht</summary>
+            <p>
+              Unter macOS in <strong>Systemeinstellungen → Datenschutz &amp; Sicherheit → Kamera</strong> bzw. <strong>Mikrofon</strong> Hallo erlauben.
+              Unter Windows unter <strong>Einstellungen → Datenschutz und Sicherheit → Kamera</strong> den Zugriff für Desktop-Apps einschalten. Nutzt
+              ein anderes Programm die Kamera gerade, gib sie dort frei.
+            </p>
+          </details>
+          <details class="faq">
+            <summary>Bildschirmfreigabe zeigt nichts an (macOS)</summary>
+            <p>Hallo unter <strong>Systemeinstellungen → Datenschutz &amp; Sicherheit</strong> bei der Bildschirmaufnahme erlauben und Hallo neu starten.</p>
+          </details>
+          <details class="faq">
+            <summary>Das AppImage startet nicht (Linux)</summary>
+            <p>Meist fehlt FUSE 2: <code>sudo apt install libfuse2</code> (Ubuntu, Debian) bzw. <code>sudo dnf install fuse</code> (Fedora). Auf Debian und Ubuntu ist das .deb-Paket die einfachere Wahl.</p>
+          </details>
+          <details class="faq">
+            <summary>Wo finde ich Fehlermeldungen des Servers?</summary>
+            <p>Im Menü <strong>Datei → Server-Protokoll öffnen</strong>, oder als <code>logs/server.log</code> im Datenordner. Schick die letzten Zeilen mit, wenn du Hilfe suchst.</p>
+          </details>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div>
+          <a class="brand" href="./"><img src="assets/logo.svg" alt="" width="28" height="28" />Hallo</a>
+          <p>Chat, Arbeitsgruppen, Anrufe, Kalender und Dateien – auf deinem eigenen Server.</p>
+        </div>
+        <nav aria-label="Weitere Seiten">
+          <a href="download.html">Download</a>
+          <a href="anleitung.html">Anleitung</a>
+          <a href="sicherheit.html">Sicherheit</a>
+          <a href="datenschutz.html">Datenschutz</a>
+          <a href="agb.html">AGB</a>
+          <a href="impressum.html">Impressum</a>
+          <a href="https://github.com/IlianBurri/Chat-App">Quellcode</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
