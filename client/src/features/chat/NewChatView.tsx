@@ -2,6 +2,7 @@ import { PaperPlaneRightIcon, UsersFourIcon } from '@phosphor-icons/react';
 import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
+import { MobileBack } from '@/components/layout/MobileBack';
 import { EmptyState } from '@/components/layout/PlaceholderView';
 import { IconButton } from '@/components/ui/IconButton';
 import { useToast } from '@/components/ui/Toaster';
@@ -43,8 +44,11 @@ export function NewChatView() {
 
   return (
     <main className="flex min-w-0 flex-1 flex-col bg-main">
-      <header className="space-y-2 border-b border-line px-5 py-3">
-        <h1 className="text-base font-semibold">{t('chat.newChat')}</h1>
+      <header className="space-y-2 border-b border-line px-4 py-3 md:px-5">
+        <div className="flex items-center gap-2">
+          <MobileBack to="/chat" />
+          <h1 className="text-base font-semibold">{t('chat.newChat')}</h1>
+        </div>
         <div className="flex items-start gap-2">
           <span className="pt-2 text-sm text-muted">{t('chat.to')}</span>
           <div className="flex-1">

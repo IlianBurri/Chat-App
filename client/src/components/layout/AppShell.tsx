@@ -19,9 +19,10 @@ import { useMessagesStore } from '@/stores/messages';
 import { usePostsStore } from '@/stores/posts';
 import { useWorkspacesStore } from '@/stores/workspaces';
 import { AppBar } from './AppBar';
+import { TabBar } from './TabBar';
 import { TitleBar } from './TitleBar';
 
-/** Signed-in layout: title bar on top, app bar left, section content right. */
+/** Signed-in layout: title bar on top, app bar left, section content right; below 768px a tab bar at the bottom instead. */
 export function AppShell() {
   const user = useAuthStore((s) => s.user);
   useTitleBadge();
@@ -75,10 +76,11 @@ export function AppShell() {
       <TitleBar user={user} />
       <div className="flex min-h-0 flex-1">
         <AppBar />
-        <div className="flex min-w-0 flex-1 overflow-hidden rounded-tl-lg shadow-card">
+        <div className="flex min-w-0 flex-1 overflow-hidden shadow-card md:rounded-tl-lg">
           <Outlet />
         </div>
       </div>
+      <TabBar />
       <MeetingEditor />
       <CallOverlay />
       <MeetingDetails />

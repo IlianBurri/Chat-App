@@ -33,6 +33,10 @@ let cameraTrack: MediaStreamTrack | null = null;
 let blurred: ProcessedTrack | null = null;
 let screenTrack: MediaStreamTrack | null = null;
 let monitor: SpeakingMonitor | null = null;
+// The lobby opens camera and microphone in the background. Joining waits for that, so a quick "Join now"
+// still sends both; closing the lobby (or opening another one) bumps the run and drops what was opened.
+let lobbyRun = 0;
+let lobbyDevices: Promise<void> = Promise.resolve();
 
 const store = () => useCallStore.getState();
 const toast = (key: string, options?: Record<string, unknown>, tone: 'success' | 'error' = 'error') =>
@@ -224,34 +228,51 @@ export async function openLobby(target: CallTarget, media: CallMedia, title: str
   if (current.phase === 'in-call' && current.target && callKey(current.target) === callKey(target)) return;
   if (current.phase !== 'idle') await leaveCall();
   store().set({ phase: 'lobby', target, media, title, camera: media === 'video', mic: true, screen: false, hand: false, mediaError: null });
+  lobbyDevices = openLobbyDevices(++lobbyRun);
+  await lobbyDevices;
+}
 
+async function openLobbyDevices(run: number) {
+  let mic: MediaStreamTrack | null = null;
+  let camera: MediaStreamTrack | null = null;
   try {
-    micTrack = await openMic(store().devices.audioIn);
+    mic = await openMic(store().devices.audioIn);
   } catch (error) {
-    store().set({ mic: false, mediaError: mediaErrorOf(error) });
+    if (run === lobbyRun) store().set({ mic: false, mediaError: mediaErrorOf(error) });
   }
-  if (store().camera) {
+  if (run === lobbyRun && store().camera) {
     try {
-      cameraTrack = await openCamera(store().devices.videoIn);
-      await applyBlur();
+      camera = await openCamera(store().devices.videoIn);
     } catch (error) {
-      store().set({ camera: false, mediaError: store().mediaError ?? mediaErrorOf(error) });
+      if (run === lobbyRun) store().set({ camera: false, mediaError: store().mediaError ?? mediaErrorOf(error) });
     }
   }
-  // The lobby may have been closed while the devices were opening.
-  if (store().phase !== 'lobby') return stopLocalMedia();
+  // Closed, or replaced by another lobby, while the devices were opening.
+  if (run !== lobbyRun) {
+    mic?.stop();
+    camera?.stop();
+    return;
+  }
+  micTrack = mic;
+  cameraTrack = camera;
+  if (cameraTrack) await applyBlur();
   updatePreview();
 }
 
 export function cancelLobby() {
+  lobbyRun++;
   stopLocalMedia();
   store().resetCall();
 }
 
 export async function joinCall() {
-  const { target, media, mic, camera } = store();
+  const { target, media } = store();
   if (!target) return;
   store().set({ phase: 'joining' });
+  await lobbyDevices;
+  if (store().phase !== 'joining') return;
+  // Opening a device may have failed meanwhile, which switches it off.
+  const { mic, camera } = store();
   if (micTrack) micTrack.enabled = mic;
 
   const res = await emitWithAck<{
@@ -289,6 +310,7 @@ export async function joinCall() {
 
 /** Tears everything down locally. `notify` tells the server (not needed when the server ended it). */
 export async function leaveCall(notify = true) {
+  lobbyRun++;
   if (notify && store().phase === 'in-call') await emitWithAck('call:leave', {}, 3000);
   for (const id of [...peers.keys()]) closePeer(id);
   earlyCandidates.clear();

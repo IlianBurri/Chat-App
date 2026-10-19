@@ -2,6 +2,7 @@ import { MagnifyingGlassIcon, PlusIcon, UsersThreeIcon } from '@phosphor-icons/r
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
+import { MobileBack } from '@/components/layout/MobileBack';
 import { Button } from '@/components/ui/Button';
 import { useToast } from '@/components/ui/Toaster';
 import { api } from '@/lib/api';
@@ -51,8 +52,11 @@ export function DiscoverView() {
 
   return (
     <main className="min-w-0 flex-1 overflow-y-auto bg-app">
-      <div className="mx-auto max-w-5xl px-6 py-8">
-        <h1 className="mb-1 text-xl font-semibold">{t('teams.joinOrCreate')}</h1>
+      <div className="mx-auto max-w-5xl px-4 py-6 md:px-6 md:py-8">
+        <div className="mb-1 flex items-center gap-2">
+          <MobileBack to="/teams" />
+          <h1 className="text-xl font-semibold">{t('teams.joinOrCreate')}</h1>
+        </div>
         <p className="mb-6 text-sm text-muted">{t('teams.discoverHint')}</p>
 
         <div className="mb-6 flex flex-wrap items-center gap-3">

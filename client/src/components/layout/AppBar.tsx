@@ -7,20 +7,18 @@ import { useComingSoon } from '@/components/ui/ComingSoon';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { useBadgeCounts } from '@/stores/badges';
 
-interface NavEntry {
+export interface NavEntry {
   to: string;
   icon: PhosphorIcon;
   label: string;
   badge?: number;
 }
 
-/** Vertical app bar (desktop): outline icons, filled + accent bar when active. */
-export function AppBar() {
+/** The app's sections, shared by the app bar (desktop) and the tab bar (mobile). */
+export function useNavEntries(): NavEntry[] {
   const { t } = useTranslation();
-  const showComingSoon = useComingSoon((s) => s.show);
   const badges = useBadgeCounts();
-
-  const entries: NavEntry[] = [
+  return [
     { to: '/activity', icon: BellIcon, label: t('nav.activity'), badge: badges.activity },
     { to: '/chat', icon: ChatsCircleIcon, label: t('nav.chat'), badge: badges.chat },
     { to: '/teams', icon: UsersThreeIcon, label: t('nav.teams'), badge: badges.teams },
@@ -28,18 +26,39 @@ export function AppBar() {
     { to: '/calls', icon: PhoneIcon, label: t('nav.calls') },
     { to: '/files', icon: CloudIcon, label: t('nav.files') },
   ];
+}
+
+/** The visible section name; with unread items screen readers get "Chat, 3 unread" as one phrase. */
+export function NavText({ label, unread }: { label: string; unread?: string }) {
+  if (!unread) return label;
+  return (
+    <>
+      <span aria-hidden="true">{label}</span>
+      <span className="sr-only">{`${label}, ${unread}`}</span>
+    </>
+  );
+}
+
+/** "3 unread" for screen readers, read after the section's name; undefined without unread items. */
+export function useUnreadText() {
+  const { t } = useTranslation();
+  return (entry: NavEntry) => (entry.badge ? t('nav.unreadBadge', { count: entry.badge }) : undefined);
+}
+
+/** Vertical app bar (desktop): outline icons, filled + accent bar when active. Hidden below 768px. */
+export function AppBar() {
+  const { t } = useTranslation();
+  const showComingSoon = useComingSoon((s) => s.show);
+  const entries = useNavEntries();
+  const unreadText = useUnreadText();
 
   return (
-    <nav aria-label={t('nav.mainNavigation')} className="flex w-[68px] shrink-0 flex-col items-center bg-app pb-2">
+    <nav aria-label={t('nav.mainNavigation')} className="hidden w-[68px] shrink-0 flex-col items-center bg-app pb-2 md:flex">
       <ul className="flex w-full flex-col items-center gap-0.5">
         {entries.map((entry) => (
           <li key={entry.to} className="w-full">
-            <NavLink
-              to={entry.to}
-              aria-label={entry.badge ? `${entry.label}, ${t('nav.unreadBadge', { count: entry.badge })}` : entry.label}
-              className={({ isActive }) => clsx(itemClass, isActive ? 'text-accent' : 'text-muted hover:text-fg')}
-            >
-              {({ isActive }) => <BarItem {...entry} active={isActive} />}
+            <NavLink to={entry.to} className={({ isActive }) => clsx(itemClass, isActive ? 'text-accent' : 'text-muted hover:text-fg')}>
+              {({ isActive }) => <BarItem {...entry} unread={unreadText(entry)} active={isActive} />}
             </NavLink>
           </li>
         ))}
@@ -62,19 +81,18 @@ export function AppBar() {
 
 const itemClass = 'group relative flex h-14 w-full flex-col items-center justify-center gap-0.5 rounded-md outline-offset-[-2px]';
 
-function BarItem({ icon: Icon, label, badge = 0, active }: Omit<NavEntry, 'to'> & { active: boolean }) {
+function BarItem({ icon: Icon, label, badge = 0, unread, active }: Omit<NavEntry, 'to'> & { unread?: string; active: boolean }) {
   return (
     <>
       {active && <span aria-hidden="true" className="absolute top-2.5 bottom-2.5 left-0 w-[3px] rounded-r-full bg-accent" />}
-      <span className="relative rounded-md p-1 group-hover:bg-hover">
-        <Icon
-          className="size-5"
-          weight={active ? 'fill' : 'regular'}
-          aria-hidden="true"
-        />
+      {/* The visible label names the link; the badge is read out as text after it. */}
+      <span aria-hidden="true" className="relative rounded-md p-1 group-hover:bg-hover">
+        <Icon className="size-5" weight={active ? 'fill' : 'regular'} />
         <Badge count={badge} className="absolute -top-1 -right-2" />
       </span>
-      <span className={clsx('text-[10px] leading-tight', active && 'font-semibold')}>{label}</span>
+      <span className={clsx('text-[10px] leading-tight', active && 'font-semibold')}>
+        <NavText label={label} unread={unread} />
+      </span>
     </>
   );
 }

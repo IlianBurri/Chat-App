@@ -2,6 +2,7 @@ import { DotsThreeIcon, LockSimpleIcon, NotePencilIcon, UsersThreeIcon, VideoCam
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useParams, useSearchParams } from 'react-router';
+import { MobileBack } from '@/components/layout/MobileBack';
 import { Button } from '@/components/ui/Button';
 import { useComingSoon } from '@/components/ui/ComingSoon';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
@@ -126,9 +127,11 @@ function Channel({ workspace, channel }: { workspace: WorkspaceSummary; channel:
   return (
     <ChannelContext.Provider value={context}>
       <main className="flex min-w-0 flex-1 flex-col bg-main">
-        <header className="flex h-14 shrink-0 items-center gap-3 border-b border-line px-4">
+        {/* Below 768px the tabs move to a second row. */}
+        <header className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1 border-b border-line px-4 pt-2 md:h-14 md:flex-nowrap md:py-0">
+          <MobileBack to="/teams" />
           <WorkspaceTile workspace={workspace} size={32} />
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1 md:flex-none">
             <h1 className="flex items-center gap-1.5 truncate text-base leading-tight font-semibold">
               {name}
               {channel.type === 'private' && <LockSimpleIcon className="size-3.5 text-subtle" aria-label={t('teams.privateChannel')} />}
@@ -137,7 +140,7 @@ function Channel({ workspace, channel }: { workspace: WorkspaceSummary; channel:
           </div>
           <Tabs
             label={name}
-            className="ml-3"
+            className="order-last h-10 w-full md:order-none md:ml-3 md:h-auto md:w-auto"
             active={tab}
             onChange={(id) => setTab(id as Tab)}
             tabs={[

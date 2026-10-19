@@ -178,8 +178,6 @@
     "joinOrCreate": "Beitreten oder erstellen",
     "general": "Allgemein",
     "privateChannel": "Privater Kanal",
-    "expand": "{{name}} aufklappen",
-    "collapse": "{{name}} zuklappen",
     "members_one": "{{count}} Mitglied",
     "members_other": "{{count}} Mitglieder",
     "roles": {

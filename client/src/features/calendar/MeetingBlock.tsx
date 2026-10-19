@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { VideoCameraIcon } from '@phosphor-icons/react';
 import type { CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { joinMeeting } from '@/features/calls/startCall';
@@ -27,32 +28,39 @@ export function MeetingBlock({ meeting, now, style, heightPx }: { meeting: Meeti
   const tiny = heightPx < 30;
 
   return (
+    // Title and "Join" share the width; in narrow blocks (overlapping meetings, phones) "Join" becomes an icon.
     <div
       data-testid="meeting-block"
-      className={clsx('absolute overflow-hidden rounded-md border-l-[3px] text-xs shadow-sm', isPast({ end }, now) && 'opacity-60')}
+      className={clsx('@container absolute flex items-start overflow-hidden rounded-md border-l-[3px] text-xs shadow-sm', isPast({ end }, now) && 'opacity-60')}
       style={{ ...meetingColorStyle(meeting.id), ...style }}
     >
       <button
         type="button"
         onClick={() => openDetails(meeting.id)}
-        aria-label={`${meeting.title}, ${time}`}
-        className={clsx('absolute inset-0 block px-1.5 text-left outline-offset-[-2px]', tiny ? 'py-0' : 'py-1', joinable && 'pr-24')}
+        className={clsx('min-w-0 flex-1 self-stretch px-1.5 text-left outline-offset-[-2px]', tiny ? 'py-0' : 'py-1')}
       >
         <span className={clsx('block truncate font-semibold text-fg', tiny && 'leading-4')}>
           {tiny ? `${meeting.title} · ${time}` : meeting.title}
         </span>
-        {!tiny && <span className="block truncate text-muted">{time}</span>}
+        {!tiny && (
+          <span className="block truncate text-muted">
+            <span className="sr-only">, </span>
+            {time}
+          </span>
+        )}
       </button>
       {joinable && (
         <button
           type="button"
           onClick={() => joinMeeting(meeting)}
+          aria-label={`${t('meetings.join')}: ${meeting.title}`}
           className={clsx(
-            'absolute right-1 z-10 rounded bg-accent font-semibold text-accent-fg hover:bg-accent-hover',
-            tiny ? 'top-0 h-4 px-1.5 text-[10px] leading-4' : 'top-1 h-6 px-2',
+            'inline-flex shrink-0 items-center gap-1 rounded bg-accent font-semibold text-accent-fg hover:bg-accent-hover',
+            tiny ? 'mr-0.5 h-4 px-1 text-[10px]' : 'mt-1 mr-1 h-6 px-1.5',
           )}
         >
-          {t('meetings.join')}
+          <VideoCameraIcon className={tiny ? 'size-3' : 'size-3.5'} weight="fill" aria-hidden="true" />
+          <span className="hidden @[10rem]:inline">{t('meetings.join')}</span>
         </button>
       )}
     </div>

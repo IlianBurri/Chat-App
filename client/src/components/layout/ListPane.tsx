@@ -1,4 +1,4 @@
-import type { KeyboardEvent, PointerEvent, ReactNode } from 'react';
+import type { CSSProperties, KeyboardEvent, PointerEvent, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LIST_WIDTH, useUiStore } from '@/stores/ui';
 
@@ -33,7 +33,12 @@ export function ListPane({ label, children }: { label: string; children: ReactNo
   };
 
   return (
-    <aside aria-label={label} className="relative flex shrink-0 flex-col rounded-tl-lg bg-pane" style={{ width }}>
+    // Full width as the only column below 768px; the stored width applies from there up.
+    <aside
+      aria-label={label}
+      className="relative flex w-full shrink-0 flex-col bg-pane md:w-(--list-width) md:rounded-tl-lg"
+      style={{ '--list-width': `${width}px` } as CSSProperties}
+    >
       {children}
       <div
         role="separator"
@@ -45,7 +50,7 @@ export function ListPane({ label, children }: { label: string; children: ReactNo
         tabIndex={0}
         onPointerDown={onPointerDown}
         onKeyDown={onKeyDown}
-        className="absolute top-0 -right-1 bottom-0 z-10 w-2 cursor-col-resize outline-offset-[-2px] after:absolute after:inset-y-0 after:left-1/2 after:w-px after:bg-line hover:after:w-0.5 hover:after:bg-accent"
+        className="absolute top-0 -right-1 bottom-0 z-10 hidden w-2 cursor-col-resize md:block outline-offset-[-2px] after:absolute after:inset-y-0 after:left-1/2 after:w-px after:bg-line hover:after:w-0.5 hover:after:bg-accent"
       />
     </aside>
   );

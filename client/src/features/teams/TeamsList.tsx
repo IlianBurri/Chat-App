@@ -70,7 +70,7 @@ function WorkspaceGroup({ workspace }: { workspace: WorkspaceSummary }) {
           type="button"
           aria-expanded={open}
           aria-controls={channelsId}
-          aria-label={open ? t('teams.collapse', { name: workspace.name }) : t('teams.expand', { name: workspace.name })}
+          // Named by its visible text (name, role, members); aria-expanded tells open or closed.
           onClick={() => setOpen((o) => !o)}
           className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-1.5 text-left"
         >

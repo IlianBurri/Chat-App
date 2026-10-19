@@ -13,7 +13,7 @@
   --border: #e0e0ea;
   --fg: #242424;
   --muted: #5c5c66;
-  --subtle: #8a8a93;
+  --subtle: #66666e;
   --code-bg: #1f1f26;
   --code-fg: #f2f2f5;
   --warn-bg: #fff6e0;
@@ -39,7 +39,7 @@
     --border: #34343f;
     --fg: #f2f2f5;
     --muted: #b3b3be;
-    --subtle: #8c8c98;
+    --subtle: #a0a0ab;
     --code-bg: #0e0e12;
     --warn-bg: #3a3020;
     --warn-border: #c98a00;

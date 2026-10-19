@@ -66,7 +66,7 @@ export function FilesView() {
 
   return (
     <main className="flex min-w-0 flex-1 flex-col bg-main">
-      <header className="flex h-14 shrink-0 items-center gap-3 border-b border-line px-5">
+      <header className="flex h-14 shrink-0 items-center gap-3 border-b border-line px-4 md:px-5">
         <h2 className="flex-1 truncate text-base font-semibold">{title}</h2>
         <input
           type="search"
@@ -74,9 +74,25 @@ export function FilesView() {
           placeholder={t('files.filter')}
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="h-8 w-64 rounded-md border border-line bg-input px-2.5 text-sm outline-none focus:border-accent"
+          className="h-8 w-40 rounded-md border border-line bg-input px-2.5 text-sm outline-none focus:border-accent md:w-64"
         />
       </header>
+      {/* Below 768px there is no list pane: the views become chips. */}
+      <nav aria-label={t('files.views')} className="flex shrink-0 gap-2 overflow-x-auto border-b border-line px-4 py-2 md:hidden">
+        {VIEWS.map(({ id }) => (
+          <NavLink
+            key={id}
+            to={id === 'all' ? '/files' : `/files?view=${id}`}
+            aria-current={view === id ? 'page' : undefined}
+            className={clsx(
+              'shrink-0 rounded-full border px-3 py-1 text-sm',
+              view === id ? 'border-accent bg-accent-soft font-semibold text-accent' : 'border-line text-muted',
+            )}
+          >
+            {t(`files.view.${id}`)}
+          </NavLink>
+        ))}
+      </nav>
       <div className="min-h-0 flex-1 overflow-y-auto">
         {!loaded ? (
           <p className="px-5 py-4 text-sm text-muted">{t('common.loading')}</p>

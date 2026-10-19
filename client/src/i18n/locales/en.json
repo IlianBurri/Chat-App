@@ -178,8 +178,6 @@
     "joinOrCreate": "Join or create",
     "general": "General",
     "privateChannel": "Private channel",
-    "expand": "Expand {{name}}",
-    "collapse": "Collapse {{name}}",
     "members_one": "{{count}} member",
     "members_other": "{{count}} members",
     "roles": {

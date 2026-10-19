@@ -9,14 +9,14 @@ import { VideoView } from './media';
 /** Large initials (or photo) for people without camera. */
 export function BigAvatar({ user, size }: { user: { id: string; name: string; avatarUrl: string | null }; size: number }) {
   if (user.avatarUrl) return <img src={user.avatarUrl} alt="" className="rounded-full object-cover" style={{ width: size, height: size }} />;
+  // Initials as generated content, like Avatar.
   return (
     <span
       aria-hidden="true"
-      className="flex items-center justify-center rounded-full font-semibold text-white"
+      data-initials={initials(user.name)}
+      className="flex items-center justify-center rounded-full font-semibold text-white before:content-[attr(data-initials)]"
       style={{ width: size, height: size, backgroundColor: avatarColor(user.id), fontSize: size * 0.36 }}
-    >
-      {initials(user.name)}
-    </span>
+    />
   );
 }
 

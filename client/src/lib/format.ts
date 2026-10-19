@@ -35,7 +35,7 @@ export function initials(name: string): string {
   return (first + last).toUpperCase();
 }
 
-const AVATAR_COLORS = ['#5B5FC7', '#C4314B', '#0F7B6C', '#B35C00', '#8764B8', '#2B7CD3', '#A0459B', '#498205'];
+const AVATAR_COLORS = ['#5B5FC7', '#C4314B', '#0F7B6C', '#B35C00', '#8764B8', '#2470C4', '#A0459B', '#498205'];
 
 /** Stable avatar colour derived from an id. */
 export function avatarColor(id: string): string {

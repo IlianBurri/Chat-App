@@ -24,13 +24,14 @@ export function Avatar({ user, size = 'md', showStatus = false, className }: Ava
       {user.avatarUrl ? (
         <img src={user.avatarUrl} alt="" className="size-full rounded-full object-cover" />
       ) : (
+        // Initials as generated content, not text: a button showing an avatar is named by its label, and the letters
+        // would otherwise count as visible text missing from that name (WCAG 2.5.3 "Label in Name").
         <span
           aria-hidden="true"
-          className="flex size-full items-center justify-center rounded-full font-semibold text-white select-none"
+          data-initials={initials(user.name)}
+          className="flex size-full items-center justify-center rounded-full font-semibold text-white select-none before:content-[attr(data-initials)]"
           style={{ backgroundColor: avatarColor(user.id), fontSize: px * 0.38 }}
-        >
-          {initials(user.name)}
-        </span>
+        />
       )}
       {showStatus && <PresenceDot userId={user.id} fallback={user.status} avatarSize={px} />}
     </span>

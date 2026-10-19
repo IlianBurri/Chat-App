@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { IconButton } from '@/components/ui/IconButton';
 import { Menu, MenuItem } from '@/components/ui/Menu';
 import { useToast } from '@/components/ui/Toaster';
+import { useIsMobile } from '@/lib/useMobile';
 import { useNow } from '@/lib/useNow';
 import { meetingsInRange, useMeetingsStore } from '@/stores/meetings';
 import { CALENDAR_VIEWS, nextSlot, shiftAnchor, visibleDays, visibleRange, type CalendarView as View } from './calendarMath';
@@ -20,8 +21,10 @@ const DATE_PARAM = 'yyyy-MM-dd';
 /** Reads view and date from the URL so back/forward and reloads keep the place. */
 function useCalendarParams() {
   const [params, setParams] = useSearchParams();
+  // A phone only has room for one day.
+  const defaultView: View = useIsMobile() ? 'day' : 'workweek';
   const rawView = params.get('view');
-  const view: View = CALENDAR_VIEWS.includes(rawView as View) ? (rawView as View) : 'workweek';
+  const view: View = CALENDAR_VIEWS.includes(rawView as View) ? (rawView as View) : defaultView;
   const parsed = parse(params.get('date') ?? '', DATE_PARAM, new Date());
   const anchorKey = isValid(parsed) ? format(parsed, DATE_PARAM) : format(new Date(), DATE_PARAM);
   const anchor = useMemo(() => parse(anchorKey, DATE_PARAM, new Date()), [anchorKey]);
@@ -74,27 +77,28 @@ export function CalendarView() {
     });
 
   return (
-    <main className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-tl-lg bg-main">
-      <header className="flex h-14 shrink-0 items-center gap-3 border-b border-line px-5">
+    <main className="flex min-w-0 flex-1 flex-col overflow-hidden bg-main md:rounded-tl-lg">
+      <header className="flex h-14 shrink-0 items-center gap-3 border-b border-line px-4 md:px-5">
         <CalendarBlankIcon className="size-5 text-accent" weight="fill" aria-hidden="true" />
         <h1 className="text-lg font-semibold">{t('calendar.title')}</h1>
         <div className="ml-auto flex items-center gap-2">
+          {/* Below 768px icon-only; the label stays for screen readers. */}
           <Button icon={VideoCameraIcon} onClick={() => void meetNow()}>
-            {t('calendar.meetNow')}
+            <span className="sr-only md:not-sr-only">{t('calendar.meetNow')}</span>
           </Button>
           <Button variant="primary" icon={PlusIcon} onClick={() => newMeeting()}>
-            {t('calendar.newMeeting')}
+            <span className="sr-only md:not-sr-only">{t('calendar.newMeeting')}</span>
           </Button>
         </div>
       </header>
 
-      <div className="flex shrink-0 items-center gap-1 border-b border-line px-5 py-2">
+      <div className="flex shrink-0 items-center gap-1 border-b border-line px-3 py-2 md:px-5">
         <Button size="sm" onClick={() => go({ date: new Date() })}>
           {t('calendar.today')}
         </Button>
         <IconButton label={t('calendar.previous')} icon={CaretLeftIcon} onClick={() => go({ date: shiftAnchor(view, anchor, -1) })} />
         <IconButton label={t('calendar.next')} icon={CaretRightIcon} onClick={() => go({ date: shiftAnchor(view, anchor, 1) })} />
-        <h2 className="ml-1 text-base font-semibold" aria-live="polite" data-testid="calendar-range">
+        <h2 className="ml-1 min-w-0 truncate text-sm font-semibold md:text-base" aria-live="polite" data-testid="calendar-range">
           {formatRangeLabel(view, days, anchor, i18n.resolvedLanguage)}
         </h2>
         {loading && <span className="ml-2 text-xs text-subtle">{t('common.loading')}</span>}

@@ -155,11 +155,12 @@ export function CallsView() {
   };
 
   return (
-    <main className="flex flex-1 flex-col overflow-hidden rounded-tl-lg bg-main">
-      <header className="flex h-14 shrink-0 items-center border-b border-line px-5">
+    // Below 768px only as tall as needed: the call history follows underneath.
+    <main className="flex shrink-0 flex-col overflow-hidden bg-main pb-4 md:flex-1 md:rounded-tl-lg md:pb-0">
+      <header className="flex h-14 shrink-0 items-center border-b border-line px-4 md:px-5">
         <h1 className="text-lg font-semibold">{t('calls.dial.title')}</h1>
       </header>
-      <div className="mx-auto mt-10 w-full max-w-md space-y-3 px-5">
+      <div className="mx-auto mt-4 w-full max-w-md space-y-3 px-4 md:mt-10 md:px-5">
         <p className="text-sm text-muted">{t('calls.dial.text')}</p>
         <UserPicker label={t('calls.dial.people')} placeholder={t('calls.invitePlaceholder')} selected={people} onChange={setPeople} exclude={meId ? [meId] : []} />
         <div className="flex gap-2">

@@ -62,7 +62,8 @@ export function ActivityItem({ notification: n, now }: { notification: Notificat
         type="button"
         onClick={open}
         {...menu.triggerProps}
-        aria-label={`${n.read ? '' : `${t('activity.unread')}, `}${text}, ${contextLabel}, ${time}`}
+        // Contains all visible text in the same order (WCAG 2.5.3 "Label in Name"), plus "unread".
+        aria-label={[n.read ? null : t('activity.unread'), text, contextLabel, time, n.preview].filter(Boolean).join(', ')}
         className="mx-2 flex w-[calc(100%-1rem)] items-start gap-3 rounded-md px-2 py-2.5 text-left outline-offset-[-2px] hover:bg-hover"
       >
         <span className="relative mt-0.5 shrink-0">
@@ -77,13 +78,12 @@ export function ActivityItem({ notification: n, now }: { notification: Notificat
             {typeIcon ? <typeIcon.icon className="size-2.5" weight="bold" /> : n.emoji}
           </span>
         </span>
-        <span className="min-w-0 flex-1">
-          <span className="flex items-baseline gap-2">
-            <span className={clsx('min-w-0 flex-1 text-sm', n.read ? 'text-fg' : 'font-semibold')}>{text}</span>
-            <span className="shrink-0 text-xs text-muted">{time}</span>
-          </span>
-          <span className="block truncate text-xs text-muted">{contextLabel}</span>
-          {n.preview && <span className="mt-0.5 line-clamp-2 text-xs text-muted">{n.preview}</span>}
+        {/* Source order text, context, time (as in the label); the grid puts the time top right. */}
+        <span className="grid min-w-0 flex-1 grid-cols-[1fr_auto] items-baseline gap-x-2">
+          <span className={clsx('min-w-0 text-sm', n.read ? 'text-fg' : 'font-semibold')}>{text}</span>
+          <span className="col-span-2 truncate text-xs text-muted">{contextLabel}</span>
+          <span className="col-start-2 row-start-1 text-xs text-muted">{time}</span>
+          {n.preview && <span className="col-span-2 mt-0.5 line-clamp-2 text-xs text-muted">{n.preview}</span>}
         </span>
         {!n.read && <span aria-hidden="true" className="mt-2 size-2 shrink-0 rounded-full bg-accent" />}
       </button>

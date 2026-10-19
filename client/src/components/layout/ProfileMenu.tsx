@@ -25,7 +25,14 @@ export function ProfileMenu({ user }: { user: Me }) {
         width={280}
         trigger={({ ref, ...props }) => (
           <Tooltip label={user.name}>
-            <button ref={ref} type="button" aria-label={t('status.profileMenu')} className="rounded-full" {...props}>
+            <button
+              ref={ref}
+              type="button"
+              // Includes the status the dot shows, so the name covers everything the button displays.
+              aria-label={`${t('status.profileMenu')}, ${status === 'offline' ? t('status.offlineShort') : t(`status.${status}`)}`}
+              className="rounded-full"
+              {...props}
+            >
               <Avatar user={{ ...user, status }} size="sm" showStatus />
             </button>
           </Tooltip>

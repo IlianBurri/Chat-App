@@ -54,14 +54,17 @@ const CallButton = forwardRef<HTMLButtonElement, CallButtonProps>(function CallB
       type="button"
       aria-label={label}
       className={clsx(
-        'relative flex min-w-14 flex-col items-center gap-0.5 rounded-md px-2 py-1 text-[11px] outline-offset-2 transition-colors',
-        danger ? 'bg-[#c4314b] px-3 text-white hover:bg-[#a72a40]' : active ? 'bg-white/15 text-white' : 'text-white/85 hover:bg-white/10',
+        // Below 768px icon-only, so all controls fit in one row at the bottom.
+        'relative flex min-w-10 flex-col items-center gap-0.5 rounded-md px-1 py-2 text-[11px] outline-offset-2 transition-colors md:min-w-14 md:px-2 md:py-1',
+        danger ? 'bg-[#c4314b] text-white hover:bg-[#a72a40] md:px-3' : active ? 'bg-white/15 text-white' : 'text-white/85 hover:bg-white/10',
         className,
       )}
       {...props}
     >
       <Icon className="size-5" weight={active ? 'fill' : 'regular'} aria-hidden="true" />
-      <span aria-hidden="true">{label}</span>
+      <span aria-hidden="true" className="hidden md:inline">
+        {label}
+      </span>
       {badge ? (
         <span className="absolute top-0 right-1 min-w-4 rounded-full bg-[#c4314b] px-1 text-[10px] leading-4 font-semibold text-white">{badge}</span>
       ) : null}
@@ -105,7 +108,11 @@ function ControlBar({ tiles, onOpenSettings }: { tiles: TileData[]; onOpenSettin
         </p>
       </div>
 
-      <nav aria-label={t('calls.controls')} className="flex flex-wrap items-center gap-1">
+      {/* Below 768px the controls sit in a bar at the bottom of the screen, like on phones. */}
+      <nav
+        aria-label={t('calls.controls')}
+        className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-center gap-0.5 border-t border-white/10 bg-[#26262e] px-1 pt-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] md:static md:flex-wrap md:gap-1 md:border-0 md:p-0"
+      >
         <CallButton icon={ChatTextIcon} label={t('calls.chat')} active={panel === 'chat'} aria-pressed={panel === 'chat'} badge={unreadChat} onClick={() => togglePanel('chat')} />
         <CallButton icon={UsersThreeIcon} label={t('calls.people')} active={panel === 'people'} aria-pressed={panel === 'people'} badge={tiles.length} onClick={() => togglePanel('people')} />
         <Menu
@@ -143,7 +150,7 @@ function ControlBar({ tiles, onOpenSettings }: { tiles: TileData[]; onOpenSettin
           </MenuItem>
         </Menu>
 
-        <span className="mx-1 h-8 w-px bg-white/15" aria-hidden="true" />
+        <span className="mx-1 hidden h-8 w-px bg-white/15 md:block" aria-hidden="true" />
 
         <CallButton
           icon={camera ? VideoCameraIcon : VideoCameraSlashIcon}
@@ -267,12 +274,21 @@ export function InCall() {
   }, []);
 
   return (
-    <div role="dialog" aria-modal="true" aria-label={t('calls.inCallLabel', { title })} className="fixed inset-0 z-40 flex flex-col bg-[#1b1b21]">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={t('calls.inCallLabel', { title })}
+      className="fixed inset-0 z-40 flex flex-col bg-[#1b1b21] pb-[calc(3.25rem+env(safe-area-inset-bottom))] md:pb-0"
+    >
       <ControlBar tiles={tiles} onOpenSettings={() => setSettingsOpen(true)} />
-      <div className="flex min-h-0 flex-1">
+      <div className="relative flex min-h-0 flex-1">
         <Stage tiles={tiles} />
         {panel && (
-          <aside className="flex w-80 shrink-0 flex-col border-l border-line bg-main text-fg" aria-label={panel === 'chat' ? t('calls.chat') : t('calls.people')}>
+          // Below 768px the panel covers the stage; the control bar stays reachable to close it.
+          <aside
+            className="absolute inset-0 z-20 flex flex-col bg-main text-fg md:static md:w-80 md:shrink-0 md:border-l md:border-line"
+            aria-label={panel === 'chat' ? t('calls.chat') : t('calls.people')}
+          >
             {panel === 'chat' ? <CallChatPanel tiles={tiles} /> : <PeoplePanel tiles={tiles} />}
           </aside>
         )}

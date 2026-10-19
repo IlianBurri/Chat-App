@@ -2,7 +2,7 @@
 
 Hallo ist eine Kommunikations- und Kollaborations-App für Firmen: Einzel- und Gruppenchats, Arbeitsgruppen mit Themenkanälen, Audio-/Videoanrufe, Kalender und Dateiablage an einem Ort.
 
-> **Stand:** Meilenstein 6 von 8 – Chats, Arbeitsgruppen mit Kanälen, Aktivitätsfeed, Benachrichtigungen, globale Suche, automatischer Status, Dateien und Uploads sowie Kalender mit Besprechungsplanung. Funktionen späterer Meilensteine sind in der App als „Kommt bald“ markiert.
+> **Stand:** Alle 8 Meilensteine sind umgesetzt – Chats, Arbeitsgruppen mit Kanälen, Aktivitätsfeed, Benachrichtigungen, globale Suche, automatischer Status, Dateien, Kalender, Audio- und Videoanrufe, heller und dunkler Modus, Handy-Ansicht und Barrierefreiheit. Dazu kommen eine Desktop-App mit Installern für Windows, macOS und Linux und eine Website. Was darüber hinausgeht (z. B. weitere Apps, eigene Tabs), ist in der App als „Kommt bald“ markiert.
 
 ## Voraussetzungen
 
@@ -44,9 +44,22 @@ Zum Testen in Echtzeit meldest du dich in zwei Browserfenstern (z. B. einem norm
 | `npm run bundle -w server` | Server als eine Datei bündeln (siehe [Produktion](#produktion)) |
 | `npm start` | Nur den API-Server starten (ohne Watch-Modus) |
 | `npm run db:reset` | Datenbank leeren und Demo-Daten neu einspielen |
-| `npm run typecheck` | TypeScript-Prüfung für Server und Client |
+| `npm run typecheck` | TypeScript-Prüfung für Server, Client und End-to-End-Tests |
 | `npm run lint` | ESLint für Server und Client |
 | `npm test` | Unit-Tests (Vitest) für Server und Client |
+| `npm run test:e2e` | End-to-End-Tests (Playwright), siehe unten |
+
+### End-to-End-Tests
+
+`npm run test:e2e` baut den Client, startet den Server im Produktionsmodus mit frischen Demo-Daten (Port 4300, Daten in `e2e/.data`) und prüft in Chromium:
+
+- Chat zwischen zwei Personen in Echtzeit (Tippen, Nachricht, Lesebestätigung, Reaktion)
+- Kanal-Beitrag mit Betreff und Antwort, live bei der anderen Person
+- Videoanruf mit Klingeln, Annehmen, Bild in beide Richtungen und Verlassen (mit simulierter Kamera)
+- Mobile Ansicht unter 768 px (eine Spalte, Tab-Leiste, Zurück-Navigation, kein seitliches Scrollen)
+- Barrierefreiheit aller Hauptansichten mit [axe](https://github.com/dequelabs/axe-core) (WCAG 2.1 A/AA) im hellen und dunklen Modus, Theme-Wechsel und Tastaturbedienung der Suche
+
+Einmalig vorher: `npx playwright install chromium`.
 
 ## Konfiguration
 
@@ -184,7 +197,7 @@ Auswahlfelder sind im Schema bewusst als Text gespeichert, damit es ohne Änderu
 5. ✅ Dateien und Uploads (Anhänge in Chats, Beiträgen und Antworten per Büroklammer, Drag & Drop oder Einfügen; Bildvorschau mit Betrachter; „Dateien“-Tabs in Chats und Kanälen; Dateien-App mit Ansichten und Filter; Downloads nur für Berechtigte)
 6. ✅ Kalender und Besprechungsplanung (Tag, Arbeitswoche, Woche, Monat; planen aus dem Kalender oder per „+“ im Chat; eigener Besprechungschat mit Einladungskarte; Zusagen/Absagen, Bearbeiten, Absagen; „Teilnehmen“ ab 5 Minuten vor Beginn)
 7. ✅ Audio- und Videoanrufe (aus Chats, Kanälen und Besprechungen; Lobby mit Vorschau, Geräteauswahl und Hintergrund-Weichzeichner; Klingeln mit Annehmen/Ablehnen, verpasste Anrufe; Galerie- und Sprecheransicht, Sprecher-Erkennung; Stummschalten, Kamera, Bildschirmfreigabe, Hand heben, Reaktionen, Chat im Anruf; weitere Personen dazuholen; Anrufe-App mit Verlauf und Rückruf; Status „Im Anruf“)
-8. ⏳ Responsive Layout, Feinschliff, End-to-End-Tests
+8. ✅ Heller und dunkler Modus (Systemeinstellung als Standard), Responsive Layout (unter 768 px eine Spalte mit Tab-Leiste, Anrufsteuerung unten), Barrierefreiheit nach WCAG 2.1 AA (Kontraste, Namen aller Bedienelemente, Tastatur), End-to-End-Tests mit Playwright
 
 ## Drittanbieter-Grafiken
 

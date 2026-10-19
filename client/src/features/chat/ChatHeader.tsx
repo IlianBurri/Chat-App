@@ -2,6 +2,7 @@ import { BellIcon, BellSlashIcon, DotsThreeIcon, PencilSimpleIcon, PhoneIcon, Pu
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
+import { MobileBack } from '@/components/layout/MobileBack';
 import { Avatar, GroupAvatar, MeetingAvatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { useComingSoon } from '@/components/ui/ComingSoon';
@@ -50,7 +51,9 @@ export function ChatHeader({ chat, meId, tab, onTabChange }: ChatHeaderProps) {
   };
 
   return (
-    <header className="flex h-14 shrink-0 items-center gap-3 border-b border-line px-4">
+    // Below 768px the tabs move to a second row.
+    <header className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1 border-b border-line px-4 pt-2 md:h-14 md:flex-nowrap md:py-0">
+      <MobileBack to="/chat" />
       {chat.meeting ? (
         <MeetingAvatar />
       ) : partner ? (
@@ -58,7 +61,7 @@ export function ChatHeader({ chat, meId, tab, onTabChange }: ChatHeaderProps) {
       ) : (
         <GroupAvatar members={chat.members.filter((m) => m.id !== meId)} />
       )}
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1 md:flex-none">
         <h1 className="truncate text-base leading-tight font-semibold">{title}</h1>
         {partner ? (
           <PartnerStatus userId={partner.id} fallback={partner.status} message={partner.statusMessage} />
@@ -68,7 +71,7 @@ export function ChatHeader({ chat, meId, tab, onTabChange }: ChatHeaderProps) {
       </div>
       <Tabs
         label={title}
-        className="ml-3"
+        className="order-last h-10 w-full md:order-none md:ml-3 md:h-auto md:w-auto"
         active={tab}
         onChange={(id) => onTabChange(id as ChatTab)}
         tabs={[

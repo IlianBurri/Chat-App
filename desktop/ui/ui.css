@@ -12,7 +12,7 @@
   --border: #e0e0ea;
   --fg: #242424;
   --muted: #616166;
-  --subtle: #8a8a93;
+  --subtle: #66666e;
   --danger: #c4314b;
   --success: #13a10e;
   --shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 2px 8px rgb(0 0 0 / 0.06);
@@ -32,7 +32,7 @@
     --border: #383843;
     --fg: #f2f2f5;
     --muted: #b3b3be;
-    --subtle: #8c8c98;
+    --subtle: #a0a0ab;
     --danger: #f1707b;
     --success: #54c56a;
   }

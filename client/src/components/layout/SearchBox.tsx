@@ -110,9 +110,9 @@ export function SearchBox() {
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         onKeyDown={onKeyDown}
-        className="h-8 w-full rounded-md border border-transparent bg-input pr-16 pl-8 text-sm text-fg shadow-card outline-none placeholder:text-subtle focus:border-accent focus-visible:outline-none"
+        className="h-8 w-full rounded-md border border-transparent bg-input pr-3 pl-8 text-sm text-fg shadow-card outline-none placeholder:text-subtle focus:border-accent focus-visible:outline-none md:pr-16"
       />
-      <kbd className="pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 rounded border border-line px-1.5 text-[11px] text-subtle">
+      <kbd className="pointer-events-none absolute top-1/2 right-2 hidden -translate-y-1/2 rounded border border-line px-1.5 text-[11px] text-subtle md:block">
         {isMac ? '⌘ K' : 'Ctrl K'}
       </kbd>
       {open && (

@@ -6,13 +6,13 @@ export function WorkspaceTile({ workspace, size = 32 }: { workspace: Pick<Worksp
   if (workspace.logoUrl) {
     return <img src={workspace.logoUrl} alt="" className="shrink-0 rounded-md object-cover" style={{ width: size, height: size }} />;
   }
+  // Initials as generated content (see Avatar): the tile sits inside buttons named by their label.
   return (
     <span
       aria-hidden="true"
-      className="flex shrink-0 items-center justify-center rounded-md font-semibold text-white select-none"
+      data-initials={initials(workspace.name)}
+      className="flex shrink-0 items-center justify-center rounded-md font-semibold text-white select-none before:content-[attr(data-initials)]"
       style={{ width: size, height: size, backgroundColor: workspace.color, fontSize: size * 0.4 }}
-    >
-      {initials(workspace.name)}
-    </span>
+    />
   );
 }

@@ -122,8 +122,9 @@ function EditorForm({ initial, meetingId, onClose }: { initial: MeetingDraft; me
             exclude={meId ? [meId] : []}
           />
         </div>
-        <div className="grid grid-cols-[1fr_auto_auto] items-end gap-2">
-          <Field label={t('meetings.form.date')}>
+        {/* Narrow screens: date on its own row, start and end below. */}
+        <div className="grid grid-cols-2 items-end gap-2 *:min-w-0 sm:grid-cols-[1fr_auto_auto]">
+          <Field label={t('meetings.form.date')} className="col-span-2 block space-y-1 sm:col-span-1">
             <input type="date" required value={date} onChange={(e) => changeStart(e.target.value, startTime)} className={inputClass} />
           </Field>
           <Field label={t('meetings.form.start')}>
