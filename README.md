@@ -2,7 +2,7 @@
 
 Hallo ist eine Kommunikations- und Kollaborations-App für Firmen: Einzel- und Gruppenchats, Arbeitsgruppen mit Themenkanälen, Audio-/Videoanrufe, Kalender und Dateiablage an einem Ort.
 
-> **Stand:** Meilenstein 6 von 8 – Chats, Arbeitsgruppen mit Kanälen, Aktivitätsfeed, Benachrichtigungen, globale Suche, automatischer Status, Dateien und Uploads sowie Kalender mit Besprechungsplanung. Funktionen späterer Meilensteine sind in der App als „Kommt bald“ markiert.
+> **Stand:** Alle 8 Meilensteine sind umgesetzt – Chats, Arbeitsgruppen mit Kanälen, Aktivitätsfeed, Benachrichtigungen, globale Suche, automatischer Status, Dateien, Kalender, Audio- und Videoanrufe, heller und dunkler Modus, Handy-Ansicht und Barrierefreiheit. Dazu kommen eine Desktop-App mit Installern für Windows, macOS und Linux und eine Website. Was darüber hinausgeht (z. B. weitere Apps, eigene Tabs), ist in der App als „Kommt bald“ markiert.
 
 ## Voraussetzungen
 
@@ -44,9 +44,22 @@ Zum Testen in Echtzeit meldest du dich in zwei Browserfenstern (z. B. einem norm
 | `npm run bundle -w server` | Server als eine Datei bündeln (siehe [Produktion](#produktion)) |
 | `npm start` | Nur den API-Server starten (ohne Watch-Modus) |
 | `npm run db:reset` | Datenbank leeren und Demo-Daten neu einspielen |
-| `npm run typecheck` | TypeScript-Prüfung für Server und Client |
+| `npm run typecheck` | TypeScript-Prüfung für Server, Client und End-to-End-Tests |
 | `npm run lint` | ESLint für Server und Client |
 | `npm test` | Unit-Tests (Vitest) für Server und Client |
+| `npm run test:e2e` | End-to-End-Tests (Playwright), siehe unten |
+
+### End-to-End-Tests
+
+`npm run test:e2e` baut den Client, startet den Server im Produktionsmodus mit frischen Demo-Daten (Port 4300, Daten in `e2e/.data`) und prüft in Chromium:
+
+- Chat zwischen zwei Personen in Echtzeit (Tippen, Nachricht, Lesebestätigung, Reaktion)
+- Kanal-Beitrag mit Betreff und Antwort, live bei der anderen Person
+- Videoanruf mit Klingeln, Annehmen, Bild in beide Richtungen und Verlassen (mit simulierter Kamera)
+- Mobile Ansicht unter 768 px (eine Spalte, Tab-Leiste, Zurück-Navigation, kein seitliches Scrollen)
+- Barrierefreiheit aller Hauptansichten mit [axe](https://github.com/dequelabs/axe-core) (WCAG 2.1 A/AA) im hellen und dunklen Modus, Theme-Wechsel und Tastaturbedienung der Suche
+
+Einmalig vorher: `npx playwright install chromium`.
 
 ## Konfiguration
 
@@ -84,6 +97,57 @@ node server/dist/server.mjs
 ```
 
 Beim ersten Start legt der Server die Tabellen an. Das Sitzungs-Cookie bekommt das `Secure`-Flag, sobald die Seite über HTTPS aufgerufen wird (direkt oder über einen Reverse Proxy auf demselben Rechner); im LAN funktioniert die Anmeldung auch über `http://`.
+
+## Desktop-App
+
+`desktop/` ist eine Electron-App. Beim ersten Start fragt ein Assistent, ob dieser Computer **selbst der Server** sein soll (der eingebaute Server läuft dann im Hintergrund, auf Wunsch im LAN erreichbar) oder ob sie sich **mit einem bestehenden Server verbindet**. Dazu kommen Menü, Symbol im Infobereich mit Ungelesen-Anzeige, Start beim Anmelden, Bildschirmfreigabe mit Auswahlfenster und Kamera/Mikrofon auch bei Servern im LAN ohne HTTPS.
+
+```bash
+cd desktop
+npm install       # eigenes Paket (kein Workspace): better-sqlite3 wird hier für Electron installiert
+npm start         # baut Client, Server-Bundle und App und startet sie
+npm run dev       # nur Hauptprozess neu bauen und starten (Client und Server unverändert)
+```
+
+Einstellungen, Datenbank, Uploads und das Server-Protokoll liegen im Benutzerdatenordner des Systems (Menü *Datei → Datenordner öffnen*). `DESKTOP_DATA_DIR` legt einen anderen Ordner fest, etwa für Tests. Die Icons in `desktop/build/` erzeugt `node scripts/icons.mjs` aus dem Logo.
+
+### Installer
+
+`npm run dist` (in `desktop/`) baut den Installer für das aktuelle Betriebssystem nach `desktop/release/`:
+
+| System | Datei | Art |
+|---|---|---|
+| Windows | `Hallo-Setup.exe` | Setup-Assistent (Deutsch/Englisch), ohne Administratorrechte, Ordner wählbar |
+| macOS | `Hallo-mac-arm64.dmg`, `Hallo-mac-x64.dmg` | Disk-Image für Apple Silicon bzw. Intel |
+| Linux | `Hallo-linux-x86_64.AppImage`, `hallo-linux-amd64.deb` | AppImage für alle Distributionen, Paket für Debian/Ubuntu |
+
+Die Dateinamen enthalten bewusst keine Version: `https://github.com/IlianBurri/Chat-App/releases/latest/download/<Datei>` zeigt so immer auf die neueste Version. Darauf bauen die Installationsbefehle auf, die vor dem Installieren die Prüfsumme aus `SHA256SUMS.txt` kontrollieren:
+
+```powershell
+irm https://ilianburri.github.io/Chat-App/install.ps1 | iex             # Windows (PowerShell)
+```
+
+```bash
+curl -fsSL https://ilianburri.github.io/Chat-App/install.sh | sh        # macOS und Linux
+```
+
+Ohne Code-Signatur-Zertifikat zeigen Windows (SmartScreen) und macOS (Gatekeeper) beim Öffnen einer im Browser heruntergeladenen Datei eine Warnung; die Installationsbefehle sind davon nicht betroffen. Mit Zertifikat signiert electron-builder automatisch (Umgebungsvariablen `CSC_LINK`/`CSC_KEY_PASSWORD`, für macOS zusätzlich `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD`, `APPLE_TEAM_ID` zum Notarisieren).
+
+Electron bleibt bei Version 42, bis better-sqlite3 vorgebaute Binärdateien für neuere Versionen veröffentlicht; so braucht weder ein Entwicklungsrechner noch der Build-Server einen C++-Compiler.
+
+## Website und Releases
+
+`website/` ist die statische Website (Infos, Download mit Systemerkennung, Anleitung, Sicherheit, Datenschutz, AGB, Impressum) samt den Installationsskripten. Sie braucht keinen Build-Schritt; zum Ansehen genügt ein beliebiger statischer Webserver. Kopf- und Fusszeile stehen in jeder Seite; bei Änderungen alle Seiten anpassen. Die Rechtstexte sind **Vorlagen**: Die gelb markierten Platzhalter ersetzen und die Texte prüfen lassen, bevor die Seite öffentlich ist.
+
+GitHub Actions in `.github/workflows/`:
+
+| Workflow | Auslöser | Was er tut |
+|---|---|---|
+| `ci.yml` | Push auf `main`, Pull Requests | Typecheck, Lint, Tests, Builds; dazu die Desktop-App |
+| `release.yml` | Tag `v*` (z. B. `git tag v0.2.0 && git push origin v0.2.0`) | Baut die Installer auf Windows, macOS und Linux, testet die Installationsbefehle damit und veröffentlicht ein GitHub-Release mit `SHA256SUMS.txt` |
+| `pages.yml` | Änderungen in `website/` auf `main` | Veröffentlicht die Website auf GitHub Pages |
+
+Einmalig einzurichten: **Settings → Pages → Source: GitHub Actions**. Downloads und Website sind nur erreichbar, wenn das Repository öffentlich ist (GitHub Pages für private Repositories braucht einen kostenpflichtigen Plan, Release-Dateien privater Repositories sind nicht öffentlich). Läuft die Website unter einer anderen Adresse als `https://ilianburri.github.io/Chat-App/`, die Adresse in den Seiten, in `website/404.html` (`<base>`), in `website/install.*` und in `desktop/package.json` (`homepage`) anpassen.
 
 ## Technik
 
@@ -133,7 +197,7 @@ Auswahlfelder sind im Schema bewusst als Text gespeichert, damit es ohne Änderu
 5. ✅ Dateien und Uploads (Anhänge in Chats, Beiträgen und Antworten per Büroklammer, Drag & Drop oder Einfügen; Bildvorschau mit Betrachter; „Dateien“-Tabs in Chats und Kanälen; Dateien-App mit Ansichten und Filter; Downloads nur für Berechtigte)
 6. ✅ Kalender und Besprechungsplanung (Tag, Arbeitswoche, Woche, Monat; planen aus dem Kalender oder per „+“ im Chat; eigener Besprechungschat mit Einladungskarte; Zusagen/Absagen, Bearbeiten, Absagen; „Teilnehmen“ ab 5 Minuten vor Beginn)
 7. ✅ Audio- und Videoanrufe (aus Chats, Kanälen und Besprechungen; Lobby mit Vorschau, Geräteauswahl und Hintergrund-Weichzeichner; Klingeln mit Annehmen/Ablehnen, verpasste Anrufe; Galerie- und Sprecheransicht, Sprecher-Erkennung; Stummschalten, Kamera, Bildschirmfreigabe, Hand heben, Reaktionen, Chat im Anruf; weitere Personen dazuholen; Anrufe-App mit Verlauf und Rückruf; Status „Im Anruf“)
-8. ⏳ Responsive Layout, Feinschliff, End-to-End-Tests
+8. ✅ Heller und dunkler Modus (Systemeinstellung als Standard), Responsive Layout (unter 768 px eine Spalte mit Tab-Leiste, Anrufsteuerung unten), Barrierefreiheit nach WCAG 2.1 AA (Kontraste, Namen aller Bedienelemente, Tastatur), End-to-End-Tests mit Playwright
 
 ## Drittanbieter-Grafiken
 

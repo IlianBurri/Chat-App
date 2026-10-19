@@ -1,5 +1,6 @@
 node_modules/
 dist/
+desktop/release/
 coverage/
 *.log
 .env
@@ -15,6 +16,7 @@ server/src/generated/
 # Tests
 test-results/
 playwright-report/
+e2e/.data/
 
 # Editor / OS
 .DS_Store
